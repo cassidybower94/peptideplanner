@@ -18,15 +18,15 @@
   .hdr-top h1{font-size:18px;font-weight:800;color:var(--accent);}
   .hdr-meta{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
   .today-pill{margin-left:auto;background:rgba(90,158,124,.12);border:1px solid var(--accent);color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;padding:4px 12px;border-radius:100px;}
-  .tabs{display:flex;gap:2px;}
-  .tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:8px 16px 10px;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.8px;}
+  .tabs{display:flex;gap:2px;flex-wrap:wrap;}
+  .tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:8px 14px 10px;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.8px;}
   .tab:hover{color:var(--text);}
   .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
   .main{padding:20px 28px;max-width:1360px;margin:0 auto;}
   .vp{display:none;} .vp.active{display:block;}
   .slabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:12px;}
   .dual{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .banner{border-radius:8px;padding:10px 14px;margin-bottom:16px;font-family:'DM Mono',monospace;font-size:12px;}
+  .banner{border-radius:8px;padding:10px 14px;margin-bottom:12px;font-family:'DM Mono',monospace;font-size:12px;}
   .banner.warn{background:rgba(194,124,58,.07);border:1px solid rgba(194,124,58,.3);border-left:3px solid var(--warn);color:#9a5e22;}
   .banner.load{background:rgba(192,82,74,.07);border:1px solid rgba(192,82,74,.25);border-left:3px solid var(--danger);color:#a03d37;}
   .pcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
@@ -38,7 +38,7 @@
   .phead.mike .phead-name{color:var(--blue);}
   .pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
   .dlist{padding:4px 0;}
-  .drow{display:grid;grid-template-columns:24px 140px 1fr auto;align-items:center;padding:7px 14px;border-bottom:1px solid rgba(216,228,208,.8);gap:8px;transition:background .1s;cursor:pointer;}
+  .drow{display:grid;grid-template-columns:24px 140px 1fr auto;align-items:center;padding:7px 14px;border-bottom:1px solid rgba(216,228,208,.6);gap:8px;transition:background .1s;cursor:pointer;}
   .drow:last-child{border-bottom:none;}
   .drow:hover{background:#f0f5ee;}
   .drow.done{opacity:.5;}
@@ -54,6 +54,7 @@
   .dtime{font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;}
   .t-early{background:rgba(90,158,124,.12);color:#3d7a5c;}
   .t-mid{background:rgba(194,124,58,.12);color:#9a5e22;}
+  .t-evepm{background:rgba(180,120,180,.12);color:#8b4d8b;}
   .t-eve{background:rgba(155,127,199,.12);color:#7355a8;}
   .t-night{background:rgba(91,143,199,.12);color:#3a6fa0;}
   .t-sun{background:rgba(90,158,124,.12);color:#3d7a5c;}
@@ -110,6 +111,23 @@
   .price-code{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
   .price-val{font-family:'DM Mono',monospace;font-size:18px;margin-top:8px;}
   .price-unit{font-size:10px;color:var(--muted);}
+  .sched-day-strip{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .sched-day-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .sched-day-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .sched-day-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .sched-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+  .sched-block-head{padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+  .sched-time-label{font-size:13px;font-weight:800;}
+  .sched-window{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+  .sched-row{display:grid;grid-template-columns:50px 1fr 130px 1fr;align-items:center;padding:10px 16px;border-bottom:1px solid rgba(216,228,208,.6);gap:10px;}
+  .sched-row:last-child{border-bottom:none;}
+  .sched-who{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;text-transform:uppercase;text-align:center;}
+  .sched-who.both{background:rgba(90,158,124,.12);color:#3d7a5c;}
+  .sched-who.cass{background:rgba(155,127,199,.12);color:#7355a8;}
+  .sched-who.mike{background:rgba(91,143,199,.12);color:#3a6fa0;}
+  .sched-pname{font-size:13px;font-weight:700;}
+  .sched-dose{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);}
+  .sched-note{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
   @media(max-width:860px){
     .dual{grid-template-columns:1fr;}
     .prep-grid{grid-template-columns:1fr 1fr;}
@@ -117,6 +135,8 @@
     .main{padding:14px;}
     .hdr{padding:12px 14px 0;}
     .prog-bars{grid-template-columns:1fr;}
+    .sched-row{grid-template-columns:45px 1fr 100px;}
+    .sched-note{display:none;}
   }
 </style>
 </head>
@@ -130,6 +150,7 @@
   <div class="tabs">
     <button class="tab active" onclick="sw('today',this)">Today</button>
     <button class="tab" onclick="sw('week',this)">This Week</button>
+    <button class="tab" onclick="sw('schedule',this)">Schedule</button>
     <button class="tab" onclick="sw('tracker',this)">Tracker</button>
     <button class="tab" onclick="sw('protocol',this)">Protocol</button>
     <button class="tab" onclick="sw('sunday',this)">Sunday Prep</button>
@@ -169,6 +190,11 @@
     <div class="slabel">Week of <span id="wkRange"></span></div>
     <div class="wk-strip" id="wkStrip"></div>
     <div id="wkDetail"></div>
+  </div>
+  <div id="tab-schedule" class="vp">
+    <div class="slabel" style="margin-bottom:16px">Daily Schedule · Exact Timing</div>
+    <div class="sched-day-strip" id="schedDayStrip"></div>
+    <div id="schedContent"></div>
   </div>
   <div id="tab-tracker" class="vp">
     <div class="slabel" style="margin-bottom:14px">7-Day Completion</div>
@@ -217,8 +243,8 @@ const WEEKDAY = [
   {name:"CJC/Ipam",c:{t:"6t", mg:"0.20mg"},m:{t:"15t",mg:"0.50mg"},time:"night"},
   {name:"DSIP",    c:{t:"6t", mg:"0.3mg"}, m:{t:"6t", mg:"0.3mg"}, time:"night"},
   {name:"Semax",   c:{t:"1 spray/nostril",mg:""},m:{t:"1 spray/nostril",mg:""},time:"early"},
-  {name:"Selank",  c:{t:"12t",mg:"0.4mg"}, m:null, time:"early"},
-  {name:"Glow70",  c:{t:"15t",mg:"3.5mg"}, m:null, time:"early"},
+  {name:"Selank",  c:{t:"12t",mg:"0.4mg"}, m:null, time:"evepm"},
+  {name:"Glow70",  c:{t:"15t",mg:"3.5mg"}, m:null, time:"evepm"},
 ];
 const ALT = {
   1:[{name:"SS-31",c:{t:"30t",mg:"1.0mg"},m:{t:"30t",mg:"1.0mg"},time:"early"}],
@@ -227,8 +253,6 @@ const ALT = {
   4:[{name:"NAD+", c:{t:"50t",mg:"50mg"}, m:{t:"50t",mg:"50mg"}, time:"early"}],
   5:[{name:"SS-31",c:{t:"30t",mg:"1.0mg"},m:{t:"30t",mg:"1.0mg"},time:"early"}],
 };
-const SAT_C = [{name:"SS-31 (recon)",t:"30t",mg:"1.0mg",time:"mid",note:"Mid AM · recon day"}];
-const SAT_M = [{name:"SS-31 (recon)",t:"30t",mg:"1.0mg",time:"mid",note:"Mid AM · recon day"}];
 
 function getSunDoses(date) {
   const r = getRetaDose(date);
@@ -252,7 +276,6 @@ function getDoses(date) {
   const isMT2Load=MT2_LOAD_DAYS.includes(ds), isMT2Maint=date>=MT2_MAINT_START&&dow===6;
   const res={c:[],m:[]};
   if(dow===6){
-    SAT_C.forEach(d=>res.c.push({...d})); SAT_M.forEach(d=>res.m.push({...d}));
     if(isMT2Maint) res.c.push({name:"MT2",t:"5t",mg:"0.25mg",time:"eve",note:"Sat maintenance · Cass only"});
     if(inPin){res.c.push({name:"Pinealon",t:"10t",mg:"0.20mg",time:"early"});res.m.push({name:"Pinealon",t:"10t",mg:"0.20mg",time:"early"});}
     return res;
@@ -282,8 +305,8 @@ function doseKey(date,person,name){return`${date.toDateString()}|${person}|${nam
 function isDone(date,person,name){return!!getStore()[doseKey(date,person,name)];}
 function toggleDose(date,person,name){const s=getStore(),k=doseKey(date,person,name);if(s[k])delete s[k];else s[k]=Date.now();saveStore(s);}
 
-const TL={early:"Early AM",mid:"Mid AM",eve:"Evening",night:"Night",sun:"Sun · Late Start",load:"Evening · LOADING"};
-const TC={early:"t-early",mid:"t-mid",eve:"t-eve",night:"t-night",sun:"t-sun",load:"t-load"};
+const TL={early:"Early AM · 8–10am",mid:"Mid AM",evepm:"Early PM · 5–7pm",eve:"Evening",night:"Night · 8–10pm",sun:"Sun · Late Start",load:"Evening · LOADING"};
+const TC={early:"t-early",mid:"t-mid",evepm:"t-evepm",eve:"t-eve",night:"t-night",sun:"t-sun",load:"t-load"};
 
 function doseRow(d,date,person,interactive){
   const done=interactive?isDone(date,person,d.name):false;
@@ -309,7 +332,7 @@ function tap(el,dateStr,person,name){
 }
 function updateProgress(){
   const d=getDoses(TODAY);
-  const cp=calcPct(d.c,TODAY,'c'), mp=calcPct(d.m,TODAY,'m');
+  const cp=calcPct(d.c,TODAY,'c'),mp=calcPct(d.m,TODAY,'m');
   const cd=d.c.filter(x=>isDone(TODAY,'c',x.name)).length;
   const md=d.m.filter(x=>isDone(TODAY,'m',x.name)).length;
   document.getElementById('cassBar').style.width=cp+'%';
@@ -325,10 +348,9 @@ function initToday(){
   document.getElementById('hMeta').textContent=`${DAYS[dow]} · ${months[TODAY.getMonth()]} ${TODAY.getDate()}, ${TODAY.getFullYear()} · Cassidy & Mike`;
   document.getElementById('hPill').textContent=`${DAYS[dow].toUpperCase()} ${TODAY.getMonth()+1}/${TODAY.getDate()}`;
   const banners=[];
-  const ds=TODAY.toDateString();
-  if(MT2_LOAD_DAYS.includes(ds)){
-    const doseNum=MT2_LOAD_DAYS.indexOf(ds)+1;
-    banners.push(`<div class="banner load">🔶 MT2 Loading — Dose ${doseNum} of 6 tonight · 10t · 0.50mg · Evening · Cass only · Loading completes May 14</div>`);
+  if(MT2_LOAD_DAYS.includes(TODAY.toDateString())){
+    const n=MT2_LOAD_DAYS.indexOf(TODAY.toDateString())+1;
+    banners.push(`<div class="banner load">🔶 MT2 Loading — Dose ${n} of 6 tonight · 10t · 0.50mg · Evening · Cass only</div>`);
   }
   if(TODAY>=MT2_MAINT_START&&TODAY.getDay()===6) banners.push(`<div class="banner load">💉 MT2 Maintenance tonight · 5t · 0.25mg · Cass only</div>`);
   if(TODAY<PIN_START) banners.push(`<div class="banner warn">⏳ Pinealon + MOTS-c start May 18</div>`);
@@ -350,8 +372,8 @@ function renderStrip(){
   let html='';
   for(let i=0;i<7;i++){
     const d=new Date(sun); d.setDate(sun.getDate()+i);
-    const isT=d.toDateString()===TODAY.toDateString(), isS=d.toDateString()===selDay.toDateString();
-    const doses=getDoses(d), cp=calcPct(doses.c,d,'c');
+    const isT=d.toDateString()===TODAY.toDateString(),isS=d.toDateString()===selDay.toDateString();
+    const doses=getDoses(d),cp=calcPct(doses.c,d,'c');
     html+=`<div class="wday ${isT?'today':''} ${isS?'sel':''}" onclick="showDay(new Date(${d.getFullYear()},${d.getMonth()},${d.getDate()}))"><div class="wday-name">${DAYS[d.getDay()]}</div><div class="wday-num">${d.getDate()}</div><div class="wday-pct">${cp?cp+'%':doses.c.length+'d'}</div></div>`;
   }
   document.getElementById('wkStrip').innerHTML=html;
@@ -366,12 +388,12 @@ function updateGraph(){
   let html='';
   for(let i=6;i>=0;i--){
     const d=new Date(TODAY); d.setDate(TODAY.getDate()-i);
-    const doses=getDoses(d), cp=calcPct(doses.c,d,'c'), mp=calcPct(doses.m,d,'m');
+    const doses=getDoses(d),cp=calcPct(doses.c,d,'c'),mp=calcPct(doses.m,d,'m');
     html+=`<div class="g-col ${i===0?'g-today':''}"><div class="g-bar-wrap" style="display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%;"><div class="g-bar cass-bar" style="height:${cp}%"></div><div class="g-bar mike-bar" style="height:${mp}%"></div></div><div class="g-day">${DAYS[d.getDay()].slice(0,2)}</div></div>`;
   }
   bars.innerHTML=html;
   const hist=document.getElementById('historyList'); if(!hist)return;
-  const store=getStore(), entries=Object.entries(store).sort((a,b)=>b[1]-a[1]).slice(0,30);
+  const store=getStore(),entries=Object.entries(store).sort((a,b)=>b[1]-a[1]).slice(0,30);
   if(!entries.length){hist.innerHTML=`<div style="padding:16px;color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;">No doses logged yet — tap doses on Today tab to track</div>`;return;}
   hist.innerHTML=entries.map(([k,ts])=>{
     const[dateStr,person,name]=k.split('|'),t=new Date(ts),timeStr=t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
@@ -379,41 +401,44 @@ function updateGraph(){
   }).join('');
 }
 function initTracker(){updateGraph();}
+
 const PROTO=[
-  {name:"KPV",         sub:"Night · both daily",                       ct:"15t",cm:"0.75mg",mt:"15t",mm:"0.75mg",who:"both"},
-  {name:"CJC/Ipam",   sub:"PM once daily",                            ct:"6t", cm:"0.20mg",mt:"15t",mm:"0.50mg",who:"both"},
-  {name:"DSIP",        sub:"Night · both daily",                       ct:"6t", cm:"0.3mg", mt:"6t", mm:"0.3mg", who:"both"},
-  {name:"Semax",       sub:"Early AM · nasal spray",                   ct:"1 spray",cm:"",  mt:"1 spray",mm:"",  who:"both"},
-  {name:"Selank",      sub:"Early AM · daily · Cass only",             ct:"12t",cm:"0.4mg", mt:"—",  mm:"",       who:"cass"},
-  {name:"Glow70",      sub:"Early AM · daily · Cass only",             ct:"15t",cm:"3.5mg", mt:"—",  mm:"",       who:"cass"},
-  {name:"Retatrutide", sub:"Sun · auto-titrates 0.5→1.0→1.5mg",       ct:"15t→30t→45t",cm:"0.5→1.0→1.5mg",mt:"same",mm:"",who:"both"},
+  {name:"KPV",         sub:"Night · 8–10pm · both daily",              ct:"15t",cm:"0.75mg",mt:"15t",mm:"0.75mg",who:"both"},
+  {name:"CJC/Ipam",   sub:"Night · PM once daily",                    ct:"6t", cm:"0.20mg",mt:"15t",mm:"0.50mg",who:"both"},
+  {name:"DSIP",        sub:"Night · 8–10pm · both daily",              ct:"6t", cm:"0.3mg", mt:"6t", mm:"0.3mg", who:"both"},
+  {name:"Semax",       sub:"Early AM · 8–10am · nasal spray",          ct:"1 spray",cm:"",  mt:"1 spray",mm:"",  who:"both"},
+  {name:"Selank",      sub:"Early PM · 5–7pm · Cass only",             ct:"12t",cm:"0.4mg", mt:"—",  mm:"",       who:"cass"},
+  {name:"Glow70",      sub:"Early PM · 5–7pm · Cass only",             ct:"15t",cm:"3.5mg", mt:"—",  mm:"",       who:"cass"},
+  {name:"Retatrutide", sub:"Sun · late start · auto-titrates",         ct:"15t→30t→45t",cm:"0.5→1.0→1.5mg",mt:"same",mm:"",who:"both"},
   {name:"Glutathione", sub:"Sun · 30min after Reta",                   ct:"100t",cm:"200mg",mt:"100t",mm:"200mg",who:"both"},
-  {name:"SS-31",       sub:"Mon/Wed/Fri early AM + Sat mid AM",        ct:"30t",cm:"1.0mg", mt:"30t",mm:"1.0mg", who:"both"},
-  {name:"NAD+",        sub:"Tue/Thu early AM + Sun mid AM",            ct:"50t",cm:"50mg",  mt:"50t",mm:"50mg",  who:"both"},
-  {name:"MT2",         sub:"Loading EOD May 4–14 · Maint Sat May 16+", ct:"10t→5t",cm:"0.50→0.25mg",mt:"—",mm:"",who:"cass"},
-  {name:"MOTS-c",      sub:"Starts May 18 · daily early AM",           ct:"10t",cm:"0.5mg", mt:"10t",mm:"0.5mg", who:"both"},
-  {name:"Pinealon",    sub:"May 18–27 cycle · early AM",               ct:"10t",cm:"0.20mg",mt:"10t",mm:"0.20mg",who:"both"},
+  {name:"SS-31",       sub:"Mon/Wed/Fri · Early AM 8–10am",            ct:"30t",cm:"1.0mg", mt:"30t",mm:"1.0mg", who:"both"},
+  {name:"NAD+",        sub:"Tue/Thu Early AM + Sun Mid AM",            ct:"50t",cm:"50mg",  mt:"50t",mm:"50mg",  who:"both"},
+  {name:"MT2",         sub:"Loading EOD Eve May 4–14 · Sat maint May 16+",ct:"10t→5t",cm:"0.50→0.25mg",mt:"—",mm:"",who:"cass"},
+  {name:"MOTS-c",      sub:"Starts May 18 · Early AM daily",           ct:"10t",cm:"0.5mg", mt:"10t",mm:"0.5mg", who:"both"},
+  {name:"Pinealon",    sub:"May 18–27 cycle · Early AM",               ct:"10t",cm:"0.20mg",mt:"10t",mm:"0.20mg",who:"both"},
 ];
 function initProtocol(){
   document.getElementById('protoRows').innerHTML=PROTO.map(p=>`<div class="ptrow"><div><div class="pt-name">${p.name}</div><div class="pt-sub">${p.sub}</div></div><div class="pt-dose"><span class="ct">${p.ct}</span>${p.cm?` <span class="dm">· ${p.cm}</span>`:''}</div><div class="pt-dose"><span class="bt">${p.mt}</span>${p.mm?` <span class="dm">· ${p.mm}</span>`:''}</div><div><span class="who ${p.who==='both'?'who-both':'who-cass'}">${p.who==='both'?'Both':'Cass only'}</span></div></div>`).join('');
 }
+
 function initSunday(){
   const ns=new Date(TODAY); ns.setDate(TODAY.getDate()+((7-TODAY.getDay())%7||7));
   document.getElementById('nextSun').textContent=`${ns.getMonth()+1}/${ns.getDate()}`;
   const items=[
-    {type:"recon",icon:"🔵",name:"SS-31",      note:"Recon new sealed vial · 30t · 1.0mg · Sat mid AM"},
+    {type:"recon",icon:"🔵",name:"SS-31",      note:"Recon new sealed vial · 30t · 1.0mg · for Mon AM"},
     {type:"recon",icon:"🔵",name:"NAD+",       note:"Check partial · 50t · 50mg · Sun mid AM"},
     {type:"recon",icon:"🔵",name:"Glutathione",note:"1/8 partial · recon new · 100t · 200mg Sun"},
     {type:"ok",  icon:"✅",name:"Retatrutide", note:"1/2 partial · use first · dose auto-adjusts by date"},
     {type:"ok",  icon:"✅",name:"CJC w/ DAC",  note:"2/3 partial · Mike draws first · 15t · 0.50mg"},
     {type:"ok",  icon:"✅",name:"DSIP",        note:"1/3 partial · use first · 6t · 0.3mg daily"},
-    {type:"ok",  icon:"✅",name:"Selank",      note:"1/2 partial · use first · 12t · 0.4mg daily"},
+    {type:"ok",  icon:"✅",name:"Selank",      note:"1/2 partial · use first · 12t · 0.4mg early PM"},
     {type:"ok",  icon:"✅",name:"MT2 (Cass)",  note:"Loading 10t · 0.50mg EOD thru May 14 → maint May 16"},
     {type:"ok",  icon:"⏳",name:"MOTS-c",      note:"Inactive until May 18 · do not recon yet"},
     {type:"ok",  icon:"⏳",name:"Pinealon",    note:"Inactive until May 18 · do not recon yet"},
   ];
   document.getElementById('prepGrid').innerHTML=items.map(p=>`<div class="prep-card ${p.type}"><div class="prep-icon">${p.icon}</div><div><div class="prep-name">${p.name}</div><div class="prep-note">${p.note}</div></div></div>`).join('');
 }
+
 function initPricing(){
   const items=[
     {name:"DSIP",           code:"DS2 / DS5",    price:"$25–$40",  unit:"2mg or 5mg × 10 vials"},
@@ -435,6 +460,96 @@ function initPricing(){
   ];
   document.getElementById('priceGrid').innerHTML=items.map(p=>`<div class="price-card"><div class="price-name">${p.name}</div><div class="price-code">${p.code}</div><div class="price-val">${p.price}</div><div class="price-unit">${p.unit}</div></div>`).join('');
 }
+
+// ─── SCHEDULE TAB ─────────────────────────────────────────────────────────────
+const SCHED_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+let schedDay = 'Mon';
+
+function getSchedule(day) {
+  const altSS31 = day==='Mon'||day==='Wed'||day==='Fri';
+  const altNAD  = day==='Tue'||day==='Thu';
+  const isSat   = day==='Sat';
+  const isSun   = day==='Sun';
+  const r = getRetaDose(TODAY);
+  const showMT2Load  = TODAY >= MT2_LOAD_START && TODAY <= MT2_LOAD_END;
+  const showMT2Maint = TODAY >= MT2_MAINT_START;
+  const pinActive    = TODAY >= PIN_START && TODAY <= PIN_END;
+  const motsActive   = TODAY >= MOTS_START;
+  const blocks = [];
+
+  if (isSun) {
+    blocks.push({time:"After Waking · Late Start",window:"first thing, no time limit",color:"#3d7a5c",rows:[
+      {who:"both",name:"Retatrutide",dose:`${r.t} · ${r.mg}`,note:"Before anything else"},
+    ]});
+    blocks.push({time:"30 Minutes Later",window:"stagger strictly — no sooner",color:"#5a9e7c",rows:[
+      {who:"both",name:"Glutathione",dose:"100t · 200mg",note:"30min after Reta only"},
+    ]});
+    blocks.push({time:"Mid AM",window:"after breakfast is fine",color:"#9a5e22",rows:[
+      {who:"both",name:"NAD+",dose:"50t · 50mg",note:"Sunday prep day dose"},
+    ]});
+    return blocks;
+  }
+
+  if (isSat) {
+    if (showMT2Maint) {
+      blocks.push({time:"Evening · 5–7pm",window:"Cass only",color:"#7355a8",rows:[
+        {who:"cass",name:"MT2",dose:"5t · 0.25mg",note:"Saturday maintenance"},
+      ]});
+    }
+    blocks.push({time:"Rest Day",window:"no other doses",color:"#8a9e8c",rows:[
+      {who:"both",name:"No injections",dose:"—",note:"Saturday is a full rest day"},
+    ]});
+    return blocks;
+  }
+
+  // Mon–Fri
+  const earlyRows = [{who:"both",name:"Semax",dose:"1 spray/nostril",note:"Both nostrils"}];
+  if (altSS31) earlyRows.push({who:"both",name:"SS-31",dose:"30t · 1.0mg",note:"Mon · Wed · Fri only"});
+  if (altNAD)  earlyRows.push({who:"both",name:"NAD+", dose:"50t · 50mg", note:"Tue · Thu only"});
+  if (pinActive)  earlyRows.push({who:"both",name:"Pinealon",dose:"10t · 0.20mg",note:"May 18–27 cycle"});
+  if (motsActive) earlyRows.push({who:"both",name:"MOTS-c",  dose:"10t · 0.5mg", note:"Daily from May 18"});
+  blocks.push({time:"Early AM · 8–10am",window:"before food preferred",color:"#3d7a5c",rows:earlyRows});
+
+  blocks.push({time:"Early PM · 5–7pm",window:"with or after lunch — Cass only",color:"#8b4d8b",rows:[
+    {who:"cass",name:"Selank",dose:"12t · 0.4mg",note:"Cass only"},
+    {who:"cass",name:"Glow70",dose:"15t · 3.5mg",note:"Cass only"},
+  ]});
+
+  const nightRows = [
+    {who:"both",name:"KPV",     dose:"15t · 0.75mg",note:"Both every night"},
+    {who:"cass",name:"CJC/Ipam",dose:"6t · 0.20mg", note:"Cass"},
+    {who:"mike",name:"CJC/Ipam",dose:"15t · 0.50mg",note:"Mike"},
+    {who:"both",name:"DSIP",    dose:"6t · 0.3mg",  note:"Both every night"},
+  ];
+  if (showMT2Load) nightRows.push({who:"cass",name:"MT2 🔶 LOADING",dose:"10t · 0.50mg",note:"EOD only — check dates"});
+  blocks.push({time:"Night · 8–10pm",window:"before bed",color:"#3a6fa0",rows:nightRows});
+
+  return blocks;
+}
+
+const BG = {"#3d7a5c":"rgba(90,158,124,.08)","#5a9e7c":"rgba(90,158,124,.06)","#9a5e22":"rgba(194,124,58,.07)","#8b4d8b":"rgba(180,120,180,.08)","#3a6fa0":"rgba(91,143,199,.08)","#7355a8":"rgba(155,127,199,.08)","#8a9e8c":"rgba(138,158,140,.05)"};
+
+function initSchedule(){
+  document.getElementById('schedDayStrip').innerHTML=SCHED_DAYS.map(d=>`<button class="sched-day-btn ${d===schedDay?'active':''}" onclick="setSchedDay('${d}')">${d}</button>`).join('');
+  renderSchedule();
+}
+function setSchedDay(day){
+  schedDay=day;
+  document.querySelectorAll('.sched-day-btn').forEach(b=>b.classList.toggle('active',b.textContent===day));
+  renderSchedule();
+}
+function renderSchedule(){
+  const blocks=getSchedule(schedDay);
+  document.getElementById('schedContent').innerHTML=blocks.map(block=>`
+    <div class="sched-block">
+      <div class="sched-block-head" style="background:${BG[block.color]||'transparent'}">
+        <span class="sched-time-label" style="color:${block.color}">${block.time}</span>
+        <span class="sched-window">· ${block.window}</span>
+      </div>
+      <div>${block.rows.map(r=>`<div class="sched-row"><div class="sched-who ${r.who}">${r.who==='both'?'Both':r.who==='cass'?'Cass':'Mike'}</div><div class="sched-pname">${r.name}</div><div class="sched-dose">${r.dose}</div><div class="sched-note">${r.note}</div></div>`).join('')}</div>
+    </div>`).join('');
+}
+
 function sw(tab,btn){
   document.querySelectorAll('.vp').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -442,6 +557,7 @@ function sw(tab,btn){
   btn.classList.add('active');
   if(tab==='tracker')initTracker();
   if(tab==='week')initWeek();
+  if(tab==='schedule')initSchedule();
 }
 initToday(); initProtocol(); initSunday(); initPricing();
 </script>
