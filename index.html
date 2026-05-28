@@ -790,39 +790,29 @@ function getSchedule(dayLabel) {
     return blocks;
   }
 
-  // Mon–Fri shared vars
-  const showMT2Load  = TODAY >= MT2_LOAD_START && TODAY <= MT2_LOAD_END;
-  const showMT2Maint = TODAY >= MT2_MAINT_START;
-  const pinActive    = TODAY >= PIN_START && TODAY <= PIN_END;
-  const motsActive   = TODAY >= MOTS_START;
-  const bioOn        = isBiocinDay();
+  // Mon–Fri — always show full schedule with date notes for cycling items
+  const showMT2Load = isWeekday; // show on all weekdays with note
 
-  // Early AM — supps first, then peptides
   const earlyAMRows = [
-    {who:"cass", name:"Adrenal Recovery · NAC · MSM · Omega-3/BSO", dose:"fasted", note:"Upon waking · before food · supplements"},
-    {who:"both", name:"Semax", dose:"1 spray/nostril", note:"Peptide · nasal · both nostrils"},
-    ...(altSS31 ? [{who:"both", name:"SS-31", dose:"30t · 1.0mg", note:"Peptide · Mon · Wed · Fri"}] : []),
-    ...(altNAD  ? [{who:"both", name:"NAD+",  dose:"50t · 50mg",  note:"Peptide · Tue · Thu"}] : []),
-    ...(pinActive  ? [{who:"both", name:"Pinealon", dose:"10t · 0.20mg", note:"Peptide · May 28–Jun 6"}] : []),
-    ...(motsActive ? [{who:"both", name:"MOTS-c",   dose:"10t · 0.5mg",  note:"Peptide · from May 28"}] : []),
+    {who:"cass", name:"Adrenal Recovery · NAC · MSM · Omega-3", dose:"fasted", note:"Upon waking · before food"},
+    {who:"both", name:"Semax", dose:"1 spray/nostril", note:"Peptide · nasal · both"},
   ];
+  if (altSS31) earlyAMRows.push({who:"both", name:"SS-31", dose:"30t · 1.0mg", note:"Mon · Wed · Fri"});
+  if (altNAD)  earlyAMRows.push({who:"both", name:"NAD+",  dose:"50t · 50mg",  note:"Tue · Thu"});
+  // Always show cycling items with date window note
+  earlyAMRows.push({who:"both", name:"Pinealon", dose:"10t · 0.20mg", note:"May 28–Jun 6 cycle only"});
+  earlyAMRows.push({who:"both", name:"MOTS-c",   dose:"10t · 0.5mg",  note:"Daily from May 28"});
   blocks.push({time:"Early AM · 8–10am", window:"fasted supps first · then peptides", color:"#3d7a5c", rows:earlyAMRows});
 
   blocks.push({time:"With First Meal", window:"breakfast or first food", color:"#5a9e7c", rows:[
-    {who:"cass", name:"Digestive enzymes", dose:"with meal", note:"Every meal"},
-    {who:"cass", name:"L-Glutamine · Zinc · Creatine · Electrolytes", dose:"with food", note:"Supplement stack"},
+    {who:"cass", name:"Digestive enzymes · L-Glutamine · Zinc · Creatine", dose:"with food", note:"Supplement stack"},
   ]});
 
-  if (bioOn) {
-    blocks.push({time:"Midday / ~2pm · Detox Layer", window:"empty-ish stomach · Mon–Fri only", color:"#c0524a", rows:[
-      {who:"cass", name:"Biocidin", dose:"as directed", note:"5 on / 2 off · Sat+Sun off"},
-      {who:"cass", name:"NAC 2nd dose (optional)", dose:"as needed", note:"Pairs ok with Biocidin"},
-    ]});
-  } else {
-    blocks.push({time:"Midday / Detox", window:"rest day", color:"#8a9e8c", rows:[
-      {who:"cass", name:"Biocidin OFF", dose:"—", note:"Sat+Sun rest · skip detox layer"},
-    ]});
-  }
+  // Biocidin — always show on weekday schedule, note the off days
+  blocks.push({time:"Midday / ~2pm · Detox", window:"Mon–Fri only · skip Sat+Sun", color:"#c0524a", rows:[
+    {who:"cass", name:"Biocidin", dose:"as directed", note:"5 on / 2 off · Sat+Sun off"},
+    {who:"cass", name:"NAC 2nd dose (optional)", dose:"as needed", note:"Pairs ok with Biocidin"},
+  ]});
 
   blocks.push({time:"Early PM · 5–7pm", window:"Cass peptides + histamine support", color:"#8b4d8b", rows:[
     {who:"cass", name:"Selank",  dose:"12t · 0.4mg",  note:"Peptide · Cass only"},
@@ -830,24 +820,24 @@ function getSchedule(dayLabel) {
     {who:"cass", name:"Quercetin · DAO · Bromelain", dose:"optional", note:"Histamine support as needed"},
   ]});
 
-  blocks.push({time:"Late Afternoon · Binder Window", window:"⚠️ 2+ hrs from all supps, peptides, glutathione", color:"#9a5e22", rows:[
+  blocks.push({time:"Late Afternoon · Binder", window:"2+ hrs from all supps, peptides, glutathione", color:"#9a5e22", rows:[
     {who:"cass", name:"Bentonite clay / Activated charcoal", dose:"as directed", note:"Strict spacing · especially from glutathione"},
     {who:"cass", name:"Psyllium husk (optional)", dose:"with water", note:"Bowel support"},
   ]});
 
   const nightRows = [
-    {who:"both", name:"KPV",      dose:"15t · 0.75mg", note:"Peptide · both every night"},
-    {who:"cass", name:"CJC/Ipam", dose:"6t · 0.20mg",  note:"Peptide · Cass"},
-    {who:"mike", name:"CJC/Ipam", dose:"15t · 0.50mg", note:"Peptide · Mike"},
-    {who:"both", name:"DSIP",     dose:"6t · 0.3mg",   note:"Peptide · both every night"},
+    {who:"both", name:"KPV",      dose:"15t · 0.75mg", note:"Both every night"},
+    {who:"cass", name:"CJC/Ipam", dose:"6t · 0.20mg",  note:"Cass"},
+    {who:"mike", name:"CJC/Ipam", dose:"15t · 0.50mg", note:"Mike"},
+    {who:"both", name:"DSIP",     dose:"6t · 0.3mg",   note:"Both every night"},
+    {who:"cass", name:"MT2 🔶 LOADING", dose:"10t · 0.50mg", note:"EOD May 28–Jun 7 · Cass only"},
   ];
-  if (showMT2Load) nightRows.push({who:"cass", name:"MT2 🔶 LOADING", dose:"10t · 0.50mg", note:"EOD only · Cass"});
   blocks.push({time:"Night · 8–10pm", window:"before bed", color:"#3a6fa0", rows:nightRows});
 
-  blocks.push({time:"Before Bed · Nervous System", window:"choose based on how you feel", color:"#5b8fc7", rows:[
-    {who:"cass", name:"Magnesium · L-theanine", dose:"nightly", note:"Core PM stack · always"},
-    {who:"cass", name:"Dream Bites · SuperCalm", dose:"choose one", note:"Sleep + cortisol support"},
-    {who:"cass", name:"GABA · Thorne Phytogen", dose:"optional", note:"High stress evenings only"},
+  blocks.push({time:"Before Bed", window:"choose based on how you feel", color:"#5b8fc7", rows:[
+    {who:"cass", name:"Naltrexone 50mg + Magnesium glycinate", dose:"fixed nightly", note:"Together every night"},
+    {who:"cass", name:"L-theanine · Dream Bites or SuperCalm", dose:"choose", note:"Sleep + nervous system"},
+    {who:"cass", name:"GABA · Thorne Phytogen", dose:"optional", note:"High stress only"},
   ]});
 
   return blocks;
