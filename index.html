@@ -223,7 +223,7 @@
       <div class="prog-label">Today's Progress</div>
       <div class="prog-bars">
         <div class="prog-item">
-          <div class="prog-name" style="color:var(--accent)">Cassidy</div>
+          <div class="prog-name" style="color:var(--accent)">Cassidy · Peptides</div>
           <div class="prog-track"><div class="prog-fill" id="cassBar" style="width:0%"></div></div>
           <div class="prog-num" id="cassNum">0 / 0 doses</div>
         </div>
@@ -234,10 +234,20 @@
         </div>
       </div>
     </div>
+
+    <!-- MEDS CARD — full width, amber -->
+    <div class="pcard" style="margin-bottom:14px;border-color:#d4a847;background:linear-gradient(135deg,rgba(212,168,71,.04),transparent);">
+      <div class="phead" style="background:linear-gradient(90deg,rgba(212,168,71,.12),transparent);border-bottom-color:#e8d5a0;">
+        <span class="phead-name" style="color:#a07c28;">💊 Cassidy · Meds & Supplements</span>
+        <span class="pct" id="medsPct">0%</span>
+      </div>
+      <div class="dlist" id="medsToday"></div>
+    </div>
+
     <div class="dual">
       <div class="pcard">
         <div class="phead cass">
-          <span class="phead-name">Cassidy</span>
+          <span class="phead-name">Cassidy · Peptides</span>
           <span class="pct" id="cassPct">0%</span>
         </div>
         <div class="dlist" id="cassToday"></div>
@@ -523,6 +533,60 @@ function updateProgress() {
   document.getElementById('mikePct').textContent = mp + '%';
 }
 
+// ─── MEDS & SUPPLEMENTS ───────────────────────────────────────────────────────
+function getMeds(date) {
+  const dow = date.getDay();
+  const isTue = dow === 2;
+  // Vitamin D3: Tuesdays only, 12-week course May 13 – Jul 28 2026
+  const vitDStart = new Date(2026,4,13), vitDEnd = new Date(2026,6,28);
+  const showVitD = isTue && date >= vitDStart && date <= vitDEnd;
+
+  const meds = [
+    {name:"Levothyroxine",        t:"1 dose", mg:"",       time:"early", note:"FIRST · alone · water only · wait 30-60min"},
+    {name:"Allegra",              t:"1 dose", mg:"",       time:"early", note:"After Levo window · water only · no juice"},
+    {name:"Thiamine",             t:"1 dose", mg:"",       time:"mid",   note:"With first meal"},
+    {name:"Active B-Complex",     t:"1 dose", mg:"",       time:"mid",   note:"With first meal"},
+    {name:"Pepcid AC",            t:"1 dose", mg:"",       time:"mid",   note:"~4hrs after Levo · noonish · before meal"},
+    {name:"Naltrexone 50mg",      t:"1 dose", mg:"50mg",   time:"night", note:"Before bed · with Mag glycinate"},
+    {name:"Magnesium glycinate",  t:"1 dose", mg:"",       time:"night", note:"Before bed · with Naltrexone"},
+  ];
+  if (showVitD) {
+    meds.splice(3, 0, {name:"Vitamin D3", t:"1 dose", mg:"", time:"mid", note:"Weekly · Tuesday only · with first meal"});
+  }
+  return meds;
+}
+
+function medRow(d, date) {
+  const done = isDone(date, 'med', d.name);
+  const tick = d.mg ? `<span class="tk" style="color:#a07c28">${d.t}</span> <span class="mg">· ${d.mg}</span>`
+                    : `<span class="tk" style="color:#a07c28">${d.t}</span>`;
+  const note = d.note ? ` · ${d.note}` : '';
+  const timeCls = {early:"t-early",mid:"t-mid",night:"t-night"}[d.time] || '';
+  return `<div class="drow" onclick="tapMed(this,'${date.toDateString()}','${d.name.replace(/'/g,"\\'")}')">
+    <div class="chk ${done?'':''}"><span class="chk-mark" style="display:${done?'block':'none'}">✓</span></div>
+    <div class="dname">${d.name}</div>
+    <div class="dtick">${tick}</div>
+    <div class="dtime ${timeCls}">${TL[d.time]||d.time}${note}</div>
+  </div>`;
+}
+
+function tapMed(el, dateStr, name) {
+  const date = new Date(dateStr);
+  toggleDose(date, 'med', name);
+  el.classList.toggle('done');
+  const mark = el.querySelector('.chk-mark');
+  if (mark) mark.style.display = el.classList.contains('done') ? 'block' : 'none';
+  updateMedProgress(date);
+}
+
+function updateMedProgress(date) {
+  const meds = getMeds(date || TODAY);
+  const done = meds.filter(d => isDone(date || TODAY, 'med', d.name)).length;
+  const pct = meds.length ? Math.round((done / meds.length) * 100) : 0;
+  const el = document.getElementById('medsPct');
+  if (el) el.textContent = pct + '%';
+}
+
 // ─── TODAY VIEW ───────────────────────────────────────────────────────────────
 function initToday() {
   const dow = TODAY.getDay();
@@ -557,6 +621,9 @@ function initToday() {
   const d = getDoses(TODAY);
   document.getElementById('cassToday').innerHTML = personList(d.c, TODAY, 'c', true);
   document.getElementById('mikeToday').innerHTML = personList(d.m, TODAY, 'm', true);
+  const meds = getMeds(TODAY);
+  document.getElementById('medsToday').innerHTML = meds.map(m => medRow(m, TODAY)).join('');
+  updateMedProgress(TODAY);
   updateProgress();
 }
 
@@ -753,62 +820,89 @@ function getSchedule(dayLabel) {
   const blocks = [];
 
   if (isSun) {
-    blocks.push({
-      time:"Late Start · After Waking", window:"whenever you wake", color:"#3d7a5c",
-      rows:[
-        {who:"both", name:"Retatrutide", dose:`${retaDose.t} · ${retaDose.mg}`, note:"First thing · before anything else"},
-      ]
-    });
-    blocks.push({
-      time:"30 min after Reta", window:"stagger strictly", color:"#5a9e7c",
-      rows:[
-        {who:"both", name:"Glutathione", dose:"100t · 200mg", note:"30min after Reta, no sooner"},
-      ]
-    });
-    blocks.push({
-      time:"Mid AM", window:"after breakfast ok", color:"#9a5e22",
-      rows:[
-        {who:"both", name:"NAD+", dose:"50t · 50mg", note:"Sunday prep day dose"},
-      ]
-    });
+    blocks.push({time:"First Thing · Alone", window:"before Reta", color:"#c27c3a", rows:[
+      {who:"cass", name:"Levothyroxine", dose:"1 dose · alone", note:"💊 Water only · wait 30-60min"},
+    ]});
+    blocks.push({time:"After Levo Window", window:"30-60min after Levo", color:"#c27c3a", rows:[
+      {who:"cass", name:"Allegra", dose:"1 dose", note:"💊 Water only · no juice"},
+    ]});
+    blocks.push({time:"Late Start · After Waking", window:"whenever you wake", color:"#3d7a5c", rows:[
+      {who:"both", name:"Retatrutide", dose:`${retaDose.t} · ${retaDose.mg}`, note:"Before anything else"},
+    ]});
+    blocks.push({time:"30 min after Reta", window:"stagger strictly", color:"#5a9e7c", rows:[
+      {who:"both", name:"Glutathione", dose:"100t · 200mg", note:"30min after Reta, no sooner"},
+    ]});
+    blocks.push({time:"Mid AM · With Food", window:"after breakfast", color:"#9a5e22", rows:[
+      {who:"both", name:"NAD+", dose:"50t · 50mg", note:"Sunday prep day dose"},
+      {who:"cass", name:"Thiamine · Active B-Complex", dose:"with food", note:"💊 With first meal"},
+    ]});
+    blocks.push({time:"~4hrs After Levo · Noonish", window:"H2 blocker", color:"#c27c3a", rows:[
+      {who:"cass", name:"Pepcid AC", dose:"1 dose", note:"💊 4hrs after Levo · before meal"},
+    ]});
+    blocks.push({time:"Night · 8–10pm", window:"before bed", color:"#3a6fa0", rows:[
+      {who:"both", name:"KPV",      dose:"15t · 0.75mg", note:"Both"},
+      {who:"cass", name:"CJC/Ipam", dose:"6t · 0.20mg",  note:"Cass"},
+      {who:"mike", name:"CJC/Ipam", dose:"15t · 0.50mg", note:"Mike"},
+      {who:"both", name:"DSIP",     dose:"6t · 0.3mg",   note:"Both"},
+    ]});
+    blocks.push({time:"Before Bed", window:"fixed nightly", color:"#5b8fc7", rows:[
+      {who:"cass", name:"Naltrexone 50mg + Magnesium glycinate", dose:"fixed", note:"💊 Together every night"},
+      {who:"cass", name:"L-theanine · Dream Bites or SuperCalm", dose:"choose", note:"Sleep + nervous system"},
+    ]});
     return blocks;
   }
 
   if (isSat) {
-    blocks.push({
-      time:"Evening · 5–7pm", window:"with MT2 loading/maint window", color:"#7355a8",
-      rows:[
-        {who:"cass", name:"MT2", dose:"5t · 0.25mg", note:"Sat maintenance · Cass only · from May 16"},
-      ]
-    });
-    blocks.push({
-      time:"No other doses", window:"rest day", color:"#8a9e8c",
-      rows:[
-        {who:"both", name:"—", dose:"", note:"Saturday is a rest day for all other peptides"},
-      ]
-    });
+    blocks.push({time:"First Thing · Alone", window:"before anything", color:"#c27c3a", rows:[
+      {who:"cass", name:"Levothyroxine", dose:"1 dose · alone", note:"💊 Water only · wait 30-60min"},
+    ]});
+    blocks.push({time:"After Levo Window", window:"30-60min after Levo", color:"#c27c3a", rows:[
+      {who:"cass", name:"Allegra", dose:"1 dose", note:"💊 Water only · no juice"},
+      {who:"cass", name:"Adrenal Recovery · NAC · MSM · Omega-3", dose:"fasted", note:"Fasted supplements"},
+    ]});
+    blocks.push({time:"With First Meal", window:"breakfast", color:"#5a9e7c", rows:[
+      {who:"cass", name:"Thiamine · Active B-Complex · Enzymes", dose:"with food", note:"💊 Daily meds + supplements"},
+    ]});
+    blocks.push({time:"~4hrs After Levo · Noonish", window:"H2 blocker", color:"#c27c3a", rows:[
+      {who:"cass", name:"Pepcid AC", dose:"1 dose", note:"💊 4hrs after Levo · H2 blocker"},
+    ]});
+    blocks.push({time:"Evening · 5–7pm", window:"Cass only", color:"#7355a8", rows:[
+      {who:"cass", name:"MT2", dose:"5t · 0.25mg", note:"Sat maintenance · from Jun 14"},
+    ]});
+    blocks.push({time:"Before Bed", window:"fixed nightly", color:"#5b8fc7", rows:[
+      {who:"cass", name:"Naltrexone 50mg + Magnesium glycinate", dose:"fixed", note:"💊 Together every night"},
+      {who:"cass", name:"L-theanine · Dream Bites or SuperCalm", dose:"choose", note:"Sleep + nervous system"},
+    ]});
     return blocks;
   }
 
   // Mon–Fri — always show full schedule with date notes for cycling items
-  const showMT2Load = isWeekday; // show on all weekdays with note
+  const showMT2Load = isWeekday;
 
   const earlyAMRows = [
-    {who:"cass", name:"Adrenal Recovery · NAC · MSM · Omega-3", dose:"fasted", note:"Upon waking · before food"},
+    {who:"cass", name:"Levothyroxine", dose:"1 dose · alone", note:"💊 FIRST · water only · wait 30-60min before anything"},
+    {who:"cass", name:"Allegra", dose:"1 dose", note:"💊 After Levo window · water only · no juice · H1 blocker"},
+    {who:"cass", name:"Adrenal Recovery · NAC · MSM · Omega-3", dose:"fasted", note:"After Levo window clears"},
     {who:"both", name:"Semax", dose:"1 spray/nostril", note:"Peptide · nasal · both"},
   ];
   if (altSS31) earlyAMRows.push({who:"both", name:"SS-31", dose:"30t · 1.0mg", note:"Mon · Wed · Fri"});
   if (altNAD)  earlyAMRows.push({who:"both", name:"NAD+",  dose:"50t · 50mg",  note:"Tue · Thu"});
-  // Always show cycling items with date window note
   earlyAMRows.push({who:"both", name:"Pinealon", dose:"10t · 0.20mg", note:"May 28–Jun 6 cycle only"});
   earlyAMRows.push({who:"both", name:"MOTS-c",   dose:"10t · 0.5mg",  note:"Daily from May 28"});
-  blocks.push({time:"Early AM · 8–10am", window:"fasted supps first · then peptides", color:"#3d7a5c", rows:earlyAMRows});
+  blocks.push({time:"Early AM · 8–10am", window:"Levo first · then fasted supps · then peptides", color:"#3d7a5c", rows:earlyAMRows});
 
-  blocks.push({time:"With First Meal", window:"breakfast or first food", color:"#5a9e7c", rows:[
+  const mealRows = [
     {who:"cass", name:"Digestive enzymes · L-Glutamine · Zinc · Creatine", dose:"with food", note:"Supplement stack"},
+    {who:"cass", name:"Thiamine", dose:"1 dose", note:"💊 With first meal"},
+    {who:"cass", name:"Active B-Complex", dose:"1 dose", note:"💊 With first meal"},
+  ];
+  if (isTue) mealRows.push({who:"cass", name:"Vitamin D3", dose:"1 dose", note:"💊 Weekly · Tuesdays only · May 13–Jul 28"});
+  blocks.push({time:"With First Meal", window:"breakfast or first food", color:"#5a9e7c", rows:mealRows});
+
+  blocks.push({time:"~4hrs After Levo · Noonish", window:"H2 blocker · before lunch", color:"#c27c3a", rows:[
+    {who:"cass", name:"Pepcid AC", dose:"1 dose", note:"💊 4hrs after Levo · before meal · H2 blocker for MCAS"},
   ]});
 
-  // Biocidin — always show on weekday schedule, note the off days
   blocks.push({time:"Midday / ~2pm · Detox", window:"Mon–Fri only · skip Sat+Sun", color:"#c0524a", rows:[
     {who:"cass", name:"Biocidin", dose:"as directed", note:"5 on / 2 off · Sat+Sun off"},
     {who:"cass", name:"NAC 2nd dose (optional)", dose:"as needed", note:"Pairs ok with Biocidin"},
@@ -834,8 +928,9 @@ function getSchedule(dayLabel) {
   ];
   blocks.push({time:"Night · 8–10pm", window:"before bed", color:"#3a6fa0", rows:nightRows});
 
-  blocks.push({time:"Before Bed", window:"choose based on how you feel", color:"#5b8fc7", rows:[
-    {who:"cass", name:"Naltrexone 50mg + Magnesium glycinate", dose:"fixed nightly", note:"Together every night"},
+  blocks.push({time:"Before Bed", window:"fixed + choose based on symptoms", color:"#5b8fc7", rows:[
+    {who:"cass", name:"Naltrexone 50mg", dose:"fixed nightly", note:"💊 Together with Mag glycinate every night"},
+    {who:"cass", name:"Magnesium glycinate", dose:"fixed nightly", note:"💊 Together with Naltrexone every night"},
     {who:"cass", name:"L-theanine · Dream Bites or SuperCalm", dose:"choose", note:"Sleep + nervous system"},
     {who:"cass", name:"GABA · Thorne Phytogen", dose:"optional", note:"High stress only"},
   ]});
@@ -847,6 +942,7 @@ const blockHeaderColors = {
   "#3d7a5c":"rgba(90,158,124,.08)",
   "#5a9e7c":"rgba(90,158,124,.06)",
   "#9a5e22":"rgba(194,124,58,.07)",
+  "#c27c3a":"rgba(194,124,58,.09)",
   "#8b4d8b":"rgba(180,120,180,.08)",
   "#3a6fa0":"rgba(91,143,199,.08)",
   "#7355a8":"rgba(155,127,199,.08)",
