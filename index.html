@@ -20,8 +20,9 @@
   .hdr-top h1{font-size:18px;font-weight:800;color:var(--accent);}
   .hdr-meta{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
   .today-pill{margin-left:auto;background:rgba(90,158,124,.12);border:1px solid var(--accent);color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;padding:4px 12px;border-radius:100px;}
-  .tabs{display:flex;gap:2px;}
-  .tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:8px 16px 10px;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.8px;}
+  .tabs{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;padding:8px 11px 10px;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;flex-shrink:0;}
   .tab:hover{color:var(--text);}
   .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
 
@@ -173,13 +174,24 @@
   .supp-tag.optional{background:rgba(138,158,140,.12);color:#556070;}
   .supp-tag.warn{background:rgba(194,124,58,.12);color:#9a5e22;}
   .conflict-banner{background:rgba(192,82,74,.07);border:1px solid rgba(192,82,74,.25);border-left:3px solid var(--danger);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:'DM Mono',monospace;font-size:12px;color:#a03d37;}
+  @media(max-width:768px){
     .dual{grid-template-columns:1fr;}
     .prep-grid{grid-template-columns:1fr 1fr;}
     .price-grid{grid-template-columns:1fr 1fr;}
-    .main{padding:14px;}
-    .hdr{padding:12px 14px 0;}
+    .main{padding:12px 14px;}
+    .hdr{padding:10px 14px 0;}
     .prog-bars{grid-template-columns:1fr;}
+    .drow{grid-template-columns:24px 1fr auto;}
+    .dtick{display:none;}
+    .pt-head{grid-template-columns:130px 1fr 60px;}
+    .ptrow{grid-template-columns:130px 1fr 60px;}
+    .ptrow>div:nth-child(3){display:none;}
+    .sched-row{grid-template-columns:40px 1fr 80px;}
+    .sched-note{display:none;}
+    .hdr-top h1{font-size:15px;}
+    .hdr-meta{display:none;}
   }
+}
 </style>
 </head>
 <body>
@@ -255,6 +267,13 @@
   </div>
 
   <div id="tab-tracker" class="vp">
+    <div id="restoreBtn" style="display:none;background:rgba(90,158,124,.1);border:1px solid var(--accent);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--accent)">Restore Previous Tracking History</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:3px;">Loads May 4–20 logged doses from your screenshots · one time only</div>
+      </div>
+      <button onclick="restoreHistory()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Restore Now</button>
+    </div>
     <div class="slabel" style="margin-bottom:14px">7-Day Completion</div>
     <div class="graph-wrap">
       <div class="graph-title">Cassidy <span style="color:var(--blue);margin-left:12px">● Mike</span> <span style="color:var(--accent);margin-left:4px">● Cass</span></div>
@@ -632,7 +651,7 @@ function updateGraph() {
   }).join('');
 }
 
-function initTracker() { updateGraph(); }
+function initTracker() { updateGraph(); checkRestoreBtn(); }
 
 // ─── PROTOCOL TABLE ───────────────────────────────────────────────────────────
 const PROTO = [
@@ -1098,10 +1117,65 @@ function sw(tab, btn) {
   btn.classList.add('active');
   if (tab === 'tracker') initTracker();
   if (tab === 'week') initWeek();
+  if (tab === 'schedule') initSchedule();
   if (tab === 'supps') initSupps();
 }
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
+// ─── HISTORY RESTORE ─────────────────────────────────────────────────────────
+const HISTORY_KEY = 'pp_history_restored_v1';
+
+function restoreHistory() {
+  const s = getStore();
+
+  // Exact entries from tracker screenshots — only what was logged
+  const entries = [
+    // Wed May 20
+    ['Wed May 20 2026', 'm', 'DSIP'],
+    ['Wed May 20 2026', 'c', 'DSIP'],
+    // Mon May 11
+    ['Mon May 11 2026', 'm', 'SS-31'],
+    ['Mon May 11 2026', 'c', 'SS-31'],
+    // Sun May 10
+    ['Sun May 10 2026', 'm', 'Retatrutide'],
+    ['Sun May 10 2026', 'c', 'Retatrutide'],
+    // Fri May 8
+    ['Fri May 08 2026', 'c', 'MT2 🔶 LOADING'],
+    ['Fri May 08 2026', 'm', 'DSIP'],
+    ['Fri May 08 2026', 'c', 'DSIP'],
+    ['Fri May 08 2026', 'm', 'SS-31'],
+    ['Fri May 08 2026', 'c', 'SS-31'],
+    // Wed May 6
+    ['Wed May 06 2026', 'c', 'Semax'],
+    ['Wed May 06 2026', 'c', 'Selank'],
+    ['Wed May 06 2026', 'm', 'SS-31'],
+    ['Wed May 06 2026', 'c', 'SS-31'],
+    // Mon May 4
+    ['Mon May 04 2026', 'c', 'MT2 🔶 LOADING'],
+    ['Mon May 04 2026', 'c', 'Glow70'],
+    ['Mon May 04 2026', 'c', 'Selank'],
+    ['Mon May 04 2026', 'm', 'SS-31'],
+    ['Mon May 04 2026', 'c', 'SS-31'],
+  ];
+
+  entries.forEach(([dateStr, person, name]) => {
+    const k = `${dateStr}|${person}|${name}`;
+    if (!s[k]) s[k] = new Date(dateStr).getTime();
+  });
+
+  saveStore(s);
+  localStorage.setItem(HISTORY_KEY, '1');
+  document.getElementById('restoreBtn').style.display = 'none';
+  updateGraph();
+  alert('✅ History restored — ' + entries.length + ' doses loaded into tracker.');
+}
+
+function checkRestoreBtn() {
+  const btn = document.getElementById('restoreBtn');
+  if (!btn) return;
+  btn.style.display = localStorage.getItem(HISTORY_KEY) ? 'none' : 'block';
+}
+
 initToday();
 initProtocol();
 initSunday();
