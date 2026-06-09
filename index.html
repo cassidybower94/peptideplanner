@@ -333,32 +333,33 @@
 const TODAY = new Date();
 const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-// Key protocol dates — restarted May 28 after 2-week break
-const MT2_LOAD_START  = new Date(2026,4,28);  // May 28 — fresh restart dose 1
-const MT2_LOAD_END    = new Date(2026,5,7);   // Jun 7 — dose 6 complete
-const MT2_MAINT_START = new Date(2026,5,14);  // Jun 14 (Sat) — maintenance begins
-const PIN_START       = new Date(2026,4,28);  // May 28 — standalone 10-day cycle
-const PIN_END         = new Date(2026,5,6);   // Jun 6 — cycle ends
-const MOTS_START      = new Date(2026,4,28);  // May 28 — restarting
+// Key protocol dates — restarted Jun 9 2026
+const MT2_LOAD_START  = new Date(2026,5,9);   // Jun 9 — restart dose 1
+const MT2_LOAD_END    = new Date(2026,5,19);  // Jun 19 — dose 6 complete
+const MT2_MAINT_START = new Date(2026,5,27);  // Jun 27 (Sat) — maintenance begins
+const PIN_START       = new Date(2026,5,9);   // Jun 9 — 10-day cycle
+const PIN_END         = new Date(2026,5,18);  // Jun 18 — cycle ends
+const MOTS_START      = new Date(2026,5,9);   // Jun 9 — twice weekly Mon+Thu
 // NOTE: Regular weekday doses (KPV, CJC, DSIP, Semax, SS-31, NAD+, Selank, Glow70)
 // are always active — only MT2/Pinealon/MOTS-c are gated by the dates above
+// MOTS-c: Mon + Thu only (twice weekly)
+const MOTS_DAYS = [1, 4]; // 1=Mon, 4=Thu
 
-// MT2 loading days: EOD May 28, 30, Jun 1, 3, 5, 7
+// MT2 loading days: EOD Jun 9, 11, 13, 15, 17, 19
 const MT2_LOAD_DAYS = [
-  new Date(2026,4,28).toDateString(),
-  new Date(2026,4,30).toDateString(),
-  new Date(2026,5,1).toDateString(),
-  new Date(2026,5,3).toDateString(),
-  new Date(2026,5,5).toDateString(),
-  new Date(2026,5,7).toDateString(),
+  new Date(2026,5,9).toDateString(),
+  new Date(2026,5,11).toDateString(),
+  new Date(2026,5,13).toDateString(),
+  new Date(2026,5,15).toDateString(),
+  new Date(2026,5,17).toDateString(),
+  new Date(2026,5,19).toDateString(),
 ];
 
-// Reta titration — holding at 1.0mg through June after 2-week break
-// Jun 7 = check-in date with prescriber before escalating to 1.5mg
+// Reta titration — holding at 1.0mg through June, Jul 1 check-in
 function getRetaDose(date) {
-  if (date < new Date(2026,4,28)) return {t:"15t", mg:"0.5mg"};
-  if (date < new Date(2026,6,1))  return {t:"30t", mg:"1.0mg"}; // hold through June
-  return {t:"45t", mg:"1.5mg"}; // escalate Jul 1+ pending Jun 7 check-in
+  if (date < new Date(2026,5,9))  return {t:"15t", mg:"0.5mg"};
+  if (date < new Date(2026,6,1))  return {t:"30t", mg:"1.0mg"};
+  return {t:"45t", mg:"1.5mg"};
 }
 
 // ─── DOSE DEFINITIONS ─────────────────────────────────────────────────────────
@@ -399,8 +400,8 @@ function getSunDoses(date) {
 function getDoses(date) {
   const dow  = date.getDay();
   const ds   = date.toDateString();
-  const inPin  = date >= PIN_START  && date <= PIN_END;
-  const inMots = date >= MOTS_START;
+  const inPin   = date >= PIN_START && date <= PIN_END;
+  const inMots  = date >= MOTS_START && MOTS_DAYS.includes(dow);
   const isMT2Load  = MT2_LOAD_DAYS.includes(ds);
   const isMT2Maint = date >= MT2_MAINT_START && dow === 6;
   const res = {c:[],m:[]};
@@ -421,7 +422,7 @@ function getDoses(date) {
     sun.c.forEach(d => res.c.push({...d}));
     sun.m.forEach(d => res.m.push({...d}));
     if (isMT2Load)
-      res.c.push({name:"MT2 🔶 LOADING",t:"10t",mg:"0.50mg",time:"load",note:"EOD · Cass · thru Jun 7"});
+      res.c.push({name:"MT2 🔶 LOADING",t:"10t",mg:"0.50mg",time:"load",note:"EOD · Cass · thru Jun 19"});
     if (inPin) {
       res.c.push({name:"Pinealon",t:"6t",mg:"0.20mg",time:"early"});
       res.m.push({name:"Pinealon",t:"6t",mg:"0.20mg",time:"early"});
@@ -438,7 +439,7 @@ function getDoses(date) {
     res.m.push({name:d.name,t:d.m.t,mg:d.m.mg,time:d.time});
   });
   if (isMT2Load)
-    res.c.push({name:"MT2 🔶 LOADING",t:"10t",mg:"0.50mg",time:"load",note:"EOD · Cass · thru Jun 7"});
+    res.c.push({name:"MT2 🔶 LOADING",t:"10t",mg:"0.50mg",time:"load",note:"EOD · Cass · thru Jun 19"});
   if (inPin) {
     res.c.push({name:"Pinealon",t:"6t",mg:"0.20mg",time:"early"});
     res.m.push({name:"Pinealon",t:"6t",mg:"0.20mg",time:"early"});
@@ -599,7 +600,7 @@ function initToday() {
   // Banners — dynamic based on current date
   const banners = [];
   const ds = TODAY.toDateString();
-  if (TODAY < new Date(2026,4,28)) {
+  if (TODAY < new Date(2026,5,9)) {
     banners.push(`<div class="banner warn">⏳ Protocol restarts Jun 9 — MT2 loading, Pinealon cycle, MOTS-c all begin</div>`);
   }
   if (MT2_LOAD_DAYS.includes(ds)) {
