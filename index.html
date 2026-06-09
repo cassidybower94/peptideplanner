@@ -600,17 +600,17 @@ function initToday() {
   const banners = [];
   const ds = TODAY.toDateString();
   if (TODAY < new Date(2026,4,28)) {
-    banners.push(`<div class="banner warn">⏳ Protocol restarts Jun 1 — MT2 loading, Pinealon cycle, MOTS-c all begin today</div>`);
+    banners.push(`<div class="banner warn">⏳ Protocol restarts Jun 9 — MT2 loading, Pinealon cycle, MOTS-c all begin</div>`);
   }
   if (MT2_LOAD_DAYS.includes(ds)) {
     const n = MT2_LOAD_DAYS.indexOf(ds) + 1;
-    banners.push(`<div class="banner load">🔶 MT2 Loading — Dose ${n} of 6 tonight · 10t · 0.50mg · Evening · Cass only · Completes Jun 11</div>`);
+    banners.push(`<div class="banner load">🔶 MT2 Loading — Dose ${n} of 6 tonight · 10t · 0.50mg · Evening · Cass only · Completes Jun 19</div>`);
   }
   if (TODAY >= MT2_MAINT_START && TODAY.getDay() === 6) {
     banners.push(`<div class="banner load">💉 MT2 Maintenance · 5t · 0.25mg · Cass only</div>`);
   }
   if (TODAY >= PIN_START && TODAY <= PIN_END) {
-    banners.push(`<div class="banner warn">🌀 Pinealon cycle active · thru Jun 10 · 6t · 0.20mg Early AM</div>`);
+    banners.push(`<div class="banner warn">🌀 Pinealon cycle active · thru Jun 18 · 6t · 0.20mg Early AM</div>`);
   }
   const jun7 = new Date(2026,5,7), jun14 = new Date(2026,5,14);
   if (TODAY >= jun7 && TODAY < jun14) {
@@ -887,8 +887,8 @@ function getSchedule(dayLabel) {
   ];
   if (altSS31) earlyAMRows.push({who:"both", name:"SS-31", dose:"30t · 1.0mg", note:"Mon/Wed/Fri"});
   if (altNAD)  earlyAMRows.push({who:"both", name:"NAD+",  dose:"50t · 50mg",  note:"Tue · Thu"});
-  earlyAMRows.push({who:"both", name:"Pinealon", dose:"6t · 0.20mg", note:"Jun 1-Jun 10"});
-  earlyAMRows.push({who:"both", name:"MOTS-c",   dose:"10t · 0.5mg",  note:"Mon+Thu from Jun 1"});
+  earlyAMRows.push({who:"both", name:"Pinealon", dose:"6t · 0.20mg", note:"Jun 9-Jun 18"});
+  earlyAMRows.push({who:"both", name:"MOTS-c",   dose:"10t · 0.5mg",  note:"Mon+Thu from Jun 9"});
   blocks.push({time:"Early AM · 8–10am", window:"Levo first · then fasted supps · then peptides", color:"#3d7a5c", rows:earlyAMRows});
 
   const mealRows = [
@@ -924,7 +924,7 @@ function getSchedule(dayLabel) {
     {who:"cass", name:"CJC/Ipam", dose:"6t · 0.20mg",  note:"Cass"},
     {who:"mike", name:"CJC/Ipam", dose:"15t · 0.50mg", note:"Mike"},
     {who:"both", name:"DSIP",     dose:"6t · 0.3mg",   note:"Both every night"},
-    {who:"cass", name:"MT2 🔶 LOADING", dose:"10t · 0.50mg", note:"EOD thru Jun 11"},
+    {who:"cass", name:"MT2 🔶 LOADING", dose:"10t · 0.50mg", note:"EOD thru Jun 19"},
   ];
   blocks.push({time:"Night · 8–10pm", window:"before bed", color:"#3a6fa0", rows:nightRows});
 
