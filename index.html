@@ -711,8 +711,11 @@ function updateGraph() {
     const [dateStr, person, name] = k.split('|');
     const t = new Date(ts);
     const timeStr = t.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    const label = person==='c' ? 'CASS' : person==='med' ? '💊 CASS' : 'MIKE';
+    const bg    = person==='c' ? 'rgba(90,158,124,.12)' : person==='med' ? 'rgba(212,168,71,.15)' : 'rgba(91,143,199,.12)';
+    const color = person==='c' ? 'var(--accent)' : person==='med' ? '#a07c28' : 'var(--blue)';
     return `<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);">
-      <span style="font-size:10px;background:${person==='c'?'rgba(0,212,170,.12)':'rgba(77,166,255,.12)'};color:${person==='c'?'var(--accent)':'var(--blue)'};padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-weight:700;">${person==='c'?'CASS':'MIKE'}</span>
+      <span style="font-size:10px;background:${bg};color:${color};padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-weight:700;">${label}</span>
       <span style="font-size:13px;font-weight:700;flex:1">${name}</span>
       <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${dateStr} · ${timeStr}</span>
     </div>`;
