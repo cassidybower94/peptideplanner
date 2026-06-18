@@ -209,6 +209,7 @@
     <button class="tab" onclick="sw('sunday',this)">Sunday Prep</button>
     <button class="tab" onclick="sw('supps',this)">Supplements</button>
     <button class="tab" onclick="sw('pricing',this)">Reorder</button>
+    <button class="tab" onclick="sw('settings',this)">⚙️ Settings</button>
   </div>
 </div>
 
@@ -307,6 +308,65 @@
   </div>
 
   <!-- PRICING -->
+  <div id="tab-settings" class="vp">
+    <div class="slabel" style="margin-bottom:16px">⚙️ Protocol Settings</div>
+    <div class="supp-block" style="margin-bottom:14px;">
+      <div class="supp-block-head" style="background:rgba(90,158,124,.08);">
+        <span class="supp-block-title" style="color:var(--accent)">Current Protocol Dates</span>
+      </div>
+      <div style="padding:14px 16px;" id="currentConfig"></div>
+    </div>
+    <div class="supp-block" style="margin-bottom:14px;">
+      <div class="supp-block-head" style="background:rgba(212,168,71,.08);">
+        <span class="supp-block-title" style="color:#a07c28">🔄 Reconfigure Protocol</span>
+        <span class="supp-block-sub">· select compounds + new start date</span>
+      </div>
+      <div style="padding:16px;">
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">New Start Date</label>
+          <input type="date" id="newStartDate" style="font-family:'DM Mono',monospace;font-size:14px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--s2);color:var(--text);width:100%;max-width:240px;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Reset which compounds?</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;"><input type="checkbox" id="reset_mt2" checked> MT2 Loading</label>
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;"><input type="checkbox" id="reset_pin" checked> Pinealon</label>
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;"><input type="checkbox" id="reset_mots" checked> MOTS-c</label>
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;"><input type="checkbox" id="reset_reta"> Retatrutide</label>
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">MOTS-c Days</label>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;"><input type="checkbox" id="mots_mon" value="1"> Mon</label>
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;"><input type="checkbox" id="mots_tue" value="2" checked> Tue</label>
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;"><input type="checkbox" id="mots_wed" value="3"> Wed</label>
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;"><input type="checkbox" id="mots_thu" value="4" checked> Thu</label>
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;"><input type="checkbox" id="mots_fri" value="5"> Fri</label>
+          </div>
+        </div>
+        <button onclick="applyProtocolReset()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-right:8px;margin-bottom:8px;">Apply & Reload</button>
+        <button onclick="resetToDefaults()" style="background:var(--s2);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Reset to Jun 18 Default</button>
+      </div>
+    </div>
+    <div class="supp-block" style="margin-bottom:14px;">
+      <div class="supp-block-head" style="background:rgba(91,143,199,.06);">
+        <span class="supp-block-title" style="color:var(--blue)">💉 Retatrutide Titration Status</span>
+      </div>
+      <div style="padding:14px 16px;" id="retaStatus"></div>
+    </div>
+    <div class="supp-block">
+      <div class="supp-block-head" style="background:rgba(192,82,74,.06);">
+        <span class="supp-block-title" style="color:var(--danger)">⚠️ Clear Tracking Data</span>
+        <span class="supp-block-sub">· cannot be undone</span>
+      </div>
+      <div style="padding:16px;">
+        <p style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:12px;">Clears all checked doses and supplement logs. Protocol config preserved.</p>
+        <button onclick="clearTracking()" style="background:var(--danger);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Clear All Tracking</button>
+      </div>
+    </div>
+  </div>
+
   <div id="tab-pricing" class="vp">
     <div class="slabel" style="margin-bottom:14px">Reorder Reference · ANLV Pricing</div>
     <div class="price-grid" id="priceGrid"></div>
@@ -333,34 +393,142 @@
 const TODAY = new Date();
 const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-// Key protocol dates — restarted Jun 9 2026
-const MT2_LOAD_START  = new Date(2026,5,9);   // Jun 9 — restart dose 1
-const MT2_LOAD_END    = new Date(2026,5,19);  // Jun 19 — dose 6 complete
-const MT2_MAINT_START = new Date(2026,5,27);  // Jun 27 (Sat) — maintenance begins
-const PIN_START       = new Date(2026,5,9);   // Jun 9 — 10-day cycle
-const PIN_END         = new Date(2026,5,18);  // Jun 18 — cycle ends
-const MOTS_START      = new Date(2026,5,9);   // Jun 9 — twice weekly Tue+Thu
-// NOTE: Regular weekday doses (KPV, CJC, DSIP, Semax, SS-31, NAD+, Selank, Glow70)
-// are always active — only MT2/Pinealon/MOTS-c are gated by the dates above
-// MOTS-c: Tue + Thu only (twice weekly)
-const MOTS_DAYS = [2, 4]; // 2=Tue, 4=Thu
-
-// MT2 loading days: EOD Jun 9, 11, 13, 15, 17, 19
-const MT2_LOAD_DAYS = [
-  new Date(2026,5,9).toDateString(),
-  new Date(2026,5,11).toDateString(),
-  new Date(2026,5,13).toDateString(),
-  new Date(2026,5,15).toDateString(),
-  new Date(2026,5,17).toDateString(),
-  new Date(2026,5,19).toDateString(),
-];
-
-// Reta titration — holding at 1.0mg through June, Jul 1 check-in
-function getRetaDose(date) {
-  if (date < new Date(2026,5,9))  return {t:"15t", mg:"0.5mg"};
-  if (date < new Date(2026,6,1))  return {t:"30t", mg:"1.0mg"};
-  return {t:"45t", mg:"1.5mg"};
+// ── PROTOCOL CONFIG — editable via Settings tab ──────────────────────────
+// These are set by the app's reset/reconfigure button and stored in localStorage
+// Default values reflect Jun 18 2026 restart
+function getProtocolConfig() {
+  try {
+    const saved = localStorage.getItem('pp_protocol_config');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return {
+    startDate: '2026-06-18',
+    mt2LoadDays: ['2026-06-18','2026-06-20','2026-06-22','2026-06-24','2026-06-26','2026-06-28'],
+    pinDays: 10,
+    motsWeekdays: [2, 4],
+  };
 }
+function saveProtocolConfig(cfg) {
+  try { localStorage.setItem('pp_protocol_config', JSON.stringify(cfg)); } catch(e) {}
+}
+
+// ─── MISSED DOSE AWARE COMPUTATIONS ──────────────────────────────────────────
+
+// Count how many Pinealon doses have actually been taken (not missed)
+function getPinealonActualDoses() {
+  const s = getStore(), ms = getMissedStore();
+  const start = new Date(CFG ? CFG.startDate : '2026-06-18');
+  let taken = 0;
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    if (d > TODAY) break;
+    const ds = d.toDateString();
+    const takenKey = `${ds}|c|Pinealon`;
+    const missedKey_c = `${ds}|Pinealon`;
+    if (s[takenKey] && !ms[missedKey_c]) taken++;
+  }
+  return taken;
+}
+
+// Compute effective PIN_END based on actual doses taken
+function getEffectivePinEnd(cfg) {
+  const start = new Date(cfg.startDate);
+  const ms = getMissedStore();
+  const s  = getStore();
+  let taken = 0, d = new Date(start);
+  // Walk forward until we hit 10 actual (non-missed) doses
+  for (let i = 0; i < 60; i++) {
+    const ds = d.toDateString();
+    const wasMissed = ms[`${ds}|Pinealon`];
+    const wasTaken  = s[`${ds}|c|Pinealon`];
+    if (!wasMissed) taken++; // scheduled day counts unless explicitly missed
+    if (taken >= cfg.pinDays) return d;
+    d.setDate(d.getDate() + 1);
+  }
+  // Fallback: start + pinDays
+  const fallback = new Date(start);
+  fallback.setDate(start.getDate() + cfg.pinDays - 1);
+  return fallback;
+}
+
+// Compute effective MT2 load days — skip missed ones, extend until 6 actual doses
+function getEffectiveMT2LoadDays(cfg) {
+  const ms = getMissedStore();
+  const scheduled = cfg.mt2LoadDays.map(d => new Date(d));
+  // Any scheduled day that wasn't missed counts; extend for missed ones
+  let actual = [], extra = new Date(scheduled[scheduled.length - 1]);
+  scheduled.forEach(d => {
+    const mk = `${d.toDateString()}|MT2 🔶 LOADING`;
+    if (!ms[mk]) actual.push(d);
+  });
+  // If any were missed, add extra EOD days after the last scheduled
+  while (actual.length < 6) {
+    extra.setDate(extra.getDate() + 2);
+    const mk = `${extra.toDateString()}|MT2 🔶 LOADING`;
+    if (!ms[mk]) actual.push(new Date(extra));
+  }
+  return actual.slice(0, 6);
+}
+
+// Reta — count missed Sundays since escalation threshold, push escalation date
+function getEffectiveRetaDose(date) {
+  const ms = getMissedStore();
+  // Base escalation dates
+  const esc1 = new Date(2026,6,1); // Jul 1 — 1.5mg threshold
+  // Count missed Reta Sundays since Jun 18
+  let missedCount = 0;
+  const start = new Date(2026,5,18);
+  let d = new Date(start);
+  while (d <= date) {
+    if (d.getDay() === 0) {
+      const mk = `${d.toDateString()}|Retatrutide`;
+      if (ms[mk]) missedCount++;
+    }
+    d.setDate(d.getDate() + 7);
+  }
+  // Push escalation date by 1 week per missed dose
+  const adjustedEsc1 = new Date(esc1);
+  adjustedEsc1.setDate(esc1.getDate() + missedCount * 7);
+
+  if (date < new Date(2026,5,18)) return {t:"15t", mg:"0.5mg", hold:false};
+  if (date < adjustedEsc1)        return {t:"30t", mg:"1.0mg", hold: missedCount > 0 && date >= esc1};
+  return {t:"45t", mg:"1.5mg", hold:false};
+}
+
+// Compute live dates from config — miss-aware
+function buildDates(cfg) {
+  const start   = new Date(cfg.startDate);
+  const pin_end = getEffectivePinEnd(cfg);
+  const mt2Days = getEffectiveMT2LoadDays(cfg);
+  const lastMT2 = mt2Days[mt2Days.length - 1];
+  const maint   = new Date(lastMT2);
+  maint.setDate(lastMT2.getDate() + 7);
+  while (maint.getDay() !== 6) maint.setDate(maint.getDate() + 1);
+  return {
+    MT2_LOAD_START:  start,
+    MT2_LOAD_END:    lastMT2,
+    MT2_MAINT_START: maint,
+    PIN_START:       start,
+    PIN_END:         pin_end,
+    MOTS_START:      start,
+    MOTS_DAYS:       cfg.motsWeekdays,
+    MT2_LOAD_DAYS:   mt2Days.map(d => d.toDateString()),
+  };
+}
+
+const CFG   = getProtocolConfig();
+const DATES = buildDates(CFG);
+const MT2_LOAD_START  = DATES.MT2_LOAD_START;
+const MT2_LOAD_END    = DATES.MT2_LOAD_END;
+const MT2_MAINT_START = DATES.MT2_MAINT_START;
+const PIN_START       = DATES.PIN_START;
+const PIN_END         = DATES.PIN_END;
+const MOTS_START      = DATES.MOTS_START;
+const MOTS_DAYS       = DATES.MOTS_DAYS;
+const MT2_LOAD_DAYS   = DATES.MT2_LOAD_DAYS;
+
+function getRetaDose(date) { return getEffectiveRetaDose(date); }
 
 // ─── DOSE DEFINITIONS ─────────────────────────────────────────────────────────
 const WEEKDAY = [
@@ -477,22 +645,56 @@ const TL = {early:"Early AM · 8–10am",mid:"Mid AM",evepm:"Early PM · 5–7pm
 const TC = {early:"t-early",mid:"t-mid",evepm:"t-evepm",eve:"t-eve",night:"t-night",sun:"t-sun",load:"t-load"};
 
 function doseRow(d, date, person, interactive) {
-  const done = interactive ? isDone(date, person, d.name) : false;
-  const tick = d.mg
+  const done   = interactive ? isDone(date, person, d.name) : false;
+  const missed = interactive ? isMissed(date, d.name) : false;
+  const tick   = d.mg
     ? `<span class="tk">${d.t}</span> <span class="mg">· ${d.mg}</span>`
     : `<span class="tk">${d.t}</span>`;
-  const note = d.note ? ` · ${d.note}` : '';
+  const note   = d.note ? ` · ${d.note}` : '';
   const onclick = interactive
     ? `onclick="tap(this,'${date.toDateString()}','${person}','${d.name.replace(/'/g,"\\'")}')"`
     : '';
-  return `<div class="drow ${done?'done':''}" ${onclick}>
+  const TITRATING = ['Retatrutide','MT2 🔶 LOADING','MT2','Pinealon','MOTS-c'];
+  const missedBtn = (interactive && TITRATING.some(t => d.name.includes(t.split(' ')[0])))
+    ? `<span onclick="event.stopPropagation();tapMiss(this,'${date.toDateString()}','${d.name.replace(/'/g,"\\'")}','${person}')" style="font-size:9px;padding:2px 7px;border-radius:4px;cursor:pointer;margin-left:4px;background:${missed?'rgba(192,82,74,.15)':'rgba(138,158,140,.1)'};color:${missed?'var(--danger)':'var(--muted)'};">${missed?'⚠️ MISSED':'Miss'}</span>`
+    : '';
+  const missedStyle = missed ? 'opacity:.4;text-decoration:line-through;' : '';
+  return `<div class="drow ${done?'done':''}" style="${missedStyle}" ${onclick}>
     <div class="chk"><span class="chk-mark">✓</span></div>
     <div>
-      <div class="dname">${d.name}</div>
+      <div class="dname">${d.name}${missedBtn}</div>
       <div class="dtick">${tick}</div>
       <div class="dtime ${TC[d.time]||''}" style="display:inline-block;margin-top:4px;white-space:normal;">${TL[d.time]||d.time}${note}</div>
     </div>
   </div>`;
+}
+
+function tapMiss(el, dateStr, name, person) {
+  const date = new Date(dateStr);
+  toggleMissed(date, name);
+  const missed = isMissed(date, name);
+  el.style.background = missed ? 'rgba(192,82,74,.15)' : 'rgba(138,158,140,.1)';
+  el.style.color = missed ? 'var(--danger)' : 'var(--muted)';
+  el.textContent = missed ? '⚠️ MISSED' : 'Mark Missed';
+  el.closest('.drow').style.opacity = missed ? '.4' : '1';
+  // Refresh banners to show Reta hold warning if needed
+  refreshRetaBanner();
+}
+
+function refreshRetaBanner() {
+  if (TODAY.getDay() !== 0) return; // only relevant on Sundays
+  const banners = document.getElementById('todayBanners');
+  if (!banners) return;
+  if (retaWasMissedLastSunday()) {
+    const existing = document.getElementById('retaHoldBanner');
+    if (!existing) {
+      const div = document.createElement('div');
+      div.id = 'retaHoldBanner';
+      div.className = 'banner load';
+      div.textContent = '⚠️ Reta hold — last Sunday dose was missed. Do NOT titrate up. Stay at current dose.';
+      banners.prepend(div);
+    }
+  }
 }
 
 function personList(arr, date, person, interactive) {
@@ -601,17 +803,17 @@ function initToday() {
   const banners = [];
   const ds = TODAY.toDateString();
   if (TODAY < new Date(2026,5,9)) {
-    banners.push(`<div class="banner warn">⏳ Protocol restarts Jun 9 — MT2 loading, Pinealon cycle, MOTS-c all begin</div>`);
+    banners.push(`<div class="banner warn">⏳ Protocol restarts Jun 18 — MT2 loading, Pinealon cycle, MOTS-c all begin</div>`);
   }
   if (MT2_LOAD_DAYS.includes(ds)) {
     const n = MT2_LOAD_DAYS.indexOf(ds) + 1;
-    banners.push(`<div class="banner load">🔶 MT2 Loading — Dose ${n} of 6 tonight · 10t · 0.50mg · Evening · Cass only · Completes Jun 19</div>`);
+    banners.push(`<div class="banner load">🔶 MT2 Loading — Dose ${n} of 6 tonight · 10t · 0.50mg · Evening · Cass only · Completes Jun 28</div>`);
   }
   if (TODAY >= MT2_MAINT_START && TODAY.getDay() === 6) {
     banners.push(`<div class="banner load">💉 MT2 Maintenance · 5t · 0.25mg · Cass only</div>`);
   }
   if (TODAY >= PIN_START && TODAY <= PIN_END) {
-    banners.push(`<div class="banner warn">🌀 Pinealon cycle active · thru Jun 18 · 6t · 0.20mg Early AM</div>`);
+    banners.push(`<div class="banner warn">🌀 Pinealon cycle active · thru Jun 27 · 6t · 0.20mg Early AM</div>`);
   }
   const jun7 = new Date(2026,5,7), jun14 = new Date(2026,5,14);
   if (TODAY >= jun7 && TODAY < jun14) {
@@ -736,9 +938,9 @@ const PROTO = [
   {name:"Glutathione", sub:"Sun · 30min after Reta",                   ct:"100t",cm:"200mg",mt:"100t",mm:"200mg",who:"both"},
   {name:"SS-31",       sub:"Mon/Wed/Fri Early AM",        ct:"30t",cm:"1.0mg", mt:"30t",mm:"1.0mg", who:"both"},
   {name:"NAD+",        sub:"Tue/Thu early AM + Sun mid AM",            ct:"50t",cm:"50mg",  mt:"50t",mm:"50mg",  who:"both"},
-  {name:"MT2 LOADING", sub:"EOD eve Jun 9-19 · Sat maint Jun 27+",    ct:"10t → 5t",cm:"0.50mg → 0.25mg",mt:"—",mm:"",who:"cass"},
-  {name:"MOTS-c",      sub:"Tue + Thu · twice weekly · from Jun 9",           ct:"10t",cm:"0.5mg", mt:"10t",mm:"0.5mg", who:"both"},
-  {name:"Pinealon",    sub:"Jun 9-18 cycle · early AM · 3ml recon",               ct:"6t",cm:"0.20mg",mt:"6t",mm:"0.20mg",who:"both"},
+  {name:"MT2 LOADING", sub:"EOD eve Jun 18-28 · Sat maint Jul 4+",    ct:"10t → 5t",cm:"0.50mg → 0.25mg",mt:"—",mm:"",who:"cass"},
+  {name:"MOTS-c",      sub:"Tue + Thu · twice weekly · from Jun 18",           ct:"10t",cm:"0.5mg", mt:"10t",mm:"0.5mg", who:"both"},
+  {name:"Pinealon",    sub:"Jun 18-27 cycle · early AM · 3ml recon",               ct:"6t",cm:"0.20mg",mt:"6t",mm:"0.20mg",who:"both"},
 ];
 
 function initProtocol() {
@@ -764,7 +966,7 @@ function initSunday() {
     {type:"ok",  icon:"✅",name:"CJC w/ DAC",  note:"2/3 partial · Mike draws first · 15t · 0.50mg"},
     {type:"ok",  icon:"✅",name:"DSIP",        note:"1/3 partial · use first · 6t · 0.3mg daily"},
     {type:"ok",  icon:"✅",name:"Selank",      note:"1/2 partial · use first · 12t · 0.4mg daily"},
-    {type:"ok",  icon:"✅",name:"MT2 (Cass)",  note:"Loading EOD Jun 9-19 · maint 5t Jun 27+"},
+    {type:"ok",  icon:"✅",name:"MT2 (Cass)",  note:"Loading EOD Jun 18-28 · maint 5t Jul 4+"},
     {type:"ok",  icon:"⏳",name:"MOTS-c",      note:"Inactive until May 18 · do not recon yet"},
     {type:"ok",  icon:"⏳",name:"Pinealon",    note:"Inactive until May 18 · do not recon yet"},
   ];
@@ -891,8 +1093,8 @@ function getSchedule(dayLabel) {
   ];
   if (altSS31) earlyAMRows.push({who:"both", name:"SS-31", dose:"30t · 1.0mg", note:"Mon/Wed/Fri"});
   if (altNAD)  earlyAMRows.push({who:"both", name:"NAD+",  dose:"50t · 50mg",  note:"Tue · Thu"});
-  earlyAMRows.push({who:"both", name:"Pinealon", dose:"6t · 0.20mg", note:"Jun 9-Jun 18"});
-  earlyAMRows.push({who:"both", name:"MOTS-c",   dose:"10t · 0.5mg",  note:"Tue+Thu from Jun 9"});
+  earlyAMRows.push({who:"both", name:"Pinealon", dose:"6t · 0.20mg", note:"Jun 18-Jun 27"});
+  earlyAMRows.push({who:"both", name:"MOTS-c",   dose:"10t · 0.5mg",  note:"Tue+Thu from Jun 18"});
   blocks.push({time:"Early AM · 8–10am", window:"Levo first · then fasted supps · then peptides", color:"#3d7a5c", rows:earlyAMRows});
 
   const mealRows = [
@@ -928,7 +1130,7 @@ function getSchedule(dayLabel) {
     {who:"cass", name:"CJC/Ipam", dose:"6t · 0.20mg",  note:"Cass"},
     {who:"mike", name:"CJC/Ipam", dose:"15t · 0.50mg", note:"Mike"},
     {who:"both", name:"DSIP",     dose:"6t · 0.3mg",   note:"Both every night"},
-    {who:"cass", name:"MT2 🔶 LOADING", dose:"10t · 0.50mg", note:"EOD thru Jun 19"},
+    {who:"cass", name:"MT2 🔶 LOADING", dose:"10t · 0.50mg", note:"EOD thru Jun 28"},
   ];
   blocks.push({time:"Night · 8–10pm", window:"before bed", color:"#3a6fa0", rows:nightRows});
 
@@ -1199,6 +1401,117 @@ function initSupps() {
   setPhase(suppPhase);
 }
 
+// ─── SETTINGS TAB ────────────────────────────────────────────────────────────
+function initSettings() {
+  const cfg = getProtocolConfig();
+  const d   = buildDates(cfg);
+
+  document.getElementById('currentConfig').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-family:'DM Mono',monospace;font-size:12px;">
+      <div><span style="color:var(--muted)">Start Date</span><br><strong>${cfg.startDate}</strong></div>
+      <div><span style="color:var(--muted)">Pinealon ends</span><br><strong>${d.PIN_END.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</strong></div>
+      <div><span style="color:var(--muted)">MT2 Loading ends</span><br><strong>${d.MT2_LOAD_END.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</strong></div>
+      <div><span style="color:var(--muted)">MT2 Maintenance</span><br><strong>${d.MT2_MAINT_START.toLocaleDateString('en-US',{month:'short',day:'numeric'})}+ Saturdays</strong></div>
+      <div><span style="color:var(--muted)">MOTS-c days</span><br><strong>${cfg.motsWeekdays.map(d=>['','Mon','Tue','Wed','Thu','Fri'][d]).join(' + ')}</strong></div>
+      <div><span style="color:var(--muted)">MT2 load dates</span><br><strong>${cfg.mt2LoadDays.map(d=>new Date(d).toLocaleDateString('en-US',{month:'numeric',day:'numeric'})).join(', ')}</strong></div>
+    </div>`;
+
+  const input = document.getElementById('newStartDate');
+  if (input) input.value = cfg.startDate;
+
+  ['mon','tue','wed','thu','fri'].forEach((day,i) => {
+    const el = document.getElementById(`mots_${day}`);
+    if (el) el.checked = cfg.motsWeekdays.includes(i+1);
+  });
+
+  // Reta status
+  const retaEl = document.getElementById('retaStatus');
+  if (retaEl) {
+    const current = getEffectiveRetaDose(TODAY);
+    const missedSundays = (() => {
+      const ms = getMissedStore();
+      let count = 0;
+      const start = new Date(2026,5,18);
+      let d = new Date(start);
+      while (d <= TODAY) {
+        if (d.getDay() === 0 && ms[`${d.toDateString()}|Retatrutide`]) count++;
+        d.setDate(d.getDate() + 7);
+      }
+      return count;
+    })();
+    const adjEsc = new Date(2026,6,1);
+    adjEsc.setDate(adjEsc.getDate() + missedSundays * 7);
+    retaEl.innerHTML = `
+      <div style="font-family:'DM Mono',monospace;font-size:12px;display:grid;gap:8px;">
+        <div><span style="color:var(--muted)">Current dose</span> &nbsp;<strong style="color:var(--accent)">${current.t} · ${current.mg}</strong></div>
+        <div><span style="color:var(--muted)">Missed Sundays</span> &nbsp;<strong style="color:${missedSundays>0?'var(--danger)':'var(--green)'}">${missedSundays === 0 ? '✅ None' : '⚠️ ' + missedSundays + ' missed'}</strong></div>
+        <div><span style="color:var(--muted)">Next escalation</span> &nbsp;<strong>${adjEsc.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}${missedSundays>0?' (pushed '+missedSundays+' wk)':''}</strong></div>
+        ${current.hold ? `<div style="color:var(--danger);font-weight:700;">⚠️ HOLD — do not titrate up yet. Last Sunday was missed.</div>` : ''}
+        <div style="color:var(--muted);font-size:11px;">Tap "Miss" on Retatrutide in the Today tab on any Sunday you skip. Escalation date adjusts automatically.</div>
+      </div>`;
+  }
+}
+
+function applyProtocolReset() {
+  const startStr = document.getElementById('newStartDate').value;
+  if (!startStr) { alert('Please select a start date'); return; }
+
+  const cfg = getProtocolConfig();
+  const start = new Date(startStr);
+
+  // Per-compound reset
+  if (document.getElementById('reset_mt2').checked) {
+    const mt2Days = [];
+    let d = new Date(start);
+    for (let i = 0; i < 6; i++) {
+      mt2Days.push(d.toISOString().split('T')[0]);
+      d.setDate(d.getDate() + 2);
+    }
+    cfg.mt2LoadDays = mt2Days;
+  }
+  if (document.getElementById('reset_pin').checked || document.getElementById('reset_mots').checked) {
+    cfg.startDate = startStr;
+  }
+
+  // MOTS-c days
+  const motsWeekdays = [];
+  ['mon','tue','wed','thu','fri'].forEach((day,i) => {
+    const el = document.getElementById(`mots_${day}`);
+    if (el && el.checked) motsWeekdays.push(i+1);
+  });
+  if (motsWeekdays.length) cfg.motsWeekdays = motsWeekdays;
+
+  if (!cfg.motsWeekdays.length) { alert('Select at least one MOTS-c day'); return; }
+
+  saveProtocolConfig(cfg);
+
+  const compounds = [];
+  if (document.getElementById('reset_mt2').checked)  compounds.push('MT2 Loading');
+  if (document.getElementById('reset_pin').checked)  compounds.push('Pinealon');
+  if (document.getElementById('reset_mots').checked) compounds.push('MOTS-c');
+  if (document.getElementById('reset_reta').checked) compounds.push('Retatrutide (date ref only)');
+
+  alert(`✅ Updated: ${compounds.join(', ')}\nStart: ${startStr}\nReloading...`);
+  window.location.reload();
+}
+
+function resetToDefaults() {
+  if (!confirm('Reset to Jun 18 2026 defaults?')) return;
+  localStorage.removeItem('pp_protocol_config');
+  alert('✅ Reset to Jun 18 defaults. Reloading...');
+  window.location.reload();
+}
+
+function clearTracking() {
+  if (!confirm('Clear ALL tracked dose data? This cannot be undone.')) return;
+  localStorage.removeItem('pp_doses_v1');
+  localStorage.removeItem('pp_supps_v1');
+  localStorage.removeItem('pp_history_restored_v1');
+  localStorage.removeItem(MISSED_KEY);
+  alert('✅ Tracking cleared. Reloading...');
+  window.location.reload();
+}
+
 // ─── TAB SWITCH ───────────────────────────────────────────────────────────────
 function sw(tab, btn) {
   document.querySelectorAll('.vp').forEach(p => p.classList.remove('active'));
@@ -1208,63 +1521,126 @@ function sw(tab, btn) {
   if (tab === 'tracker') initTracker();
   if (tab === 'week') initWeek();
   if (tab === 'schedule') initSchedule();
-  if (tab === 'supps') initSupps();
+  if (tab === 'settings') initSettings();
 }
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 // ─── HISTORY RESTORE ─────────────────────────────────────────────────────────
 const HISTORY_KEY = 'pp_history_restored_v1';
+const MISSED_KEY  = 'pp_missed_v1';
+
+// ─── MISSED DOSE TRACKING ────────────────────────────────────────────────────
+function getMissedStore() { try { return JSON.parse(localStorage.getItem(MISSED_KEY))||{}; } catch(e) { return {}; } }
+function saveMissedStore(s) { try { localStorage.setItem(MISSED_KEY, JSON.stringify(s)); } catch(e) {} }
+function missedKey(date, name) { return `${date.toDateString()}|${name}`; }
+function isMissed(date, name) { return !!getMissedStore()[missedKey(date, name)]; }
+function toggleMissed(date, name) {
+  const s = getMissedStore(), k = missedKey(date, name);
+  if (s[k]) delete s[k]; else s[k] = Date.now();
+  saveMissedStore(s);
+}
+
+// Reta titration hold logic — if Reta was missed last Sunday, hold current dose
+function retaWasMissedLastSunday() {
+  const lastSun = new Date(TODAY);
+  lastSun.setDate(TODAY.getDate() - ((TODAY.getDay() + 7) % 7 || 7));
+  return isMissed(lastSun, 'Retatrutide');
+}
+
+function getRetaDoseWithHold(date) {
+  const base = getRetaDose(date);
+  // If this is a Sunday dose and last Sunday was missed, show hold warning
+  if (date.getDay() === 0 && retaWasMissedLastSunday()) {
+    return { ...base, hold: true };
+  }
+  return base;
+}
+
+// ─── HISTORY RESTORE ─────────────────────────────────────────────────────────
+const ALL_HISTORY = [
+  // Thu Jun 11 — Cass
+  ['Thu Jun 11 2026','c','MOTS-c'],
+  ['Thu Jun 11 2026','c','NAD+'],
+  ['Thu Jun 11 2026','c','Pinealon'],
+  ['Thu Jun 11 2026','c','Semax'],
+  ['Thu Jun 11 2026','med','Levothyroxine'],
+  // Wed Jun 10 — Cass
+  ['Wed Jun 10 2026','med','Allegra'],
+  ['Wed Jun 10 2026','c','Pinealon'],
+  ['Wed Jun 10 2026','c','SS-31'],
+  ['Wed Jun 10 2026','c','Semax'],
+  ['Wed Jun 10 2026','med','Levothyroxine'],
+  ['Wed Jun 10 2026','c','CJC/Ipam'],
+  ['Wed Jun 10 2026','c','DSIP'],
+  ['Wed Jun 10 2026','c','KPV'],
+  ['Wed Jun 10 2026','med','Naltrexone 50mg'],
+  // Wed Jun 10 — Mike
+  ['Wed Jun 10 2026','m','Pinealon'],
+  ['Wed Jun 10 2026','m','SS-31'],
+  ['Wed Jun 10 2026','m','CJC/Ipam'],
+  ['Wed Jun 10 2026','m','DSIP'],
+  ['Wed Jun 10 2026','m','KPV'],
+  // Tue Jun 9 — Cass
+  ['Tue Jun 09 2026','c','CJC/Ipam'],
+  ['Tue Jun 09 2026','c','KPV'],
+  ['Tue Jun 09 2026','c','DSIP'],
+  ['Tue Jun 09 2026','c','MOTS-c'],
+  ['Tue Jun 09 2026','c','Pinealon'],
+  // Tue Jun 9 — Mike
+  ['Tue Jun 09 2026','m','CJC/Ipam'],
+  ['Tue Jun 09 2026','m','KPV'],
+  ['Tue Jun 09 2026','m','DSIP'],
+  ['Tue Jun 09 2026','m','MOTS-c'],
+  ['Tue Jun 09 2026','m','Pinealon'],
+  ['Tue Jun 09 2026','m','NAD+'],
+  // Wed May 20
+  ['Wed May 20 2026','m','DSIP'],
+  ['Wed May 20 2026','c','DSIP'],
+  // Mon May 11
+  ['Mon May 11 2026','m','SS-31'],
+  ['Mon May 11 2026','c','SS-31'],
+  // Sun May 10
+  ['Sun May 10 2026','m','Retatrutide'],
+  ['Sun May 10 2026','c','Retatrutide'],
+  // Fri May 8
+  ['Fri May 08 2026','c','MT2 🔶 LOADING'],
+  ['Fri May 08 2026','m','DSIP'],
+  ['Fri May 08 2026','c','DSIP'],
+  ['Fri May 08 2026','m','SS-31'],
+  ['Fri May 08 2026','c','SS-31'],
+  // Wed May 6
+  ['Wed May 06 2026','c','Semax'],
+  ['Wed May 06 2026','c','Selank'],
+  ['Wed May 06 2026','m','SS-31'],
+  ['Wed May 06 2026','c','SS-31'],
+  // Mon May 4
+  ['Mon May 04 2026','c','MT2 🔶 LOADING'],
+  ['Mon May 04 2026','c','Glow70'],
+  ['Mon May 04 2026','c','Selank'],
+  ['Mon May 04 2026','m','SS-31'],
+  ['Mon May 04 2026','c','SS-31'],
+];
 
 function restoreHistory() {
   const s = getStore();
-
-  // Exact entries from tracker screenshots — only what was logged
-  const entries = [
-    // Wed May 20
-    ['Wed May 20 2026', 'm', 'DSIP'],
-    ['Wed May 20 2026', 'c', 'DSIP'],
-    // Mon May 11
-    ['Mon May 11 2026', 'm', 'SS-31'],
-    ['Mon May 11 2026', 'c', 'SS-31'],
-    // Sun May 10
-    ['Sun May 10 2026', 'm', 'Retatrutide'],
-    ['Sun May 10 2026', 'c', 'Retatrutide'],
-    // Fri May 8
-    ['Fri May 08 2026', 'c', 'MT2 🔶 LOADING'],
-    ['Fri May 08 2026', 'm', 'DSIP'],
-    ['Fri May 08 2026', 'c', 'DSIP'],
-    ['Fri May 08 2026', 'm', 'SS-31'],
-    ['Fri May 08 2026', 'c', 'SS-31'],
-    // Wed May 6
-    ['Wed May 06 2026', 'c', 'Semax'],
-    ['Wed May 06 2026', 'c', 'Selank'],
-    ['Wed May 06 2026', 'm', 'SS-31'],
-    ['Wed May 06 2026', 'c', 'SS-31'],
-    // Mon May 4
-    ['Mon May 04 2026', 'c', 'MT2 🔶 LOADING'],
-    ['Mon May 04 2026', 'c', 'Glow70'],
-    ['Mon May 04 2026', 'c', 'Selank'],
-    ['Mon May 04 2026', 'm', 'SS-31'],
-    ['Mon May 04 2026', 'c', 'SS-31'],
-  ];
-
-  entries.forEach(([dateStr, person, name]) => {
+  ALL_HISTORY.forEach(([dateStr, person, name]) => {
     const k = `${dateStr}|${person}|${name}`;
     if (!s[k]) s[k] = new Date(dateStr).getTime();
   });
-
   saveStore(s);
   localStorage.setItem(HISTORY_KEY, '1');
-  document.getElementById('restoreBtn').style.display = 'none';
   updateGraph();
-  alert('✅ History restored — ' + entries.length + ' doses loaded into tracker.');
+  alert('✅ History restored — ' + ALL_HISTORY.length + ' doses loaded.');
 }
 
 function checkRestoreBtn() {
   const btn = document.getElementById('restoreBtn');
   if (!btn) return;
-  btn.style.display = localStorage.getItem(HISTORY_KEY) ? 'none' : 'block';
+  // Always show restore button — not one-time anymore
+  btn.style.display = 'block';
 }
+
+function initTracker() { updateGraph(); checkRestoreBtn(); }
 
 initToday();
 initProtocol();
