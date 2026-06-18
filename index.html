@@ -1623,14 +1623,85 @@ const ALL_HISTORY = [
 
 function restoreHistory() {
   const s = getStore();
-  ALL_HISTORY.forEach(([dateStr, person, name]) => {
-    const k = `${dateStr}|${person}|${name}`;
-    if (!s[k]) s[k] = new Date(dateStr).getTime();
+
+  // Exact entries with timestamps from screenshots
+  // Format: [dateString, person, name, hour, minute]
+  const entries = [
+    // Thu Jun 11 — Cass (from screenshot: 08:02-08:06 AM)
+    ['2026-06-11','c','MOTS-c',           8,  6],
+    ['2026-06-11','c','NAD+',             8,  5],
+    ['2026-06-11','c','Pinealon',         8,  4],
+    ['2026-06-11','c','Semax',            8,  3],
+    ['2026-06-11','med','Levothyroxine',  8,  2],
+    // Wed Jun 10 — Cass (10:34-10:40 AM + 11:07-11:14 PM)
+    ['2026-06-10','med','Allegra',        10, 40],
+    ['2026-06-10','c','Pinealon',         10, 39],
+    ['2026-06-10','c','SS-31',            10, 37],
+    ['2026-06-10','c','Semax',            10, 35],
+    ['2026-06-10','med','Levothyroxine',  10, 34],
+    ['2026-06-10','c','CJC/Ipam',         23, 14],
+    ['2026-06-10','c','DSIP',             23, 13],
+    ['2026-06-10','c','KPV',              23, 11],
+    ['2026-06-10','med','Naltrexone 50mg',23,  7],
+    // Wed Jun 10 — Mike (10:41 AM + 11:14 PM)
+    ['2026-06-10','m','Pinealon',         10, 41],
+    ['2026-06-10','m','SS-31',            10, 41],
+    ['2026-06-10','m','CJC/Ipam',         23, 14],
+    ['2026-06-10','m','DSIP',             23, 14],
+    ['2026-06-10','m','KPV',              23, 14],
+    // Tue Jun 9 — Cass (09:40-09:47 PM)
+    ['2026-06-09','c','CJC/Ipam',         21, 47],
+    ['2026-06-09','c','KPV',              21, 45],
+    ['2026-06-09','c','DSIP',             21, 44],
+    ['2026-06-09','c','MOTS-c',           21, 40],
+    ['2026-06-09','c','Pinealon',         21, 40],
+    // Tue Jun 9 — Mike (09:40-09:46 PM)
+    ['2026-06-09','m','CJC/Ipam',         21, 46],
+    ['2026-06-09','m','KPV',              21, 43],
+    ['2026-06-09','m','DSIP',             21, 44],
+    ['2026-06-09','m','MOTS-c',           21, 40],
+    ['2026-06-09','m','Pinealon',         21, 40],
+    ['2026-06-09','m','NAD+',             21, 40],
+    // Wed May 20 (10:22 PM)
+    ['2026-05-20','m','DSIP',             22, 22],
+    ['2026-05-20','c','DSIP',             22, 22],
+    // Mon May 11 (10:54 AM)
+    ['2026-05-11','m','SS-31',            10, 54],
+    ['2026-05-11','c','SS-31',            10, 54],
+    // Sun May 10 (10:19 PM)
+    ['2026-05-10','m','Retatrutide',      22, 19],
+    ['2026-05-10','c','Retatrutide',      22, 19],
+    // Fri May 8 (11:21 AM + 10:53 PM)
+    ['2026-05-08','m','SS-31',            11, 21],
+    ['2026-05-08','c','SS-31',            11, 21],
+    ['2026-05-08','c','MT2 🔶 LOADING',   22, 53],
+    ['2026-05-08','m','DSIP',             22, 53],
+    ['2026-05-08','c','DSIP',             22, 53],
+    // Wed May 6 (11:05 AM + 10:52 PM)
+    ['2026-05-06','m','SS-31',            11,  5],
+    ['2026-05-06','c','SS-31',            11,  5],
+    ['2026-05-06','c','Semax',            22, 52],
+    ['2026-05-06','c','Selank',           22, 52],
+    // Mon May 4 (08:41 PM + 09:24-09:28 PM)
+    ['2026-05-04','m','SS-31',            20, 41],
+    ['2026-05-04','c','SS-31',            20, 41],
+    ['2026-05-04','c','Selank',           21, 24],
+    ['2026-05-04','c','Glow70',           21, 27],
+    ['2026-05-04','c','MT2 🔶 LOADING',   21, 28],
+  ];
+
+  entries.forEach(([isoDate, person, name, hour, min]) => {
+    const date = new Date(isoDate);
+    const ts = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour, min, 0).getTime();
+    const ds = date.toDateString();
+    const k  = `${ds}|${person}|${name}`;
+    if (!s[k]) s[k] = ts;
   });
+
   saveStore(s);
   localStorage.setItem(HISTORY_KEY, '1');
   updateGraph();
-  alert('✅ History restored — ' + ALL_HISTORY.length + ' doses loaded.');
+  alert('✅ History restored — ' + entries.length + ' doses loaded with correct timestamps.');
 }
 
 function checkRestoreBtn() {
