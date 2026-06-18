@@ -904,7 +904,7 @@ function updateGraph() {
   const hist = document.getElementById('historyList');
   if (!hist) return;
   const store = getStore();
-  const entries = Object.entries(store).sort((a,b) => b[1]-a[1]).slice(0,30);
+  const entries = Object.entries(store).sort((a,b) => b[1]-a[1]).slice(0,100);
   if (!entries.length) {
     hist.innerHTML = `<div style="padding:16px;color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;">No doses logged yet — tap doses on Today tab to track</div>`;
     return;
@@ -1691,9 +1691,11 @@ function restoreHistory() {
   ];
 
   entries.forEach(([isoDate, person, name, hour, min]) => {
-    const date = new Date(isoDate);
-    const ts = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour, min, 0).getTime();
-    const ds = date.toDateString();
+    const [y,m,d] = isoDate.split('-').map(Number);
+    // Build date in LOCAL time explicitly to avoid UTC offset issues
+    const localDate = new Date(y, m-1, d, hour, min, 0);
+    const ts = localDate.getTime();
+    const ds = new Date(y, m-1, d).toDateString();
     const k  = `${ds}|${person}|${name}`;
     if (!s[k]) s[k] = ts;
   });
@@ -1707,8 +1709,7 @@ function restoreHistory() {
 function checkRestoreBtn() {
   const btn = document.getElementById('restoreBtn');
   if (!btn) return;
-  // Always show restore button — not one-time anymore
-  btn.style.display = 'block';
+  btn.style.display = 'block'; // always show — not one-time
 }
 
 function initTracker() { updateGraph(); checkRestoreBtn(); }
