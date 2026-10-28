@@ -651,14 +651,25 @@ async function syncFromSupabase() {
 }
 
 // Write a single dose log to Supabase (fire-and-forget)
+// person must be 'c' or 'm' — skip meds ('med') and anything else
 function sbLogDose(date, person, name, isAdding) {
-  if (!isAdding) return; // only log additions, not removals
-  const loggedAt = new Date(date.getFullYear(), date.getMonth(), date.getDate(),
-                            new Date().getHours(), new Date().getMinutes(), 0).toISOString();
-  sbFetch('/rest/v1/dose_logs', {
-    method: 'POST',
-    body: JSON.stringify({ logged_at: loggedAt, person: person === 'c' ? 'Cass' : 'Mike', compound: name })
-  });
+  if (person !== 'c' && person !== 'm') return; // skip meds / non-peptide rows
+  const sbPerson = person === 'c' ? 'Cass' : 'Mike';
+  if (isAdding) {
+    const loggedAt = new Date(date.getFullYear(), date.getMonth(), date.getDate(),
+                              new Date().getHours(), new Date().getMinutes(), 0).toISOString();
+    sbFetch('/rest/v1/dose_logs', {
+      method: 'POST',
+      body: JSON.stringify({ logged_at: loggedAt, person: sbPerson, compound: name })
+    });
+  } else {
+    // Delete matching rows for this date+person+compound
+    const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+    const dayEnd   = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString();
+    sbFetch(`/rest/v1/dose_logs?person=eq.${encodeURIComponent(sbPerson)}&compound=eq.${encodeURIComponent(name)}&logged_at=gte.${dayStart}&logged_at=lte.${dayEnd}`, {
+      method: 'DELETE'
+    });
+  }
 }
 
 // ─── localStorage TRACKING ────────────────────────────────────────────────────
