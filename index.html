@@ -284,6 +284,55 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
 .tl-miss.on{background:#A33226;color:#FFF6E6;}
 .tl-empty{padding:24px;color:var(--muted);}
 
+
+/* ── CHECK-IN / CYCLE / TRACKER / PROTOCOL CARDS ── */
+.tl-sum-top h2{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:var(--accent);}
+.ci-wrap,.ci{background:var(--surface);border-radius:22px;padding:18px 20px;margin-bottom:16px;}
+.ci-wrap .ci{padding:0;margin:0;background:transparent;}
+.ci-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;}
+.ci-l{width:84px;font-weight:600;font-size:14px;}
+.ci-pills{display:inline-flex;gap:8px;flex-wrap:wrap;}
+.ci-pill{width:44px;height:44px;border-radius:50%;border:1px solid var(--accent);background:var(--frame);color:var(--accent);font:600 15px 'DM Sans',sans-serif;cursor:pointer;}
+.ci-pill:hover{background:var(--s2);}
+.ci-pill.on{background:var(--accent);color:#FFF6E6;}
+.ci-pill:focus-visible,.dose-btn:focus-visible,.pill-btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
+.ci-nl{display:block;margin:16px 0 6px;font-weight:600;font-size:14px;}
+.ci textarea,.ci-datebar input,.cy-form input{font:15px 'DM Sans',sans-serif;border:1px solid var(--border);border-radius:14px;background:var(--frame);color:var(--text);padding:10px 12px;}
+.ci textarea{width:100%;resize:vertical;}
+.ci-saved{font-size:12px;color:var(--muted);margin-top:8px;}
+.ci-datebar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;font-weight:600;font-size:14px;}
+.cy-big{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:34px;color:var(--accent);margin-top:8px;}
+.cy-big span{font-size:20px;}
+.cy-sub{font-size:14px;line-height:1.5;margin-top:6px;}
+.cy-form{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:14px;font-size:14px;font-weight:600;}
+.pill-btn{background:var(--accent);color:#FFF6E6;border:0;border-radius:999px;min-height:44px;padding:0 20px;font:600 14px 'DM Sans',sans-serif;cursor:pointer;}
+.pill-btn:hover{filter:brightness(.92);}
+.cy-list{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+.cy-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--frame);border-radius:14px;padding:6px 12px;font-size:14px;}
+.dose-btn{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;min-height:32px;padding:0 12px;font:600 12px 'DM Sans',sans-serif;cursor:pointer;margin-left:6px;}
+.dose-btn:hover{background:var(--s2);}
+.tl-card .dose-btn{border-color:#A33226;color:#A33226;margin:0;min-height:36px;align-self:flex-start;}
+.ci-hist{padding:10px 0;border-bottom:1px solid var(--border);}
+.ci-hist:last-child{border-bottom:none;}
+.ci-hist-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;}
+.ci-hist-sc{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
+.ci-hist-n{font-size:13px;margin-top:4px;line-height:1.4;}
+.xg{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;}
+.xg-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.xg-bars{height:96px;width:100%;display:flex;gap:4px;align-items:flex-end;justify-content:center;}
+.xg-bars i{display:block;width:40%;max-width:22px;border-radius:6px 6px 0 0;}
+.xg-bars .m,.xg-key.m{background:var(--warn);}
+.xg-bars .s,.xg-key.s{background:var(--green);}
+.xg-key{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 2px;}
+.trk-list{background:var(--surface);border-radius:20px;overflow:hidden;margin-top:0;}
+.trk-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);}
+.trk-tag{font:700 10px 'DM Mono',monospace;background:rgba(58,110,82,.14);color:var(--green);border-radius:999px;padding:2px 9px;}
+.trk-n{font-size:13px;font-weight:700;flex:1;}
+.trk-t{font:10px 'DM Mono',monospace;color:var(--muted);}
+.pr-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.pr-track{background:rgba(255,255,255,.6);margin-top:4px;}
+.pr-track div{background:#A33226;}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .dual{grid-template-columns:1fr;}
@@ -315,6 +364,7 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
     <button class="tab" onclick="sw('week',this)">This Week</button>
     <button class="tab" onclick="sw('schedule',this)">Schedule</button>
     <button class="tab" onclick="sw('tracker',this)">Tracker</button>
+    <button class="tab" onclick="sw('checkin',this)">Check-in</button>
     <button class="tab" onclick="sw('protocol',this)">Protocol</button>
     <button class="tab" onclick="sw('sunday',this)">Sunday Prep</button>
     <button class="tab" onclick="sw('supps',this)">Supplements</button>
@@ -329,6 +379,7 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
   <div id="tab-today" class="vp active">
     <div id="todayBanners"></div>
     <div id="todayTimeline"></div>
+    <div id="todayCheckin" class="ci-wrap"></div>
     <div id="todayClassic" style="display:none">
     <div class="prog-wrap" style="margin-bottom:16px;">
       <div class="prog-label">Today's Progress</div>
@@ -403,16 +454,27 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
       <div class="graph-title">Cassidy <span style="color:var(--blue);margin-left:12px">● Mike</span> <span style="color:var(--accent);margin-left:4px">● Cass</span></div>
       <div class="graph-bars" id="graphBars"></div>
     </div>
+    <div id="trkExtras"></div>
     <div class="slabel" style="margin-bottom:10px">Log History</div>
     <div id="historyList" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;"></div>
+  </div>
+
+  <!-- CHECK-IN -->
+  <div id="tab-checkin" class="vp">
+    <div class="slabel" style="margin-bottom:14px">Check-in · Notes · Cycle</div>
+    <div id="ciTabBody"></div>
   </div>
 
   <!-- PROTOCOL -->
   <div id="tab-protocol" class="vp">
     <div class="slabel" style="margin-bottom:14px">Full Protocol · May 2026</div>
+    <div id="protoTools"></div>
+    <div id="protoCards"></div>
+    <div id="protoTable" style="display:none">
     <div class="ptable">
       <div class="pt-head"><span>Peptide</span><span>Cassidy</span><span>Mike</span><span>Who</span></div>
       <div id="protoRows"></div>
+    </div>
     </div>
   </div>
 
@@ -1139,7 +1201,7 @@ function updateGraph() {
   }).join('');
 }
 
-function initTracker() { updateGraph(); checkRestoreBtn(); }
+function initTracker() { updateGraph(); checkRestoreBtn(); renderTrackerExtras(); }
 
 // ─── PROTOCOL TABLE ───────────────────────────────────────────────────────────
 const PROTO = [
@@ -1166,6 +1228,7 @@ function initProtocol() {
       <div class="pt-dose"><span class="bt">${p.mt}</span>${p.mm?` <span class="dm">· ${p.mm}</span>`:''}</div>
       <div><span class="who ${p.who==='both'?'who-both':'who-cass'}">${p.who==='both'?'Both':'Cass only'}</span></div>
     </div>`).join('');
+  renderProtoCards();
 }
 
 // ─── SUNDAY PREP ──────────────────────────────────────────────────────────────
@@ -1553,8 +1616,8 @@ function suppRow(block, item) {
   return `<div class="supp-row ${done?'done':''}" onclick="tapSupp(this,'${block}','${item.name.replace(/'/g,"\\'")}')">
     <div class="supp-chk"><span class="supp-chk-mark">✓</span></div>
     <div>
-      <div class="supp-name">${item.name}</div>
-      <div class="supp-note">${item.note}</div>
+      <div class="supp-name">${item.name}${getDoseInfo()[item.name] ? ` <b class="supp-dose">· ${tlEsc(getDoseInfo()[item.name])}</b>` : ''}</div>
+      <div class="supp-note">${item.note} ${doseBtn(item.name)}</div>
     </div>
     ${tagHtml}
   </div>`;
@@ -1565,6 +1628,7 @@ function tapSupp(el, block, name) {
   el.classList.toggle('done');
   const mark = el.querySelector('.supp-chk-mark');
   if (mark) mark.style.display = el.classList.contains('done') ? 'block' : 'none';
+  tlRefreshAll();
 }
 
 function renderSupps() {
@@ -1611,7 +1675,7 @@ function renderSupps() {
     </div>`;
   }).join('');
 
-  document.getElementById('suppBanners').innerHTML = bannerHtml;
+  document.getElementById('suppBanners').innerHTML = cycleBanner() + bannerHtml;
   document.getElementById('suppContent').innerHTML = blocks;
 }
 
@@ -1738,6 +1802,7 @@ function sw(tab, btn) {
   document.getElementById('tab-'+tab).classList.add('active');
   btn.classList.add('active');
   if (tab === 'tracker') initTracker();
+  if (tab === 'checkin') initCheckin();
   if (tab === 'week') initWeek();
   if (tab === 'supps') initSupps();
   if (tab === 'schedule') initSchedule();
@@ -1932,7 +1997,7 @@ function checkRestoreBtn() {
   btn.style.display = 'block'; // always show — not one-time
 }
 
-function initTracker() { updateGraph(); checkRestoreBtn(); }
+function initTracker() { updateGraph(); checkRestoreBtn(); renderTrackerExtras(); }
 
 // ─── TIMELINE VIEW ────────────────────────────────────────────────────────────
 // Display layer only. Reads getDoses / getMeds / SUPP_BLOCKS and writes through the
@@ -2003,7 +2068,7 @@ function tlBuild(date) {
 
   getMeds(date).forEach(x => {
     slots[TL_BUCKET[x.time] || 'early'].push({kind:'med', name:x.name, note:x.note||'', lines:[
-      {person:'med', label:'Cass', amount: x.mg ? `${x.t} · ${x.mg}` : x.t, done: isDone(date,'med',x.name), live:true}
+      {person:'med', label:'Cass', amount: getDoseInfo()[x.name] || (x.mg ? `${x.t} · ${x.mg}` : x.t), done: isDone(date,'med',x.name), live:true}
     ]});
   });
 
@@ -2013,7 +2078,7 @@ function tlBuild(date) {
     const items = b.id === 'phase' ? PHASE_ITEMS[suppPhase].items : b.items;
     items.forEach(i => {
       slots[TL_SUPP_SLOT[b.id]].push({kind:'supp', block:b.id, name:i.name, note:i.note||'', tag:i.tag||'', lines:[
-        {person:'supp', label:'Cass', amount:'', done: isToday && isSuppDone(b.id, i.name), live:isToday}
+        {person:'supp', label:'Cass', amount: getDoseInfo()[i.name] || '', done: isToday && isSuppDone(b.id, i.name), live:isToday}
       ]});
     });
   });
@@ -2043,6 +2108,7 @@ function tlCard(it, date, bg) {
     ${it.note ? `<div class="tl-note">${tlEsc(it.note)}</div>` : ''}
     <div class="tl-lines">${lines}</div>
     ${miss}
+    ${(it.kind === 'med' || it.kind === 'supp') ? doseBtn(it.name) : ''}
   </div>`;
 }
 
@@ -2052,8 +2118,8 @@ function tlRender(date) {
   const slots = tlBuild(date);
   const keep = l => who==='all' || (who==='c' && l.label==='Cass') || (who==='m' && l.label==='Mike');
 
-  const nowH = TODAY.getHours() + TODAY.getMinutes()/60;
-  const timed = TL_SLOTS.filter(s => s.start < 99);
+  const nowD = new Date(), nowH = nowD.getHours() + nowD.getMinutes()/60;
+  const timed = TL_SLOTS.filter(s => s.start < 99 && slots[s.id].some(it => it.lines.some(keep)));
   let curId = null;
   if (isToday) timed.forEach(s => { if (s.start <= nowH) curId = s.id; });
 
@@ -2092,6 +2158,7 @@ function tlRender(date) {
     ${isToday ? `<div class="tl-track" role="img" aria-label="${pct}% of today's items done"><div style="width:${pct}%"></div></div>` : ''}
     ${next ? `<div class="tl-next">${next}</div>` : ''}
     ${(!isToday) ? '<div class="tl-next">Supplements are view-only on other days.</div>' : ''}
+    ${(isToday && cycleInfo()) ? `<div class="tl-next">Cycle day ${cycleInfo().day} · ${cycleInfo().label} phase</div>` : ''}
   </div>`;
   return summary + (blocks || '<div class="tl-empty">Nothing scheduled.</div>');
 }
@@ -2103,6 +2170,8 @@ function renderTodayView() {
   const classic = document.getElementById('todayClassic');
   if (classic) classic.style.display = mode === 'list' ? '' : 'none';
   el.innerHTML = tlToolbar(true) + (mode === 'timeline' ? tlRender(TODAY) : '');
+  const ci = document.getElementById('todayCheckin');
+  if (ci && !ci.dataset.ready) { ci.dataset.ready = '1'; ciRender(ci, 't', ymd(TODAY)); }
 }
 
 function tlRenderWeek(date) {
@@ -2162,6 +2231,288 @@ function renderScheduleTimeline(blocks) {
   document.getElementById('schedContent').innerHTML = out || '<div class="tl-empty">Nothing scheduled.</div>';
 }
 
+// ─── CHECK-IN, NOTES, CYCLE, DOSES, PROTOCOL CARDS ───────────────────────────
+// All stored on this device (localStorage), like the supplement checks.
+const CI_KEY = 'pp_checkin_v1', CY_KEY = 'pp_cycle_v1', DOSE_KEY = 'pp_doseinfo_v1';
+function jget(k, def) { try { const v = JSON.parse(localStorage.getItem(k)); return v || def; } catch(e) { return def; } }
+function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function fromYmd(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+function dayDiff(a, b) { return Math.round((new Date(a.getFullYear(),a.getMonth(),a.getDate()) - new Date(b.getFullYear(),b.getMonth(),b.getDate())) / 86400000); }
+function fmtShort(d) { return d.toLocaleDateString('en-US', {month:'short', day:'numeric'}); }
+function goTab(tab) { const b = document.querySelector(`.tab[onclick*="'${tab}'"]`); if (b) { sw(tab, b); window.scrollTo(0,0); } }
+
+// Editable doses for meds and supplements (no amounts are built in)
+function getDoseInfo() { return jget(DOSE_KEY, {}); }
+function editDose(btn) {
+  const name = btn.dataset.name, info = getDoseInfo();
+  const v = prompt(`Dose for ${name} (for example 500 mg, 2 capsules). Leave blank to clear.`, info[name] || '');
+  if (v === null) return;
+  if (v.trim()) info[name] = v.trim(); else delete info[name];
+  jset(DOSE_KEY, info);
+  tlRefreshAll();
+  if (tlIsActive('tab-supps')) renderSupps();
+}
+function doseBtn(name) {
+  const has = !!getDoseInfo()[name];
+  return `<button class="dose-btn" data-name="${tlEsc(name)}" onclick="event.stopPropagation();editDose(this)">${has ? 'Edit dose' : '+ Add dose'}</button>`;
+}
+
+// ── Cycle tracking ──
+function getCycle() { const c = jget(CY_KEY, {}); return {starts: Array.isArray(c.starts) ? c.starts.slice().sort() : [], len: Number(c.len) || 28}; }
+function cycleInfo(date) {
+  date = date || TODAY;
+  const c = getCycle(), t = ymd(date);
+  const last = c.starts.filter(s => s <= t).pop();
+  if (!last) return null;
+  const day = dayDiff(date, fromYmd(last)) + 1;
+  const phase = day <= 5 ? 'menstrual' : day <= 16 ? 'follicular' : 'luteal';
+  const next = fromYmd(last); next.setDate(next.getDate() + c.len);
+  return {start:last, day, phase, len:c.len, late: day > c.len, next,
+          label:{menstrual:'Menstrual', follicular:'Follicular', luteal:'Luteal'}[phase]};
+}
+function applyCyclePhase() { const ci = cycleInfo(); if (ci) suppPhase = ci.phase; }
+function cycleAfterChange() {
+  applyCyclePhase();
+  renderTodayView();
+  if (tlIsActive('tab-supps')) renderSupps();
+  renderCheckinTab();
+}
+function logPeriodStart() {
+  const v = document.getElementById('cyDate').value;
+  if (!v) return;
+  const c = getCycle();
+  if (!c.starts.includes(v)) c.starts.push(v);
+  jset(CY_KEY, c); cycleAfterChange();
+}
+function removePeriod(btn) {
+  const c = getCycle();
+  c.starts = c.starts.filter(s => s !== btn.dataset.d);
+  jset(CY_KEY, c); cycleAfterChange();
+}
+function setCycleLen(inp) {
+  const c = getCycle(), n = parseInt(inp.value, 10);
+  if (n >= 20 && n <= 45) { c.len = n; jset(CY_KEY, c); cycleAfterChange(); }
+}
+function cycleBanner() {
+  const ci = cycleInfo();
+  if (!ci) return `<div class="banner warn">No period logged yet, so the phase is set by hand. <button class="dose-btn" onclick="goTab('checkin')">Log your period</button></div>`;
+  return `<div class="banner warn">Cycle day ${ci.day} · ${ci.label}. Supplements follow this phase automatically; tap a phase below to override it for now.${ci.late ? ' Your period may be due. <button class="dose-btn" onclick="goTab(\'checkin\')">Log it</button>' : ''}</div>`;
+}
+
+// ── Check-in widget (ratings + notes), used on Today and on the Check-in tab ──
+const CI_METRICS = [['sleep','Sleep'],['energy','Energy'],['mood','Mood'],['recovery','Recovery']];
+function ciRender(el, pre, key) {
+  if (!el) return;
+  const e = (jget(CI_KEY, {}))[key] || {};
+  const d = fromYmd(key), isT = key === ymd(TODAY);
+  const rows = CI_METRICS.map(([m, l]) => `<div class="ci-row"><span class="ci-l" id="${pre}-${m}">${l}</span>
+    <div class="ci-pills" role="group" aria-labelledby="${pre}-${m}">${[1,2,3,4,5].map(n =>
+      `<button class="ci-pill ${e[m]===n?'on':''}" aria-pressed="${e[m]===n}" aria-label="${l} ${n} of 5" data-key="${key}" data-m="${m}" data-v="${n}" onclick="ciSet(this)">${n}</button>`).join('')}</div></div>`).join('');
+  el.innerHTML = `<div class="ci">
+    <div class="tl-sum-top"><h2>${isT ? 'How do you feel today?' : 'Check-in · ' + fmtShort(d)}</h2><span class="tl-sum-n">1 = low · 5 = high</span></div>
+    ${rows}
+    <label class="ci-nl" for="${pre}-notes">Notes</label>
+    <textarea id="${pre}-notes" rows="3" data-key="${key}" placeholder="Side effects, timing, how the day went" onchange="ciNote(this)">${tlEsc(e.notes || '')}</textarea>
+    <div class="ci-saved" id="${pre}-saved" aria-live="polite"></div>
+  </div>`;
+}
+function ciRefresh() {
+  const t = document.getElementById('todayCheckin');
+  if (t && t.dataset.ready) ciRender(t, 't', ymd(TODAY));
+  const w = document.getElementById('ciTabWidget');
+  if (w) ciRender(w, 'c', ciDate);
+}
+function ciSet(btn) {
+  const k = btn.dataset, all = jget(CI_KEY, {});
+  const e = all[k.key] || {};
+  const v = parseInt(k.v, 10), wrapId = btn.closest('[id]').id;
+  if (e[k.m] === v) delete e[k.m]; else e[k.m] = v;
+  e.ts = Date.now(); all[k.key] = e; jset(CI_KEY, all);
+  ciRefresh(); renderCheckinHistory();
+  const again = Array.from(document.querySelectorAll('.ci-pill')).find(x => x.dataset.key === k.key && x.dataset.m === k.m && x.dataset.v === k.v && x.closest('#' + wrapId));
+  if (again) again.focus({preventScroll:true});
+}
+function ciNote(ta) {
+  const all = jget(CI_KEY, {}), e = all[ta.dataset.key] || {};
+  e.notes = ta.value; e.ts = Date.now(); all[ta.dataset.key] = e; jset(CI_KEY, all);
+  const s = document.getElementById(ta.id.replace('-notes', '-saved'));
+  if (s) s.textContent = 'Saved on this device';
+  renderCheckinHistory();
+}
+
+let ciDate = ymd(TODAY);
+function initCheckin() { ciDate = ymd(TODAY); renderCheckinTab(); }
+function renderCheckinTab() {
+  const body = document.getElementById('ciTabBody');
+  if (!body) return;
+  const ci = cycleInfo(), c = getCycle();
+  const starts = c.starts.slice().reverse().slice(0, 6);
+  const intervals = []; for (let i = 1; i < c.starts.length; i++) intervals.push(dayDiff(fromYmd(c.starts[i]), fromYmd(c.starts[i-1])));
+  const avg = intervals.length ? Math.round(intervals.slice(-3).reduce((a,b) => a+b, 0) / Math.min(3, intervals.length)) : null;
+  const status = ci
+    ? `<div class="cy-big">Day ${ci.day} <span>· ${ci.label}</span></div>
+       <div class="cy-sub">Supplements use the ${ci.label.toLowerCase()} phase list automatically. Next period expected about ${fmtShort(ci.next)}${ci.late ? ' (it may be late, log it when it starts)' : ''}.${avg ? ` Your recent average is ${avg} days.` : ''}</div>`
+    : `<div class="cy-sub">Log the first day of your last period to start tracking. The Supplements tab will then pick your phase automatically.</div>`;
+  body.innerHTML = `
+    <div class="ci-datebar"><label for="ciDateIn">Check-in date</label>
+      <input type="date" id="ciDateIn" value="${ciDate}" max="${ymd(TODAY)}" onchange="ciDate=this.value||ymd(TODAY);ciRefresh();"></div>
+    <div id="ciTabWidget" class="ci-wrap"></div>
+    <div class="ci-wrap cy">
+      <div class="tl-sum-top"><h2>Cycle</h2></div>
+      ${status}
+      <div class="cy-form">
+        <label for="cyDate">First day of period</label>
+        <input type="date" id="cyDate" value="${ymd(TODAY)}" max="${ymd(TODAY)}">
+        <button class="pill-btn" onclick="logPeriodStart()">Log period start</button>
+        <label for="cyLen">Cycle length (days)</label>
+        <input type="number" id="cyLen" min="20" max="45" value="${c.len}" onchange="setCycleLen(this)" style="width:84px">
+      </div>
+      ${starts.length ? `<div class="cy-list">${starts.map(s => `<div class="cy-item"><span>${fmtShort(fromYmd(s))}, ${fromYmd(s).getFullYear()}</span><button class="dose-btn" data-d="${s}" aria-label="Remove period start ${s}" onclick="removePeriod(this)">Remove</button></div>`).join('')}</div>` : ''}
+      <div class="ci-saved">Days 1–5 menstrual, 6–16 follicular, 17+ luteal, the same ranges your Supplements tab uses.</div>
+    </div>
+    <div class="ci-wrap"><div class="tl-sum-top"><h2>Recent check-ins</h2></div><div id="ciHistory"></div></div>`;
+  ciRender(document.getElementById('ciTabWidget'), 'c', ciDate);
+  renderCheckinHistory();
+}
+function renderCheckinHistory() {
+  const el = document.getElementById('ciHistory');
+  if (!el) return;
+  const all = jget(CI_KEY, {});
+  const keys = Object.keys(all).filter(k => CI_METRICS.some(([m]) => all[k][m]) || all[k].notes).sort().reverse().slice(0, 14);
+  if (!keys.length) { el.innerHTML = '<div class="tl-empty">No check-ins yet.</div>'; return; }
+  const last7 = keys.filter(k => dayDiff(TODAY, fromYmd(k)) < 7);
+  const avgs = CI_METRICS.map(([m, l]) => {
+    const v = last7.map(k => all[k][m]).filter(Boolean);
+    return v.length ? `${l} ${(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1)}` : null;
+  }).filter(Boolean);
+  el.innerHTML = (avgs.length ? `<div class="ci-saved" style="margin:0 0 10px">7-day average: ${avgs.join(' · ')}</div>` : '') +
+    keys.map(k => {
+      const e = all[k], d = fromYmd(k), cinfo = cycleInfo(d);
+      const sc = CI_METRICS.map(([m, l]) => e[m] ? `${l} ${e[m]}` : null).filter(Boolean).join(' · ');
+      return `<div class="ci-hist"><div class="ci-hist-top"><b>${DAYS[d.getDay()]} ${d.getMonth()+1}/${d.getDate()}</b>${cinfo ? `<span class="tl-tag">Cycle day ${cinfo.day}</span>` : ''}<span class="ci-hist-sc">${sc}</span></div>${e.notes ? `<div class="ci-hist-n">${tlEsc(e.notes)}</div>` : ''}</div>`;
+    }).join('');
+}
+
+// ── Tracker: meds + supplements (they were not counted before) ──
+function suppItemsFor(date) {
+  const dow = date.getDay(), biocin = dow !== 0 && dow !== 6, out = [];
+  SUPP_BLOCKS.forEach(b => {
+    if (b.id === 'detox_mid' && !biocin) return;
+    (b.id === 'phase' ? PHASE_ITEMS[suppPhase].items : b.items).forEach(i => out.push({block:b.id, name:i.name, tag:i.tag || ''}));
+  });
+  return out;
+}
+function renderTrackerExtras() {
+  const el = document.getElementById('trkExtras');
+  if (!el) return;
+  const ss = getSuppStore();
+  let cols = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(TODAY); d.setDate(TODAY.getDate() - i);
+    const meds = getMeds(d), mDone = meds.filter(m => isDone(d, 'med', m.name)).length;
+    const mp = meds.length ? Math.round(mDone / meds.length * 100) : 0;
+    const items = suppItemsFor(d).filter(x => x.tag !== 'optional');
+    const sDone = items.filter(x => ss[`${d.toDateString()}|${x.block}|${x.name}`]).length;
+    const sp = items.length ? Math.round(sDone / items.length * 100) : 0;
+    cols += `<div class="xg-col"><div class="xg-bars" role="img" aria-label="${DAYS[d.getDay()]}: meds ${mp}%, supplements ${sp}%"><i class="m" style="height:${Math.max(mp,2)}%"></i><i class="s" style="height:${Math.max(sp,2)}%"></i></div><span class="g-day">${DAYS[d.getDay()].slice(0,3)}</span><span class="g-pct">${mp}/${sp}</span></div>`;
+  }
+  const rows = Object.entries(ss).sort((a,b) => b[1]-a[1]).slice(0, 40).map(([k, ts]) => {
+    const [dateStr, block, name] = k.split('|'), t = new Date(ts);
+    return `<div class="trk-row"><span class="trk-tag">SUPP</span><span class="trk-n">${tlEsc(name)}</span><span class="trk-t">${dateStr} · ${t.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span></div>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="slabel" style="margin-bottom:14px">Meds + Supplements · 7-Day Completion</div>
+    <div class="graph-wrap"><div class="graph-title">Meds <span class="xg-key m"></span> · Supplements <span class="xg-key s"></span> <span style="font-size:12px;font-weight:400;color:var(--muted)">(optional items not counted · numbers are meds/supps %)</span></div>
+      <div class="xg">${cols}</div></div>
+    <div class="slabel" style="margin-bottom:10px">Supplement Log</div>
+    <div class="trk-list">${rows || '<div class="tl-empty">No supplements checked yet. Tick them on Today or the Supplements tab.</div>'}</div>
+    <div style="height:18px"></div>`;
+}
+
+// ── Protocol cards ──
+// Day lists come from getDoses, so the cards always match what the Today tab schedules
+function cycleDaysOf(match) {
+  const base = fromYmd(CFG.startDate), out = [];
+  for (let i = -3; i < 90; i++) {
+    const d = new Date(base); d.setDate(base.getDate() + i);
+    if (getDoses(d).c.some(x => x.name.includes(match))) out.push(d);
+  }
+  return out;
+}
+function protoStatus(name) {
+  const T = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
+  const run = (match, word) => {
+    const days = cycleDaysOf(match);
+    if (!days.length) return {state:'Ongoing', label:'Ongoing', pct:null};
+    const n = days.filter(d => dayDiff(d, T) <= 0).length, last = days[days.length-1];
+    if (n === 0) return {state:'Planned', label:`Starts ${fmtShort(days[0])}`, pct:0};
+    if (dayDiff(T, last) > 0) return null;
+    return {state:'Active', label:`${word} ${n} of ${days.length} · ends ${fmtShort(last)}`, pct:Math.round(n/days.length*100)};
+  };
+  if (name === 'Pinealon') return run('Pinealon', 'Day') || {state:'Complete', label:'Cycle complete', pct:100};
+  if (name.startsWith('MT2')) return run('LOADING', 'Loading dose') || {state:'Active', label:`Maintenance · Saturdays from ${fmtShort(MT2_MAINT_START)}`, pct:100};
+  if (name === 'Retatrutide') { const r = getRetaDose(TODAY); return {state:'Active', label:`Current dose ${r.t} · ${r.mg}${r.hold ? ' · hold' : ''}`, pct:null}; }
+  if (name === 'MOTS-c') return {state:'Active', label:`Twice weekly · ${MOTS_DAYS.map(d => ['','Mon','Tue','Wed','Thu','Fri'][d]).join(' + ')}`, pct:null};
+  return {state:'Ongoing', label:'Ongoing', pct:null};
+}
+function protoIcon(i, c1, c2) {
+  const k = i % 4;
+  if (k === 0) return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><rect x="32" y="8" width="36" height="16" rx="5" fill="${c2}"/><rect x="28" y="22" width="44" height="72" rx="12" fill="${c1}"/><rect x="28" y="44" width="44" height="26" fill="#FAF0DC"/><rect x="36" y="53" width="28" height="4" rx="2" fill="${c2}"/></svg>`;
+  if (k === 1) return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><rect x="40" y="4" width="20" height="14" rx="4" fill="${c2}"/><rect x="34" y="16" width="32" height="70" rx="14" fill="${c1}"/><rect x="46" y="86" width="8" height="12" rx="3" fill="${c2}"/></svg>`;
+  if (k === 2) return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><g transform="rotate(-35 50 50)"><rect x="12" y="30" width="76" height="40" rx="20" fill="#FFF6E6"/><path d="M50 30h18a20 20 0 0 1 0 40H50z" fill="${c2}"/></g></svg>`;
+  return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><circle cx="50" cy="66" r="30" fill="${c1}"/><rect x="42" y="14" width="16" height="22" rx="5" fill="${c2}"/><rect x="38" y="34" width="24" height="8" rx="3" fill="${c2}"/></svg>`;
+}
+let protoFilter = 'all';
+function protoMode() { try { return localStorage.getItem('pp_proto_v1') === 'table' ? 'table' : 'cards'; } catch(e) { return 'cards'; } }
+function setProtoMode(m) { try { localStorage.setItem('pp_proto_v1', m); } catch(e) {} renderProtoCards(); }
+function setProtoFilter(f) { protoFilter = f; renderProtoCards(); }
+function renderProtoCards() {
+  const tools = document.getElementById('protoTools'), cards = document.getElementById('protoCards'), table = document.getElementById('protoTable');
+  if (!tools || !cards) return;
+  const mode = protoMode();
+  const chip = (on, fn, l) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="${fn}">${l}</button>`;
+  tools.innerHTML = `<div class="tl-bar"><div class="tl-seg" role="group" aria-label="View">${chip(mode==='cards',"setProtoMode('cards')",'Cards')}${chip(mode==='table',"setProtoMode('table')",'Table')}</div>
+    ${mode==='cards' ? `<div class="tl-seg" role="group" aria-label="Filter">${chip(protoFilter==='all',"setProtoFilter('all')",'All')}${chip(protoFilter==='active',"setProtoFilter('active')",'Active cycles')}${chip(protoFilter==='both',"setProtoFilter('both')",'Both of us')}${chip(protoFilter==='cass',"setProtoFilter('cass')",'Cass only')}</div>` : ''}</div>`;
+  table.style.display = mode === 'table' ? '' : 'none';
+  if (mode === 'table') { cards.innerHTML = ''; return; }
+  const pal = [['#FFE7A0','#8E9BE0','#A9CCDC'],['#CFE4EE','#C8402F','#FFD97A'],['#F9D6CC','#8E9BE0','#FFF6E6'],['#DDE0F7','#C8402F','#FFB5C2'],['#FFD1D9','#8E9BE0','#FFD97A'],['#E8F0C8','#C8402F','#A9CCDC']];
+  const list = PROTO.map((p, i) => ({p, i, st: protoStatus(p.name)})).filter(({p, st}) =>
+    protoFilter === 'all' || (protoFilter === 'active' && st.pct !== null && st.state === 'Active') || (protoFilter === 'both' && p.who === 'both') || (protoFilter === 'cass' && p.who === 'cass'));
+  cards.innerHTML = `<div class="tl-grid">${list.map(({p, i, st}) => {
+    const [bg, c1, c2] = pal[i % pal.length];
+    const cass = `${p.ct}${p.cm ? ' · ' + p.cm : ''}`, mike = p.mt && p.mt !== '—' ? `${p.mt}${p.mm ? ' · ' + p.mm : ''}` : '';
+    return `<div class="tl-card pr-card" style="background:${bg}">
+      <div class="pr-top"><div class="pr-ic">${protoIcon(i, c1, c2)}</div><span class="tl-tag">${st.state}</span></div>
+      <div class="tl-name">${tlEsc(p.name)}</div>
+      <div class="tl-note">${tlEsc(p.sub)}</div>
+      <div class="tl-lines"><div class="tl-line ro"><span class="tl-who">Cass</span><span class="tl-amt">${tlEsc(cass)}</span></div>
+      ${mike ? `<div class="tl-line ro"><span class="tl-who">Mike</span><span class="tl-amt">${tlEsc(mike)}</span></div>` : ''}</div>
+      ${st.pct !== null ? `<div class="tl-track pr-track" role="img" aria-label="${tlEsc(st.label)}"><div style="width:${st.pct}%"></div></div>` : ''}
+      <div class="tl-note"><b>${tlEsc(st.label)}</b></div>
+    </div>`;
+  }).join('')}</div>${list.length ? '' : '<div class="tl-empty">Nothing matches this filter.</div>'}`;
+}
+
+// ── Keep "now" live ──
+function tlCurId() {
+  const n = new Date(), h = n.getHours() + n.getMinutes() / 60;
+  let id = null; TL_SLOTS.forEach(s => { if (s.start < 99 && s.start <= h) id = s.id; });
+  return id;
+}
+let tlLastCur = tlCurId();
+function tlClockCheck() {
+  if (ymd(new Date()) !== ymd(TODAY)) {
+    const a = document.activeElement;
+    if (!a || !/^(TEXTAREA|INPUT)$/.test(a.tagName)) window.location.reload();
+    return;
+  }
+  const cur = tlCurId();
+  if (cur !== tlLastCur) { tlLastCur = cur; tlRefreshAll(); }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) tlClockCheck(); });
+setInterval(tlClockCheck, 60000);
+
 (async () => {
   // One-time cleanup: remove any bad localStorage keys from before the med-person fix
   // These are keys where person is a raw Supabase string ('Mike','Cass','Cass-med')
@@ -2181,6 +2532,7 @@ function renderScheduleTimeline(blocks) {
 
   // Sync from Supabase first so checkmarks are correct on first render
   await syncFromSupabase();
+  applyCyclePhase();
   initToday();
   initProtocol();
   initSunday();
