@@ -681,12 +681,12 @@ function refreshActiveTab() {
   updateGraph();
   updateMedProgress(TODAY);
   // Re-render week detail if week tab is active
-  if (document.getElementById('week') && document.getElementById('week').classList.contains('active')) {
+  if (document.getElementById('tab-week') && document.getElementById('tab-week').classList.contains('active')) {
     renderStrip();
     showDay(selDay);
   }
   // Re-render today's dose rows so checkmarks appear immediately
-  const todayEl = document.getElementById('today');
+  const todayEl = document.getElementById('tab-today');
   if (todayEl && todayEl.classList.contains('active')) {
     initToday();
   }
@@ -822,12 +822,16 @@ function tap(el, dateStr, person, name) {
   updateGraph();
   // If tapping from This Week tab, re-render strip % and also refresh Today's
   // dose lists so checkmarks appear there without a manual refresh
-  if (document.getElementById('week') && document.getElementById('week').classList.contains('active')) {
+  if (document.getElementById('tab-week') && document.getElementById('tab-week').classList.contains('active')) {
     renderStrip();
     if (date.toDateString() === TODAY.toDateString()) {
       // Full re-init of Today tab so banners, headers, and all rows are consistent
       initToday();
     }
+  }
+  // If tapping from Today tab, keep This Week strip percentages current
+  if (document.getElementById('tab-today') && document.getElementById('tab-today').classList.contains('active')) {
+    renderStrip();
   }
 }
 
@@ -1635,6 +1639,7 @@ function sw(tab, btn) {
   btn.classList.add('active');
   if (tab === 'tracker') initTracker();
   if (tab === 'week') initWeek();
+  if (tab === 'supps') initSupps();
   if (tab === 'schedule') initSchedule();
   if (tab === 'settings') initSettings();
 }
