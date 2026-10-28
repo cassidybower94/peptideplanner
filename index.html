@@ -2306,17 +2306,23 @@ function cycleBanner() {
 
 // ── Check-in widget (ratings + notes), used on Today and on the Check-in tab ──
 const CI_METRICS = [['sleep','Sleep'],['energy','Energy'],['mood','Mood'],['recovery','Recovery']];
-function ciRender(el, pre, key) {
+// Two people: Cassidy is stored under the date, Mike under "date|m"
+function ciWho() { try { return localStorage.getItem('pp_ciwho_v1') === 'm' ? 'm' : 'c'; } catch(e) { return 'c'; } }
+function setCiWho(w) { try { localStorage.setItem('pp_ciwho_v1', w); } catch(e) {} ciRefresh(); renderCheckinHistory(); }
+function ciRender(el, pre, dateKey) {
   if (!el) return;
+  const who = ciWho(), key = dateKey + (who === 'm' ? '|m' : ''), name = who === 'm' ? 'Mike' : 'Cassidy';
   const e = (jget(CI_KEY, {}))[key] || {};
-  const d = fromYmd(key), isT = key === ymd(TODAY);
+  const d = fromYmd(dateKey), isT = dateKey === ymd(TODAY);
+  const chip = (on, w, l) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="setCiWho('${w}')">${l}</button>`;
   const rows = CI_METRICS.map(([m, l]) => `<div class="ci-row"><span class="ci-l" id="${pre}-${m}">${l}</span>
     <div class="ci-pills" role="group" aria-labelledby="${pre}-${m}">${[1,2,3,4,5].map(n =>
-      `<button class="ci-pill ${e[m]===n?'on':''}" aria-pressed="${e[m]===n}" aria-label="${l} ${n} of 5" data-key="${key}" data-m="${m}" data-v="${n}" onclick="ciSet(this)">${n}</button>`).join('')}</div></div>`).join('');
+      `<button class="ci-pill ${e[m]===n?'on':''}" aria-pressed="${e[m]===n}" aria-label="${name} ${l} ${n} of 5" data-key="${key}" data-m="${m}" data-v="${n}" onclick="ciSet(this)">${n}</button>`).join('')}</div></div>`).join('');
   el.innerHTML = `<div class="ci">
-    <div class="tl-sum-top"><h2>${isT ? 'How do you feel today?' : 'Check-in · ' + fmtShort(d)}</h2><span class="tl-sum-n">1 = low · 5 = high</span></div>
+    <div class="tl-bar" style="margin-bottom:10px"><div class="tl-seg" role="group" aria-label="Check-in for">${chip(who==='c','c','Cassidy')}${chip(who==='m','m','Mike')}</div></div>
+    <div class="tl-sum-top"><h2>${isT ? `How does ${name} feel today?` : `${name} · ${fmtShort(d)}`}</h2><span class="tl-sum-n">1 = low · 5 = high</span></div>
     ${rows}
-    <label class="ci-nl" for="${pre}-notes">Notes</label>
+    <label class="ci-nl" for="${pre}-notes">Notes for ${name}</label>
     <textarea id="${pre}-notes" rows="3" data-key="${key}" placeholder="Side effects, timing, how the day went" onchange="ciNote(this)">${tlEsc(e.notes || '')}</textarea>
     <div class="ci-saved" id="${pre}-saved" aria-live="polite"></div>
   </div>`;
@@ -2363,7 +2369,7 @@ function renderCheckinTab() {
       <input type="date" id="ciDateIn" value="${ciDate}" max="${ymd(TODAY)}" onchange="ciDate=this.value||ymd(TODAY);ciRefresh();"></div>
     <div id="ciTabWidget" class="ci-wrap"></div>
     <div class="ci-wrap cy">
-      <div class="tl-sum-top"><h2>Cycle</h2></div>
+      <div class="tl-sum-top"><h2>Cycle · Cassidy</h2></div>
       ${status}
       <div class="cy-form">
         <label for="cyDate">First day of period</label>
@@ -2384,19 +2390,20 @@ function renderCheckinTab() {
 function renderCheckinHistory() {
   const el = document.getElementById('ciHistory');
   if (!el) return;
-  const all = jget(CI_KEY, {});
-  const keys = Object.keys(all).filter(k => CI_METRICS.some(([m]) => all[k][m]) || all[k].notes).sort().reverse().slice(0, 14);
+  const all = jget(CI_KEY, {}), who = ciWho();
+  const has = k => CI_METRICS.some(([m]) => all[k][m]) || all[k].notes;
+  const keys = Object.keys(all).filter(has).sort((x, y) => y.localeCompare(x)).slice(0, 24);
   if (!keys.length) { el.innerHTML = '<div class="tl-empty">No check-ins yet.</div>'; return; }
-  const last7 = keys.filter(k => dayDiff(TODAY, fromYmd(k)) < 7);
+  const mine = Object.keys(all).filter(k => (k.endsWith('|m') ? 'm' : 'c') === who && dayDiff(TODAY, fromYmd(k.split('|')[0])) < 7);
   const avgs = CI_METRICS.map(([m, l]) => {
-    const v = last7.map(k => all[k][m]).filter(Boolean);
+    const v = mine.map(k => all[k][m]).filter(Boolean);
     return v.length ? `${l} ${(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1)}` : null;
   }).filter(Boolean);
-  el.innerHTML = (avgs.length ? `<div class="ci-saved" style="margin:0 0 10px">7-day average: ${avgs.join(' · ')}</div>` : '') +
+  el.innerHTML = (avgs.length ? `<div class="ci-saved" style="margin:0 0 10px">${who==='m'?'Mike':'Cassidy'} 7-day average: ${avgs.join(' · ')}</div>` : '') +
     keys.map(k => {
-      const e = all[k], d = fromYmd(k), cinfo = cycleInfo(d);
+      const e = all[k], isM = k.endsWith('|m'), d = fromYmd(k.split('|')[0]), cinfo = isM ? null : cycleInfo(d);
       const sc = CI_METRICS.map(([m, l]) => e[m] ? `${l} ${e[m]}` : null).filter(Boolean).join(' · ');
-      return `<div class="ci-hist"><div class="ci-hist-top"><b>${DAYS[d.getDay()]} ${d.getMonth()+1}/${d.getDate()}</b>${cinfo ? `<span class="tl-tag">Cycle day ${cinfo.day}</span>` : ''}<span class="ci-hist-sc">${sc}</span></div>${e.notes ? `<div class="ci-hist-n">${tlEsc(e.notes)}</div>` : ''}</div>`;
+      return `<div class="ci-hist"><div class="ci-hist-top"><b>${DAYS[d.getDay()]} ${d.getMonth()+1}/${d.getDate()}</b><span class="tl-tag">${isM ? 'Mike' : 'Cass'}</span>${cinfo ? `<span class="tl-tag">Cycle day ${cinfo.day}</span>` : ''}<span class="ci-hist-sc">${sc}</span></div>${e.notes ? `<div class="ci-hist-n">${tlEsc(e.notes)}</div>` : ''}</div>`;
     }).join('');
 }
 
