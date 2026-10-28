@@ -240,6 +240,50 @@ body{background:var(--bg);}
   .main{width:calc(100% - 24px);padding:16px 14px;border-radius:22px;}
 }
 
+
+/* ── TIMELINE VIEW ── */
+.tl-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.tl-seg{display:inline-flex;background:var(--surface);border-radius:999px;padding:3px;gap:2px;}
+.tl-chip{border:0;background:transparent;color:var(--accent);font:600 13px 'DM Sans',sans-serif;min-height:40px;padding:0 16px;border-radius:999px;cursor:pointer;}
+.tl-chip:hover{background:var(--s2);}
+.tl-chip.on{background:var(--accent);color:#FFF6E6;}
+.tl-sum{background:var(--surface);border-radius:22px;padding:18px 20px;margin-bottom:22px;}
+.tl-sum-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.tl-sum h2{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:30px;color:var(--accent);}
+.tl-sum-n{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
+.tl-track{height:8px;border-radius:999px;background:var(--s2);margin-top:12px;overflow:hidden;}
+.tl-track div{height:100%;background:var(--accent);border-radius:999px;transition:width .3s;}
+.tl-next{margin-top:10px;font-size:14px;color:var(--text);}
+.tl-block{margin-bottom:26px;border-radius:24px;padding:2px;}
+.tl-block.now{outline:2px solid var(--accent);outline-offset:6px;}
+.tl-bh{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap;margin:0 2px 10px;}
+.tl-bt{display:flex;align-items:center;gap:10px;}
+.tl-bh h3{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:26px;color:var(--accent);}
+.tl-nowpill{background:var(--accent);color:#FFF6E6;font-size:11px;font-weight:600;border-radius:999px;padding:3px 10px;text-transform:uppercase;letter-spacing:.06em;}
+.tl-win{font-size:13px;color:var(--muted);flex:1;min-width:140px;}
+.tl-count{font-family:'DM Mono',monospace;font-size:12px;background:var(--surface);color:var(--accent);border-radius:999px;padding:4px 12px;}
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:10px;}
+.tl-card{border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:8px;color:#3A1D1A;}
+.tl-card.all-done{opacity:.6;}
+.tl-card.is-missed .tl-name{text-decoration:line-through;}
+.tl-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.tl-name{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:18px;line-height:1.2;color:#3A1D1A;}
+.tl-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.6);color:#6B2F26;border-radius:999px;padding:3px 9px;white-space:nowrap;}
+.tl-note{font-size:12px;line-height:1.4;color:#6B2F26;}
+.tl-lines{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.tl-line{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:6px 12px 6px 8px;border:0;border-radius:999px;background:rgba(255,255,255,.62);color:#3A1D1A;font:inherit;text-align:left;cursor:pointer;}
+button.tl-line:hover{background:rgba(255,255,255,.9);}
+button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
+.tl-line.ro{cursor:default;min-height:36px;}
+.tl-ck{width:28px;height:28px;border-radius:50%;border:2px solid #A33226;display:inline-flex;align-items:center;justify-content:center;flex:none;color:#FFF6E6;}
+.tl-line.ro .tl-ck{display:none;}
+.tl-line.done .tl-ck{background:#A33226;}
+.tl-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6B2F26;}
+.tl-amt{font-family:'DM Mono',monospace;font-size:13px;color:#A33226;font-weight:500;margin-left:auto;text-align:right;}
+.tl-miss{align-self:flex-start;border:1px solid #A33226;background:transparent;color:#A33226;border-radius:999px;min-height:36px;padding:0 14px;font:600 12px 'DM Sans',sans-serif;cursor:pointer;}
+.tl-miss.on{background:#A33226;color:#FFF6E6;}
+.tl-empty{padding:24px;color:var(--muted);}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .dual{grid-template-columns:1fr;}
@@ -284,6 +328,8 @@ body{background:var(--bg);}
   <!-- TODAY -->
   <div id="tab-today" class="vp active">
     <div id="todayBanners"></div>
+    <div id="todayTimeline"></div>
+    <div id="todayClassic" style="display:none">
     <div class="prog-wrap" style="margin-bottom:16px;">
       <div class="prog-label">Today's Progress</div>
       <div class="prog-bars">
@@ -325,12 +371,14 @@ body{background:var(--bg);}
         <div class="dlist" id="mikeToday"></div>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- WEEK -->
   <div id="tab-week" class="vp">
     <div class="slabel">Week of <span id="wkRange"></span></div>
     <div class="wk-strip" id="wkStrip"></div>
+    <div id="wkTools"></div>
     <div id="wkDetail"></div>
   </div>
 
@@ -338,6 +386,7 @@ body{background:var(--bg);}
   <div id="tab-schedule" class="vp">
     <div class="slabel" style="margin-bottom:14px">Daily Schedule · Exact Timing</div>
     <div class="sched-day-strip" id="schedDayStrip"></div>
+    <div id="schedTools"></div>
     <div id="schedContent"></div>
   </div>
 
@@ -991,6 +1040,7 @@ function initToday() {
   document.getElementById('medsToday').innerHTML = meds.map(m => medRow(m, TODAY)).join('');
   updateMedProgress(TODAY);
   updateProgress();
+  renderTodayView();
 }
 
 // ─── WEEK VIEW ────────────────────────────────────────────────────────────────
@@ -1027,6 +1077,8 @@ function renderStrip() {
 function showDay(date) {
   selDay = date;
   renderStrip();
+  tlRenderWeek(date);
+  if (tlMode() === 'timeline') return;
   const d = getDoses(date);
   document.getElementById('wkDetail').innerHTML = `
     <div class="slabel">${DAYS[date.getDay()]} ${date.getMonth()+1}/${date.getDate()}</div>
@@ -1338,6 +1390,9 @@ function setSchedDay(day) {
 
 function renderSchedule() {
   const blocks = getSchedule(schedDay);
+  const st = document.getElementById('schedTools');
+  if (st) st.innerHTML = tlToolbar(true);
+  if (tlMode() === 'timeline') return renderScheduleTimeline(blocks);
   const whoLabel = {both:'Both',cass:'Cass',mike:'Mike'};
   const whoCls   = {both:'both',cass:'cass',mike:'cass'};
 
@@ -1878,6 +1933,234 @@ function checkRestoreBtn() {
 }
 
 function initTracker() { updateGraph(); checkRestoreBtn(); }
+
+// ─── TIMELINE VIEW ────────────────────────────────────────────────────────────
+// Display layer only. Reads getDoses / getMeds / SUPP_BLOCKS and writes through the
+// existing trackers (toggleDose, toggleSupp, toggleMissed), so data and Supabase
+// logging behave exactly as in the list view.
+const TL_SLOTS = [
+  {id:'early',    label:'Early AM',        win:'8–10am · Levo first, then fasted supps, then peptides', start:8,  bg:'#FFE7A0'},
+  {id:'sun',      label:'Late start',      win:'Sunday · after waking',                                 start:9,  bg:'#FFD1D9'},
+  {id:'mid',      label:'Mid AM',          win:'with first meal',                                       start:10, bg:'#CFE4EE'},
+  {id:'midday',   label:'Midday',          win:'~2pm · detox layer, Mon–Fri',                           start:14, bg:'#F9D6CC'},
+  {id:'binder',   label:'Late afternoon',  win:'binder window · 2+ hrs from everything',                start:15, bg:'#EADFF3'},
+  {id:'evepm',    label:'Early PM',        win:'5–7pm',                                                 start:17, bg:'#DDE0F7'},
+  {id:'eve',      label:'Evening',         win:'MT2 doses',                                             start:18, bg:'#FFD1D9'},
+  {id:'night',    label:'Night',           win:'8–10pm · before bed',                                   start:20, bg:'#BFD6F2'},
+  {id:'bed',      label:'Before bed',      win:'fixed nightly + choose by symptoms',                    start:21, bg:'#D5DDF5'},
+  {id:'asneeded', label:'As needed',       win:'histamine and inflammation support',                    start:99, bg:'#E8F0C8'},
+];
+const TL_BUCKET = {early:'early', sun:'sun', mid:'mid', evepm:'evepm', eve:'eve', load:'eve', night:'night'};
+const TL_SUPP_SLOT = {am_fasted:'early', am_food:'mid', phase:'mid', detox_mid:'midday', binder:'binder', pm:'bed', histamine:'asneeded'};
+const TL_TITRATING = ['Retatrutide','MT2','Pinealon','MOTS-c'];
+const TL_CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+function tlEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function tlMode() { try { return localStorage.getItem('pp_view_v1') === 'list' ? 'list' : 'timeline'; } catch(e) { return 'timeline'; } }
+function tlWho()  { try { const w = localStorage.getItem('pp_who_v1'); return (w==='c'||w==='m') ? w : 'all'; } catch(e) { return 'all'; } }
+function tlIsActive(id) { const el = document.getElementById(id); return !!(el && el.classList.contains('active')); }
+
+function tlToolbar(showWho) {
+  const mode = tlMode(), who = tlWho();
+  const chip = (on, fn, label) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="${fn}">${label}</button>`;
+  return `<div class="tl-bar">
+    <div class="tl-seg" role="group" aria-label="View">${chip(mode==='timeline',"setTlMode('timeline')",'Timeline')}${chip(mode==='list',"setTlMode('list')",'List')}</div>
+    ${(showWho && mode==='timeline') ? `<div class="tl-seg" role="group" aria-label="Show">${chip(who==='all',"setTlWho('all')",'Both')}${chip(who==='c',"setTlWho('c')",'Cassidy')}${chip(who==='m',"setTlWho('m')",'Mike')}</div>` : ''}
+  </div>`;
+}
+
+function setTlMode(m) {
+  try { localStorage.setItem('pp_view_v1', m); } catch(e) {}
+  initToday();
+  tlRefreshOthers();
+}
+function setTlWho(w) {
+  try { localStorage.setItem('pp_who_v1', w); } catch(e) {}
+  renderTodayView();
+  tlRefreshOthers();
+}
+function tlRefreshOthers() {
+  if (tlIsActive('tab-week')) { renderStrip(); showDay(selDay); }
+  if (tlIsActive('tab-schedule')) renderSchedule();
+}
+
+function tlBuild(date) {
+  const isToday = date.toDateString() === TODAY.toDateString();
+  const slots = {};
+  TL_SLOTS.forEach(s => { slots[s.id] = []; });
+
+  const d = getDoses(date);
+  [['c','Cass',d.c],['m','Mike',d.m]].forEach(([p,label,arr]) => arr.forEach(x => {
+    const slot = TL_BUCKET[x.time] || 'early';
+    let it = slots[slot].find(i => i.kind==='dose' && i.name===x.name);
+    if (!it) {
+      it = {kind:'dose', name:x.name, note:x.note||'', lines:[],
+            titrating: TL_TITRATING.some(t => x.name.includes(t))};
+      slots[slot].push(it);
+    }
+    it.lines.push({person:p, label, amount: x.mg ? `${x.t} · ${x.mg}` : x.t, done: isDone(date,p,x.name), live:true});
+  }));
+
+  getMeds(date).forEach(x => {
+    slots[TL_BUCKET[x.time] || 'early'].push({kind:'med', name:x.name, note:x.note||'', lines:[
+      {person:'med', label:'Cass', amount: x.mg ? `${x.t} · ${x.mg}` : x.t, done: isDone(date,'med',x.name), live:true}
+    ]});
+  });
+
+  const dow = date.getDay(), biocin = dow !== 0 && dow !== 6;
+  SUPP_BLOCKS.forEach(b => {
+    if (b.id === 'detox_mid' && !biocin) return;
+    const items = b.id === 'phase' ? PHASE_ITEMS[suppPhase].items : b.items;
+    items.forEach(i => {
+      slots[TL_SUPP_SLOT[b.id]].push({kind:'supp', block:b.id, name:i.name, note:i.note||'', tag:i.tag||'', lines:[
+        {person:'supp', label:'Cass', amount:'', done: isToday && isSuppDone(b.id, i.name), live:isToday}
+      ]});
+    });
+  });
+  // Early AM runs in this order: meds (Levo alone first), fasted supps, then peptides
+  const rank = {med:0, supp:1, dose:2};
+  slots.early.sort((a, b) => rank[a.kind] - rank[b.kind]);
+  return slots;
+}
+
+function tlCard(it, date, bg) {
+  const ds = date.toDateString();
+  const missed = it.titrating && isMissed(date, it.name);
+  const lines = it.lines.map(l => {
+    const key = `${it.kind}|${ds}|${l.person}|${it.name}`;
+    const inner = `<span class="tl-ck">${l.done ? TL_CHECK : ''}</span><span class="tl-who">${l.label}</span><span class="tl-amt">${tlEsc(l.amount)}</span>`;
+    if (!l.live) return `<div class="tl-line ro">${inner}</div>`;
+    return `<button class="tl-line ${l.done?'done':''}" aria-pressed="${l.done}" aria-label="${tlEsc(it.name)}, ${l.label}${l.amount ? ', ' + tlEsc(l.amount) : ''}"
+      data-key="${tlEsc(key)}" data-kind="${it.kind}" data-date="${tlEsc(ds)}" data-person="${l.person}" data-block="${tlEsc(it.block||'')}" data-name="${tlEsc(it.name)}"
+      onclick="tlTap(this)">${inner}</button>`;
+  }).join('');
+  const miss = it.titrating
+    ? `<button class="tl-miss ${missed?'on':''}" aria-pressed="${missed}" data-date="${tlEsc(ds)}" data-name="${tlEsc(it.name)}" onclick="tlMiss(this)">${missed ? 'Missed' : 'Mark missed'}</button>` : '';
+  const allDone = it.lines.every(l => l.done);
+  const tag = it.tag ? `<span class="tl-tag">${tlEsc(it.tag)}</span>` : '';
+  return `<div class="tl-card ${allDone?'all-done':''} ${missed?'is-missed':''}" style="background:${bg}">
+    <div class="tl-card-top"><div class="tl-name">${tlEsc(it.name)}</div>${tag}</div>
+    ${it.note ? `<div class="tl-note">${tlEsc(it.note)}</div>` : ''}
+    <div class="tl-lines">${lines}</div>
+    ${miss}
+  </div>`;
+}
+
+function tlRender(date) {
+  const who = tlWho();
+  const isToday = date.toDateString() === TODAY.toDateString();
+  const slots = tlBuild(date);
+  const keep = l => who==='all' || (who==='c' && l.label==='Cass') || (who==='m' && l.label==='Mike');
+
+  const nowH = TODAY.getHours() + TODAY.getMinutes()/60;
+  const timed = TL_SLOTS.filter(s => s.start < 99);
+  let curId = null;
+  if (isToday) timed.forEach(s => { if (s.start <= nowH) curId = s.id; });
+
+  let total = 0, done = 0, firstOpen = null, openAfterNow = null;
+  const blocks = TL_SLOTS.map((s, idx) => {
+    const items = slots[s.id].map(it => ({...it, lines: it.lines.filter(keep)})).filter(it => it.lines.length);
+    if (!items.length) return '';
+    let sTotal = 0, sDone = 0;
+    items.forEach(it => it.lines.forEach(l => { if (l.live) { sTotal++; if (l.done) sDone++; } }));
+    total += sTotal; done += sDone;
+    if (sDone < sTotal) {
+      if (!firstOpen) firstOpen = s;
+      if (!openAfterNow && (!curId || timed.findIndex(t=>t.id===s.id) >= timed.findIndex(t=>t.id===curId))) openAfterNow = s;
+    }
+    const isNow = isToday && s.id === curId;
+    return `<section class="tl-block ${isNow?'now':''}" aria-label="${tlEsc(s.label)}">
+      <div class="tl-bh">
+        <div class="tl-bt"><h3>${tlEsc(s.label)}</h3>${isNow?'<span class="tl-nowpill">Now</span>':''}</div>
+        <div class="tl-win">${tlEsc(s.win)}</div>
+        ${sTotal ? `<div class="tl-count">${sDone}/${sTotal}</div>` : ''}
+      </div>
+      <div class="tl-grid">${items.map(it => tlCard(it, date, s.bg)).join('')}</div>
+    </section>`;
+  }).join('');
+
+  const pct = total ? Math.round(done/total*100) : 0;
+  const dayLabel = isToday ? 'Today' : `${DAYS[date.getDay()]} ${date.getMonth()+1}/${date.getDate()}`;
+  let next = '';
+  if (isToday) {
+    if (total && done === total) next = 'Everything is checked off for today.';
+    else if (openAfterNow) next = `Up next: <b>${tlEsc(openAfterNow.label)}</b>`;
+    else if (firstOpen) next = `Still open: <b>${tlEsc(firstOpen.label)}</b>`;
+  }
+  const summary = `<div class="tl-sum">
+    <div class="tl-sum-top"><h2>${dayLabel}</h2><span class="tl-sum-n">${isToday ? `${done} of ${total} done` : `${total} to track`}</span></div>
+    ${isToday ? `<div class="tl-track" role="img" aria-label="${pct}% of today's items done"><div style="width:${pct}%"></div></div>` : ''}
+    ${next ? `<div class="tl-next">${next}</div>` : ''}
+    ${(!isToday) ? '<div class="tl-next">Supplements are view-only on other days.</div>' : ''}
+  </div>`;
+  return summary + (blocks || '<div class="tl-empty">Nothing scheduled.</div>');
+}
+
+function renderTodayView() {
+  const el = document.getElementById('todayTimeline');
+  if (!el) return;
+  const mode = tlMode();
+  const classic = document.getElementById('todayClassic');
+  if (classic) classic.style.display = mode === 'list' ? '' : 'none';
+  el.innerHTML = tlToolbar(true) + (mode === 'timeline' ? tlRender(TODAY) : '');
+}
+
+function tlRenderWeek(date) {
+  const tools = document.getElementById('wkTools');
+  if (tools) tools.innerHTML = tlToolbar(true);
+  if (tlMode() === 'timeline') document.getElementById('wkDetail').innerHTML = tlRender(date);
+}
+
+function tlRefreshAll() {
+  renderTodayView();
+  if (tlIsActive('tab-week')) { renderStrip(); showDay(selDay); }
+}
+
+function tlAfterChange(key) {
+  updateProgress();
+  updateGraph();
+  updateMedProgress(TODAY);
+  tlRefreshAll();
+  if (key) {
+    const b = Array.from(document.querySelectorAll('[data-key]')).find(x => x.dataset.key === key);
+    if (b) b.focus({preventScroll:true});
+  }
+}
+
+function tlTap(btn) {
+  const k = btn.dataset, date = new Date(k.date);
+  if (k.kind === 'supp') toggleSupp(k.block, k.name);
+  else toggleDose(date, k.person, k.name);
+  tlAfterChange(k.key);
+}
+
+function tlMiss(btn) {
+  toggleMissed(new Date(btn.dataset.date), btn.dataset.name);
+  refreshRetaBanner();
+  tlRefreshAll();
+}
+
+// Schedule tab: same cards, read-only (plan for the selected weekday)
+function renderScheduleTimeline(blocks) {
+  const who = tlWho();
+  const pal = ['#FFE7A0','#CFE4EE','#F9D6CC','#DDE0F7','#FFD1D9','#E8F0C8'];
+  const whoLabel = {both:'Both', cass:'Cass', mike:'Mike'};
+  const out = blocks.map((b, i) => {
+    const rows = b.rows.filter(r => who==='all' || r.who==='both' || (who==='c' && r.who==='cass') || (who==='m' && r.who==='mike'));
+    if (!rows.length) return '';
+    const bg = pal[i % pal.length];
+    const cards = rows.map(r => `<div class="tl-card" style="background:${bg}">
+      <div class="tl-card-top"><div class="tl-name">${tlEsc(r.name)}</div></div>
+      ${r.note ? `<div class="tl-note">${tlEsc(r.note)}</div>` : ''}
+      <div class="tl-lines"><div class="tl-line ro"><span class="tl-who">${whoLabel[r.who]||''}</span><span class="tl-amt">${tlEsc(r.dose)}</span></div></div>
+    </div>`).join('');
+    return `<section class="tl-block" aria-label="${tlEsc(b.time)}">
+      <div class="tl-bh"><div class="tl-bt"><h3>${tlEsc(b.time)}</h3></div><div class="tl-win">${tlEsc(b.window)}</div></div>
+      <div class="tl-grid">${cards}</div>
+    </section>`;
+  }).join('');
+  document.getElementById('schedContent').innerHTML = out || '<div class="tl-empty">Nothing scheduled.</div>';
+}
 
 (async () => {
   // One-time cleanup: remove any bad localStorage keys from before the med-person fix
