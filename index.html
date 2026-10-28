@@ -333,6 +333,8 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
 .pr-track{background:rgba(255,255,255,.6);margin-top:4px;}
 .pr-track div{background:#A33226;}
 
+.sync-code{font:600 20px 'DM Mono',monospace;letter-spacing:.06em;background:var(--frame);border:1px dashed var(--accent);border-radius:14px;padding:12px 16px;margin-top:12px;word-break:break-all;user-select:all;}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .dual{grid-template-columns:1fr;}
@@ -1491,6 +1493,7 @@ function toggleSupp(block, name) {
   const s = getSuppStore(), k = suppKey(block, name);
   if (s[k]) delete s[k]; else s[k] = Date.now();
   saveSuppStore(s);
+  syncQueue('supp', k, s[k] || null, !s[k]);
 }
 
 function setPhase(phase) {
@@ -2250,6 +2253,7 @@ function editDose(btn) {
   if (v === null) return;
   if (v.trim()) info[name] = v.trim(); else delete info[name];
   jset(DOSE_KEY, info);
+  syncQueue('dose', name, info[name] || null, !info[name]);
   tlRefreshAll();
   if (tlIsActive('tab-supps')) renderSupps();
 }
@@ -2283,16 +2287,16 @@ function logPeriodStart() {
   if (!v) return;
   const c = getCycle();
   if (!c.starts.includes(v)) c.starts.push(v);
-  jset(CY_KEY, c); cycleAfterChange();
+  jset(CY_KEY, c); syncQueue('cycle', 'cycle', c, false); cycleAfterChange();
 }
 function removePeriod(btn) {
   const c = getCycle();
   c.starts = c.starts.filter(s => s !== btn.dataset.d);
-  jset(CY_KEY, c); cycleAfterChange();
+  jset(CY_KEY, c); syncQueue('cycle', 'cycle', c, false); cycleAfterChange();
 }
 function setCycleLen(inp) {
   const c = getCycle(), n = parseInt(inp.value, 10);
-  if (n >= 20 && n <= 45) { c.len = n; jset(CY_KEY, c); cycleAfterChange(); }
+  if (n >= 20 && n <= 45) { c.len = n; jset(CY_KEY, c); syncQueue('cycle', 'cycle', c, false); cycleAfterChange(); }
 }
 function cycleBanner() {
   const ci = cycleInfo();
@@ -2328,14 +2332,14 @@ function ciSet(btn) {
   const e = all[k.key] || {};
   const v = parseInt(k.v, 10), wrapId = btn.closest('[id]').id;
   if (e[k.m] === v) delete e[k.m]; else e[k.m] = v;
-  e.ts = Date.now(); all[k.key] = e; jset(CI_KEY, all);
+  e.ts = Date.now(); all[k.key] = e; jset(CI_KEY, all); syncQueue('checkin', k.key, e, false);
   ciRefresh(); renderCheckinHistory();
   const again = Array.from(document.querySelectorAll('.ci-pill')).find(x => x.dataset.key === k.key && x.dataset.m === k.m && x.dataset.v === k.v && x.closest('#' + wrapId));
   if (again) again.focus({preventScroll:true});
 }
 function ciNote(ta) {
   const all = jget(CI_KEY, {}), e = all[ta.dataset.key] || {};
-  e.notes = ta.value; e.ts = Date.now(); all[ta.dataset.key] = e; jset(CI_KEY, all);
+  e.notes = ta.value; e.ts = Date.now(); all[ta.dataset.key] = e; jset(CI_KEY, all); syncQueue('checkin', ta.dataset.key, e, false);
   const s = document.getElementById(ta.id.replace('-notes', '-saved'));
   if (s) s.textContent = 'Saved on this device';
   renderCheckinHistory();
@@ -2371,9 +2375,11 @@ function renderCheckinTab() {
       ${starts.length ? `<div class="cy-list">${starts.map(s => `<div class="cy-item"><span>${fmtShort(fromYmd(s))}, ${fromYmd(s).getFullYear()}</span><button class="dose-btn" data-d="${s}" aria-label="Remove period start ${s}" onclick="removePeriod(this)">Remove</button></div>`).join('')}</div>` : ''}
       <div class="ci-saved">Days 1–5 menstrual, 6–16 follicular, 17+ luteal, the same ranges your Supplements tab uses.</div>
     </div>
+    ${syncCardHtml()}
     <div class="ci-wrap"><div class="tl-sum-top"><h2>Recent check-ins</h2></div><div id="ciHistory"></div></div>`;
   ciRender(document.getElementById('ciTabWidget'), 'c', ciDate);
   renderCheckinHistory();
+  syncStatus();
 }
 function renderCheckinHistory() {
   const el = document.getElementById('ciHistory');
@@ -2513,6 +2519,144 @@ function tlClockCheck() {
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tlClockCheck(); });
 setInterval(tlClockCheck, 60000);
 
+// ─── PRIVATE SYNC (check-ins, cycle, supplement doses, supplement checks) ─────
+// Data goes to the pp_data table through two Supabase functions. The table itself
+// is locked; a record is only reachable with the hash of your private sync code.
+const SYNC_CODE_KEY = 'pp_sync_code_v1', SYNC_META_KEY = 'pp_syncmeta_v1', SYNC_OUT_KEY = 'pp_outbox_v1', SYNC_LAST_KEY = 'pp_synclast_v1';
+function syncCode() { try { return localStorage.getItem(SYNC_CODE_KEY) || ''; } catch(e) { return ''; } }
+function syncOn() { return !!syncCode(); }
+function syncClean(c) { return String(c).replace(/[^A-Za-z0-9]/g, '').toUpperCase(); }
+function syncFmt(c) { return c.match(/.{1,5}/g).join('-'); }
+async function syncOwner(code) {
+  const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('pp1:' + syncClean(code)));
+  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function syncNewCode() {
+  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = crypto.getRandomValues(new Uint8Array(20));
+  return syncFmt(Array.from(r).map(b => A[b % 32]).join(''));
+}
+async function syncRpc(fn, body) {
+  const r = await fetch(SB_URL + '/rest/v1/rpc/' + fn, {method:'POST', headers:{'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY}, body:JSON.stringify(body)});
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+function syncMeta() { return jget(SYNC_META_KEY, {}); }
+
+// Called after every local change to a synced record
+function syncQueue(kind, key, value, deleted) {
+  const ts = Date.now(), m = syncMeta();
+  m[kind + '|' + key] = ts; jset(SYNC_META_KEY, m);
+  if (!syncOn()) return;
+  const out = jget(SYNC_OUT_KEY, []).filter(o => !(o.kind === kind && o.key === key));
+  out.push({kind, key, value: deleted ? null : value, deleted: !!deleted, updated_at: ts});
+  jset(SYNC_OUT_KEY, out);
+  syncFlushSoon();
+}
+let syncTimer = null;
+function syncFlushSoon() { clearTimeout(syncTimer); syncTimer = setTimeout(syncFlush, 800); }
+async function syncFlush() {
+  if (!syncOn()) return;
+  const batch = jget(SYNC_OUT_KEY, []).slice(0, 400);
+  if (!batch.length) return;
+  try {
+    await syncRpc('pp_push', {p_owner: await syncOwner(syncCode()), p_rows: batch});
+    const left = jget(SYNC_OUT_KEY, []).filter(o => !batch.some(b => b.kind === o.kind && b.key === o.key && b.updated_at === o.updated_at));
+    jset(SYNC_OUT_KEY, left);
+    if (left.length) syncFlushSoon();
+  } catch(e) { console.warn('sync push failed', e); syncStatus('Offline. Changes will send when you are back online.'); }
+}
+async function syncPull() {
+  if (!syncOn()) return false;
+  try {
+    const rows = await syncRpc('pp_pull', {p_owner: await syncOwner(syncCode())});
+    const meta = syncMeta(), ci = jget(CI_KEY, {}), di = getDoseInfo(), ss = getSuppStore();
+    let changed = false;
+    rows.forEach(r => {
+      const mk = r.kind + '|' + r.key, rts = Date.parse(r.updated_at);
+      if (!(rts > (meta[mk] || 0))) return;
+      changed = true; meta[mk] = rts;
+      if (r.kind === 'checkin') { if (r.deleted) delete ci[r.key]; else ci[r.key] = r.value; }
+      else if (r.kind === 'cycle') { if (r.value) jset(CY_KEY, r.value); }
+      else if (r.kind === 'dose') { if (r.deleted) delete di[r.key]; else di[r.key] = r.value; }
+      else if (r.kind === 'supp') { if (r.deleted) delete ss[r.key]; else ss[r.key] = r.value; }
+    });
+    if (changed) { jset(CI_KEY, ci); jset(DOSE_KEY, di); saveSuppStore(ss); jset(SYNC_META_KEY, meta); }
+    return changed;
+  } catch(e) { console.warn('sync pull failed', e); syncStatus('Offline. Showing what is saved on this device.'); return false; }
+}
+// Put everything already on this device into the outbox (first time sync is turned on)
+function syncSeedLocal() {
+  const meta = syncMeta(), out = [], now = Date.now();
+  const add = (kind, key, value, deleted, fallback) => {
+    const mk = kind + '|' + key; meta[mk] = meta[mk] || fallback || now;
+    out.push({kind, key, value: deleted ? null : value, deleted: !!deleted, updated_at: meta[mk]});
+  };
+  const ci = jget(CI_KEY, {}); Object.keys(ci).forEach(k => add('checkin', k, ci[k], false, ci[k].ts));
+  const cy = jget(CY_KEY, null); if (cy) add('cycle', 'cycle', cy, false);
+  const di = getDoseInfo(); Object.keys(di).forEach(k => add('dose', k, di[k], false));
+  const ss = getSuppStore(); Object.keys(ss).forEach(k => add('supp', k, ss[k], false, ss[k]));
+  jset(SYNC_META_KEY, meta); jset(SYNC_OUT_KEY, out);
+}
+async function syncNow() {
+  if (!syncOn()) return;
+  syncStatus('Syncing…');
+  await syncFlush();
+  const changed = await syncPull();
+  if (changed) syncAfterPull();
+  if (!jget(SYNC_OUT_KEY, []).length) { try { localStorage.setItem(SYNC_LAST_KEY, String(Date.now())); } catch(e) {} syncStatus(); }
+}
+function syncAfterPull() {
+  applyCyclePhase();
+  tlRefreshAll();
+  const a = document.activeElement;
+  if (!(a && a.tagName === 'TEXTAREA')) { ciRefresh(); renderCheckinHistory(); }
+  if (tlIsActive('tab-supps')) renderSupps();
+  if (tlIsActive('tab-tracker')) renderTrackerExtras();
+  if (tlIsActive('tab-checkin') && !(a && /^(TEXTAREA|INPUT)$/.test(a.tagName))) renderCheckinTab();
+}
+function syncStatus(msg) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  if (msg) { el.textContent = msg; return; }
+  const t = Number(localStorage.getItem(SYNC_LAST_KEY) || 0);
+  el.textContent = t ? 'Synced ' + new Date(t).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : 'Not synced yet';
+}
+function syncSupported() { return !!(window.crypto && crypto.subtle && crypto.getRandomValues); }
+async function syncEnableNew() {
+  if (!syncSupported()) { alert('This browser cannot create a secure sync code.'); return; }
+  localStorage.setItem(SYNC_CODE_KEY, syncNewCode());
+  syncSeedLocal(); renderCheckinTab(); await syncNow();
+}
+async function syncConnect() {
+  if (!syncSupported()) { alert('This browser cannot use secure sync.'); return; }
+  const c = syncClean(document.getElementById('syncCodeIn').value);
+  if (c.length !== 20) { const m = document.getElementById('syncMsg'); if (m) m.textContent = 'A sync code has 20 letters and numbers.'; return; }
+  localStorage.setItem(SYNC_CODE_KEY, syncFmt(c));
+  syncSeedLocal(); renderCheckinTab(); await syncNow();
+}
+function syncDisable() {
+  if (!confirm('Turn off sync on this device? Your data stays here and in the cloud. You can reconnect with your code.')) return;
+  try { localStorage.removeItem(SYNC_CODE_KEY); localStorage.removeItem(SYNC_OUT_KEY); } catch(e) {}
+  renderCheckinTab();
+}
+function syncToggleCode(btn) {
+  const el = document.getElementById('syncCodeShow'), show = el.hidden;
+  el.hidden = !show; btn.textContent = show ? 'Hide code' : 'Show my code'; btn.setAttribute('aria-expanded', show);
+}
+function syncCardHtml() {
+  if (!syncOn()) return `<div class="ci-wrap"><div class="tl-sum-top"><h2>Sync across devices</h2></div>
+    <div class="cy-sub">Keep your check-ins, notes, cycle, supplement doses and supplement checks the same on your phone and laptop. They are stored privately under a code only you hold.</div>
+    <div class="cy-form"><button class="pill-btn" onclick="syncEnableNew()">Turn on sync</button></div>
+    <div class="cy-form"><label for="syncCodeIn">Already have a code?</label><input type="text" id="syncCodeIn" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" autocapitalize="characters" style="width:260px"><button class="pill-btn" onclick="syncConnect()">Connect</button></div>
+    <div class="ci-saved" id="syncMsg" aria-live="polite"></div></div>`;
+  return `<div class="ci-wrap"><div class="tl-sum-top"><h2>Sync across devices</h2><span class="tl-sum-n" id="syncStatus" aria-live="polite"></span></div>
+    <div class="cy-sub">Sync is on. Enter this code on your other devices to connect them. Anyone who has the code can read this data, so keep it private.</div>
+    <div class="cy-form"><button class="pill-btn" onclick="syncNow()">Sync now</button><button class="dose-btn" aria-expanded="false" onclick="syncToggleCode(this)">Show my code</button><button class="dose-btn" onclick="syncDisable()">Turn off on this device</button></div>
+    <div id="syncCodeShow" class="sync-code" hidden>${tlEsc(syncCode())}</div>
+    <div class="ci-saved">Peptide dose checks on Today still sync through your original dose log.</div></div>`;
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNow(); });
+
 (async () => {
   // One-time cleanup: remove any bad localStorage keys from before the med-person fix
   // These are keys where person is a raw Supabase string ('Mike','Cass','Cass-med')
@@ -2537,6 +2681,7 @@ setInterval(tlClockCheck, 60000);
   initProtocol();
   initSunday();
   initPricing();
+  syncNow();
 })();
 </script>
 </body>
