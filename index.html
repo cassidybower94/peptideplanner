@@ -415,6 +415,27 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
 .tr-table th,.tr-table td{padding:4px 12px;text-align:center;border-bottom:1px solid var(--border);}
 .tr-table th:first-child,.tr-table td:first-child{text-align:left;}
 
+
+/* ── Sticky pickers: day strip / schedule days / Today filter stay in view while scrolling ── */
+.sticky-bar{position:sticky;top:var(--hdr-h,120px);z-index:60;background:var(--frame);padding:8px 0 10px;margin-bottom:14px;border-bottom:1px solid var(--border);}
+.sticky-bar .wk-strip{margin-bottom:8px;}
+.sticky-bar .sched-day-strip{margin-bottom:8px;}
+.sticky-bar .tl-bar{margin-bottom:0;}
+#todayBar{position:sticky;top:var(--hdr-h,120px);z-index:60;background:var(--frame);padding:8px 0;margin-bottom:12px;border-bottom:1px solid var(--border);}
+#todayBar .tl-bar{margin-bottom:0;}
+.ci-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;}
+.ci-sub{background:var(--frame);border-radius:18px;padding:14px 16px;}
+@media(max-width:768px){
+  .sticky-bar{padding:6px 0 8px;}
+  .sticky-bar .wk-strip{gap:4px;margin-bottom:6px;}
+  .sticky-bar .wday{padding:6px 2px;border-radius:14px;}
+  .sticky-bar .wday-num{font-size:17px;margin:1px 0;}
+  .sticky-bar .sched-day-strip{gap:6px;margin-bottom:6px;}
+  .sticky-bar .sched-day-btn{padding:6px 12px;}
+  .sticky-bar .tl-chip,#todayBar .tl-chip{min-height:36px;padding:0 12px;font-size:12px;}
+  .sticky-bar .tl-bar,#todayBar .tl-bar{gap:6px;}
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .dual{grid-template-columns:1fr;}
@@ -462,6 +483,7 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
   <div id="tab-today" class="vp active">
     <div id="meBar"></div>
     <div id="todayBanners"></div>
+    <div id="todayBar"></div>
     <div id="todayTimeline"></div>
     <div id="todayCheckin" class="ci-wrap"></div>
     <div id="todayClassic" style="display:none">
@@ -512,16 +534,20 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
   <!-- WEEK -->
   <div id="tab-week" class="vp">
     <div class="slabel">Week of <span id="wkRange"></span></div>
-    <div class="wk-strip" id="wkStrip"></div>
-    <div id="wkTools"></div>
+    <div class="sticky-bar">
+      <div class="wk-strip" id="wkStrip"></div>
+      <div id="wkTools"></div>
+    </div>
     <div id="wkDetail"></div>
   </div>
 
   <!-- TRACKER -->
   <div id="tab-schedule" class="vp">
     <div class="slabel" style="margin-bottom:14px">Daily Schedule · Exact Timing</div>
-    <div class="sched-day-strip" id="schedDayStrip"></div>
-    <div id="schedTools"></div>
+    <div class="sticky-bar">
+      <div class="sched-day-strip" id="schedDayStrip"></div>
+      <div id="schedTools"></div>
+    </div>
     <div id="schedContent"></div>
   </div>
 
@@ -2137,8 +2163,9 @@ function setTlMode(m) {
   tlRefreshOthers();
 }
 function setTlWho(w) {
-  try { localStorage.setItem('pp_who_v1', w); } catch(e) {}
+  try { localStorage.setItem('pp_who_v1', w); if (w === 'c' || w === 'm') localStorage.setItem('pp_ciwho_v1', w); } catch(e) {}
   renderTodayView();
+  ciRefresh();
   tlRefreshOthers();
 }
 function tlRefreshOthers() {
@@ -2359,9 +2386,11 @@ function renderTodayView() {
   const mode = tlMode();
   const classic = document.getElementById('todayClassic');
   if (classic) classic.style.display = mode === 'list' ? '' : 'none';
-  el.innerHTML = tlToolbar(true) + (mode === 'timeline' ? tlRender(TODAY) : '');
+  const bar = document.getElementById('todayBar');
+  if (bar) bar.innerHTML = tlToolbar(true);
+  el.innerHTML = mode === 'timeline' ? tlRender(TODAY) : '';
   const ci = document.getElementById('todayCheckin');
-  if (ci && !ci.dataset.ready) { ci.dataset.ready = '1'; ciRender(ci, 't', ymd(TODAY)); }
+  if (ci && !ci.dataset.ready) { ci.dataset.ready = '1'; ciRenderToday(ci); }
   renderMeBar();
   if (!tlScrolled && mode === 'timeline' && tlIsActive('tab-today')) {
     tlScrolled = true;
@@ -2501,9 +2530,9 @@ const CI_METRICS = [['sleep','Sleep'],['energy','Energy'],['mood','Mood'],['reco
 // Two people: Cassidy is stored under the date, Mike under "date|m"
 function ciWho() { try { return localStorage.getItem('pp_ciwho_v1') === 'm' ? 'm' : 'c'; } catch(e) { return 'c'; } }
 function setCiWho(w) { try { localStorage.setItem('pp_ciwho_v1', w); } catch(e) {} ciRefresh(); renderCheckinHistory(); }
-function ciRender(el, pre, dateKey) {
+function ciRender(el, pre, dateKey, whoOverride, showToggle) {
   if (!el) return;
-  const who = ciWho(), key = dateKey + (who === 'm' ? '|m' : ''), name = who === 'm' ? 'Mike' : 'Cassidy';
+  const who = whoOverride || ciWho(), key = dateKey + (who === 'm' ? '|m' : ''), name = who === 'm' ? 'Mike' : 'Cassidy';
   const e = (jget(CI_KEY, {}))[key] || {};
   const d = fromYmd(dateKey), isT = dateKey === ymd(TODAY);
   const chip = (on, w, l) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="setCiWho('${w}')">${l}</button>`;
@@ -2511,7 +2540,7 @@ function ciRender(el, pre, dateKey) {
     <div class="ci-pills" role="group" aria-labelledby="${pre}-${m}">${[1,2,3,4,5].map(n =>
       `<button class="ci-pill ${e[m]===n?'on':''}" aria-pressed="${e[m]===n}" aria-label="${name} ${l} ${n} of 5" data-key="${key}" data-m="${m}" data-v="${n}" onclick="ciSet(this)">${n}</button>`).join('')}</div></div>`).join('');
   el.innerHTML = `<div class="ci">
-    <div class="tl-bar" style="margin-bottom:10px"><div class="tl-seg" role="group" aria-label="Check-in for">${chip(who==='c','c','Cassidy')}${chip(who==='m','m','Mike')}</div></div>
+    ${showToggle === false ? '' : `<div class="tl-bar" style="margin-bottom:10px"><div class="tl-seg" role="group" aria-label="Check-in for">${chip(who==='c','c','Cassidy')}${chip(who==='m','m','Mike')}</div></div>`}
     <div class="tl-sum-top"><h2>${isT ? `How does ${name} feel today?` : `${name} · ${fmtShort(d)}`}</h2><span class="tl-sum-n">1 = low · 5 = high</span></div>
     ${rows}
     <label class="ci-nl" for="${pre}-notes">Notes for ${name}</label>
@@ -2519,9 +2548,21 @@ function ciRender(el, pre, dateKey) {
     <div class="ci-saved" id="${pre}-saved" aria-live="polite"></div>
   </div>`;
 }
+// Today's check-in follows the Cassidy / Mike / Both filter at the top
+function ciRenderToday(t) {
+  const who = tlWho(), key = ymd(TODAY);
+  if (who === 'all') {
+    t.innerHTML = '<div class="ci-two"><div class="ci-sub" id="tciC"></div><div class="ci-sub" id="tciM"></div></div>';
+    ciRender(document.getElementById('tciC'), 't1', key, 'c', false);
+    ciRender(document.getElementById('tciM'), 't2', key, 'm', false);
+  } else {
+    t.innerHTML = '<div id="tciS"></div>';
+    ciRender(document.getElementById('tciS'), 't1', key, who, false);
+  }
+}
 function ciRefresh() {
   const t = document.getElementById('todayCheckin');
-  if (t && t.dataset.ready) ciRender(t, 't', ymd(TODAY));
+  if (t && t.dataset.ready) ciRenderToday(t);
   const w = document.getElementById('ciTabWidget');
   if (w) ciRender(w, 'c', ciDate);
 }
@@ -2943,6 +2984,16 @@ function syncStatus(msg) {
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
 }
+
+(function trackHeaderHeight() {
+  const h = document.querySelector('.hdr');
+  if (!h) return;
+  const set = () => document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px');
+  set();
+  if (window.ResizeObserver) new ResizeObserver(set).observe(h);
+  window.addEventListener('resize', set);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(set);
+})();
 
 (async () => {
   // One-time cleanup: remove any bad localStorage keys from before the med-person fix
