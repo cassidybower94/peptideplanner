@@ -717,7 +717,7 @@ function toggleDose(date, person, name) {
   const adding = !s[k];
   if (adding) s[k] = Date.now(); else delete s[k];
   saveStore(s);
-  sbLogDose(new Date(), person, name, adding);
+  sbLogDose(date, person, name, adding);
 }
 
 // ─── RENDER HELPERS ────────────────────────────────────────────────────────────
@@ -804,12 +804,8 @@ function tap(el, dateStr, person, name) {
   if (document.getElementById('week') && document.getElementById('week').classList.contains('active')) {
     renderStrip();
     if (date.toDateString() === TODAY.toDateString()) {
-      const d = getDoses(TODAY);
-      const ct = document.getElementById('cassToday');
-      const mt = document.getElementById('mikeToday');
-      if (ct) ct.innerHTML = personList(d.c, TODAY, 'c', true);
-      if (mt) mt.innerHTML = personList(d.m, TODAY, 'm', true);
-      updateProgress();
+      // Full re-init of Today tab so banners, headers, and all rows are consistent
+      initToday();
     }
   }
 }
