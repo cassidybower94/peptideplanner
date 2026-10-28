@@ -4,34 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Peptide Planner</title>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FFB5C2">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Planner">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700;1,900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap">
 <style>
 /* ── TOKENS ───────────────────────────────────────────────── */
 :root {
-  --bg:#FFB5C2; --frame:#FAF0DC; --surface:#FFF6E6; --s2:#F5E6CB; --border:#E6CFC0;
-  --ink:#3A1D1A; --text:#3A1D1A; --muted:#8C3A30;
-  --accent:#B83A2D; --a2:#2F6C94;
-  --warn:#9A5E22; --danger:#A32A3A; --green:#3A6E52; --blue:#2F6C94;
+  --bg:#F4F0EB; --surface:#FDFAF6; --s2:#EDE8E1; --border:#D5CFC6;
+  --ink:#1C1814; --text:#2A2420; --muted:#8A7F76;
+  --accent:#B85C38; --a2:#4A7C9E;
+  --warn:#C27C3A; --danger:#B84040; --green:#5A7A5C; --blue:#4A7C9E;
 }
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#2A1412; --frame:#331816; --surface:#3F201C; --s2:#4A2723; --border:#5E322B;
-    --ink:#FFE9DC; --text:#FBEBDD; --muted:#E0B0A4;
-    --accent:#FF8A78; --a2:#8EC1E0; --green:#8FCFA8; --blue:#8EC1E0; --warn:#E8B26A; --danger:#FF8FA0;
+    --bg:#171310; --surface:#1F1B18; --s2:#282420; --border:#3A342E;
+    --ink:#F0EAE2; --text:#E0D8D0; --muted:#7A706A;
+    --accent:#C86848; --a2:#5A8CAE; --green:#6A8A6C; --blue:#5A8CAE;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#2A1412; --frame:#331816; --surface:#3F201C; --s2:#4A2723; --border:#5E322B;
-    --ink:#FFE9DC; --text:#FBEBDD; --muted:#E0B0A4;
-    --accent:#FF8A78; --a2:#8EC1E0; --green:#8FCFA8; --blue:#8EC1E0; --warn:#E8B26A; --danger:#FF8FA0;
+  --bg:#171310; --surface:#1F1B18; --s2:#282420; --border:#3A342E;
+  --ink:#F0EAE2; --text:#E0D8D0; --muted:#7A706A;
+  --accent:#C86848; --a2:#5A8CAE; --green:#6A8A6C; --blue:#5A8CAE;
   color-scheme:dark;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -40,7 +33,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 /* ── HEADER ── */
 .hdr{background:var(--ink);padding:0 28px;position:sticky;top:0;z-index:100;}
 .hdr-top{display:flex;align-items:center;gap:14px;padding:13px 0 11px;border-bottom:1px solid rgba(255,255,255,.08);}
-.hdr-top h1{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:20px;font-weight:700;color:var(--bg);letter-spacing:-.01em;}
+.hdr-top h1{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:20px;font-weight:700;color:var(--bg);letter-spacing:-.01em;}
 .hdr-meta{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.38);}
 .today-pill{margin-left:auto;background:var(--accent);color:#fff;font-family:'DM Mono',monospace;font-size:10px;padding:4px 12px;text-transform:uppercase;letter-spacing:.06em;}
 .tabs{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -66,7 +59,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 .phead{padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid;}
 .phead.cass{border-color:var(--accent);background:rgba(184,92,56,.04);}
 .phead.mike{border-color:var(--a2);background:rgba(74,124,158,.04);}
-.phead-name{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:700;font-size:15px;}
+.phead-name{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:700;font-size:15px;}
 .phead.cass .phead-name{color:var(--accent);}
 .phead.mike .phead-name{color:var(--a2);}
 .pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
@@ -97,7 +90,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 
 /* ── PROGRESS ── */
 .prog-wrap{background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px;}
-.prog-label{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.prog-label{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
 .prog-bars{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .prog-item{}
 .prog-name{font-size:11px;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
@@ -108,7 +101,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 
 /* ── WEEK GRAPH ── */
 .graph-wrap{background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px;}
-.graph-title{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;}
+.graph-title{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;}
 .graph-bars{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;align-items:end;height:80px;}
 .g-col{display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;}
 .g-bar-wrap{flex:1;width:100%;display:flex;flex-direction:column;justify-content:flex-end;}
@@ -126,7 +119,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 .wday.today{border-color:var(--accent);border-width:2px;background:rgba(184,92,56,.04);}
 .wday.sel{border-color:var(--a2);border-width:2px;background:rgba(74,124,158,.04);}
 .wday-name{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
-.wday-num{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:22px;font-weight:700;margin:3px 0;}
+.wday-num{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:22px;font-weight:700;margin:3px 0;}
 .wday.today .wday-num{color:var(--accent);}
 .wday-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
 
@@ -158,7 +151,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 .price-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--accent);padding:14px;}
 .price-name{font-size:12px;font-weight:600;color:var(--text);}
 .price-code{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
-.price-val{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:22px;font-weight:700;margin-top:8px;color:var(--text);}
+.price-val{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:22px;font-weight:700;margin-top:8px;color:var(--text);}
 .price-unit{font-size:10px;color:var(--muted);}
 
 /* ── SCHEDULE ── */
@@ -202,240 +195,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 .supp-tag.warn{background:rgba(194,124,58,.1);color:var(--warn);}
 .conflict-banner{background:rgba(184,64,64,.07);border-left:3px solid var(--danger);padding:10px 14px;margin-bottom:14px;font-family:'DM Mono',monospace;font-size:12px;color:var(--danger);}
 
-
-/* ── RAYO SKIN (visual only; no markup or script changes) ── */
-body{background:var(--bg);}
-.hdr{background:var(--bg);padding:14px 28px 0;}
-.hdr-top{border-bottom:none;padding:6px 0 12px;}
-.hdr-top h1{font-weight:600;font-size:26px;color:var(--accent);}
-.hdr-meta{color:var(--ink);opacity:.7;}
-.today-pill{background:var(--accent);color:#FFF6E6;border-radius:999px;padding:6px 14px;}
-.tabs{background:var(--frame);border-radius:999px;padding:4px;width:max-content;max-width:100%;margin-bottom:12px;}
-.tab{color:var(--accent);border:none;border-radius:999px;padding:10px 16px;min-height:40px;font-size:12px;}
-.tab:hover{color:var(--ink);background:var(--s2);}
-.tab.active{background:var(--accent);color:#FFF6E6;border:none;}
-.main{background:var(--frame);border:1px solid var(--accent);border-radius:28px;margin:4px auto 28px;padding:24px 28px;width:calc(100% - 56px);}
-.slabel{color:var(--accent);}
-.slabel::before{background:var(--accent);}
-.pcard,.prog-wrap,.graph-wrap,.ptable,.sched-block,.supp-block,.prep-card,.price-card,.wday{border-radius:20px;border-color:var(--border);}
-.prep-card,.price-card{overflow:hidden;}
-.banner,.conflict-banner{border-radius:14px;}
-.phead{border-bottom-width:0;padding:14px 18px 10px;}
-.phead.cass{background:rgba(184,58,45,.10);}
-.phead.mike{background:rgba(47,108,148,.10);}
-.phead-name{font-size:18px;font-weight:600;}
-.prog-label,.graph-title{font-size:18px;font-weight:600;color:var(--accent);}
-.prog-track{height:8px;border-radius:999px;}
-.prog-fill{border-radius:999px;}
-.chk,.supp-chk{border-radius:50%;width:20px;height:20px;border-color:var(--accent);}
-.drow{grid-template-columns:26px 1fr;}
-.drow:hover,.supp-row:hover,.ptrow:hover{background:var(--s2);}
-.dtime{border-left-width:0;border-radius:999px;padding:3px 10px;}
-.who,.supp-tag,.sched-who{border-radius:999px;}
-.g-bar{border-radius:6px 6px 0 0;}
-.wday{padding:12px 6px;}
-.wday.today{background:rgba(184,58,45,.10);}
-.wday-num{font-weight:600;}
-.pt-head{background:var(--accent);color:#FFF6E6;}
-.sched-day-btn{border-radius:999px;border-color:var(--accent);color:var(--accent);padding:8px 16px;}
-.sched-day-btn:hover{background:var(--s2);}
-.sched-day-btn.active{background:var(--accent);border-color:var(--accent);color:#FFF6E6;}
-.sched-block-head,.supp-block-head{background:var(--s2);}
-.price-val{font-weight:600;color:var(--accent);}
-@media(max-width:768px){
-  .hdr{padding:10px 12px 0;}
-  .main{width:calc(100% - 24px);padding:16px 14px;border-radius:22px;}
-}
-
-
-/* ── TIMELINE VIEW ── */
-.tl-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
-.tl-seg{display:inline-flex;background:var(--surface);border-radius:999px;padding:3px;gap:2px;}
-.tl-chip{border:0;background:transparent;color:var(--accent);font:600 13px 'DM Sans',sans-serif;min-height:40px;padding:0 16px;border-radius:999px;cursor:pointer;}
-.tl-chip:hover{background:var(--s2);}
-.tl-chip.on{background:var(--accent);color:#FFF6E6;}
-.tl-sum{background:var(--surface);border-radius:22px;padding:18px 20px;margin-bottom:22px;}
-.tl-sum-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-.tl-sum h2{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:30px;color:var(--accent);}
-.tl-sum-n{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
-.tl-track{height:8px;border-radius:999px;background:var(--s2);margin-top:12px;overflow:hidden;}
-.tl-track div{height:100%;background:var(--accent);border-radius:999px;transition:width .3s;}
-.tl-next{margin-top:10px;font-size:14px;color:var(--text);}
-.tl-block{margin-bottom:26px;border-radius:24px;padding:2px;}
-.tl-block.now{outline:2px solid var(--accent);outline-offset:6px;}
-.tl-bh{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap;margin:0 2px 10px;}
-.tl-bt{display:flex;align-items:center;gap:10px;}
-.tl-bh h3{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:26px;color:var(--accent);}
-.tl-nowpill{background:var(--accent);color:#FFF6E6;font-size:11px;font-weight:600;border-radius:999px;padding:3px 10px;text-transform:uppercase;letter-spacing:.06em;}
-.tl-win{font-size:13px;color:var(--muted);flex:1;min-width:140px;}
-.tl-count{font-family:'DM Mono',monospace;font-size:12px;background:var(--surface);color:var(--accent);border-radius:999px;padding:4px 12px;}
-.tl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:10px;}
-.tl-card{border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:8px;color:#3A1D1A;}
-.tl-card.all-done{opacity:.6;}
-.tl-card.is-missed .tl-name{text-decoration:line-through;}
-.tl-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
-.tl-name{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:18px;line-height:1.2;color:#3A1D1A;}
-.tl-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.6);color:#6B2F26;border-radius:999px;padding:3px 9px;white-space:nowrap;}
-.tl-note{font-size:12px;line-height:1.4;color:#6B2F26;}
-.tl-lines{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
-.tl-line{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:6px 12px 6px 8px;border:0;border-radius:999px;background:rgba(255,255,255,.62);color:#3A1D1A;font:inherit;text-align:left;cursor:pointer;}
-button.tl-line:hover{background:rgba(255,255,255,.9);}
-button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
-.tl-line.ro{cursor:default;min-height:36px;}
-.tl-ck{width:28px;height:28px;border-radius:50%;border:2px solid #A33226;display:inline-flex;align-items:center;justify-content:center;flex:none;color:#FFF6E6;}
-.tl-line.ro .tl-ck{display:none;}
-.tl-line.done .tl-ck{background:#A33226;}
-.tl-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6B2F26;}
-.tl-amt{font-family:'DM Mono',monospace;font-size:13px;color:#A33226;font-weight:500;margin-left:auto;text-align:right;}
-.tl-miss{align-self:flex-start;border:1px solid #A33226;background:transparent;color:#A33226;border-radius:999px;min-height:36px;padding:0 14px;font:600 12px 'DM Sans',sans-serif;cursor:pointer;}
-.tl-miss.on{background:#A33226;color:#FFF6E6;}
-.tl-empty{padding:24px;color:var(--muted);}
-
-
-/* ── CHECK-IN / CYCLE / TRACKER / PROTOCOL CARDS ── */
-.tl-sum-top h2{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:var(--accent);}
-.ci-wrap,.ci{background:var(--surface);border-radius:22px;padding:18px 20px;margin-bottom:16px;}
-.ci-wrap .ci{padding:0;margin:0;background:transparent;}
-.ci-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;}
-.ci-l{width:84px;font-weight:600;font-size:14px;}
-.ci-pills{display:inline-flex;gap:8px;flex-wrap:wrap;}
-.ci-pill{width:44px;height:44px;border-radius:50%;border:1px solid var(--accent);background:var(--frame);color:var(--accent);font:600 15px 'DM Sans',sans-serif;cursor:pointer;}
-.ci-pill:hover{background:var(--s2);}
-.ci-pill.on{background:var(--accent);color:#FFF6E6;}
-.ci-pill:focus-visible,.dose-btn:focus-visible,.pill-btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
-.ci-nl{display:block;margin:16px 0 6px;font-weight:600;font-size:14px;}
-.ci textarea,.ci-datebar input,.cy-form input{font:15px 'DM Sans',sans-serif;border:1px solid var(--border);border-radius:14px;background:var(--frame);color:var(--text);padding:10px 12px;}
-.ci textarea{width:100%;resize:vertical;}
-.ci-saved{font-size:12px;color:var(--muted);margin-top:8px;}
-.ci-datebar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;font-weight:600;font-size:14px;}
-.cy-big{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:34px;color:var(--accent);margin-top:8px;}
-.cy-big span{font-size:20px;}
-.cy-sub{font-size:14px;line-height:1.5;margin-top:6px;}
-.cy-form{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:14px;font-size:14px;font-weight:600;}
-.pill-btn{background:var(--accent);color:#FFF6E6;border:0;border-radius:999px;min-height:44px;padding:0 20px;font:600 14px 'DM Sans',sans-serif;cursor:pointer;}
-.pill-btn:hover{filter:brightness(.92);}
-.cy-list{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
-.cy-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--frame);border-radius:14px;padding:6px 12px;font-size:14px;}
-.dose-btn{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;min-height:32px;padding:0 12px;font:600 12px 'DM Sans',sans-serif;cursor:pointer;margin-left:6px;}
-.dose-btn:hover{background:var(--s2);}
-.tl-card .dose-btn{border-color:#A33226;color:#A33226;margin:0;min-height:36px;align-self:flex-start;}
-.ci-hist{padding:10px 0;border-bottom:1px solid var(--border);}
-.ci-hist:last-child{border-bottom:none;}
-.ci-hist-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;}
-.ci-hist-sc{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
-.ci-hist-n{font-size:13px;margin-top:4px;line-height:1.4;}
-.xg{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;}
-.xg-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
-.xg-bars{height:96px;width:100%;display:flex;gap:4px;align-items:flex-end;justify-content:center;}
-.xg-bars i{display:block;width:40%;max-width:22px;border-radius:6px 6px 0 0;}
-.xg-bars .m,.xg-key.m{background:var(--warn);}
-.xg-bars .s,.xg-key.s{background:var(--green);}
-.xg-key{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 2px;}
-.trk-list{background:var(--surface);border-radius:20px;overflow:hidden;margin-top:0;}
-.trk-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);}
-.trk-tag{font:700 10px 'DM Mono',monospace;background:rgba(58,110,82,.14);color:var(--green);border-radius:999px;padding:2px 9px;}
-.trk-n{font-size:13px;font-weight:700;flex:1;}
-.trk-t{font:10px 'DM Mono',monospace;color:var(--muted);}
-.pr-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.pr-track{background:rgba(255,255,255,.6);margin-top:4px;}
-.pr-track div{background:#A33226;}
-
-.sync-code{font:600 20px 'DM Mono',monospace;letter-spacing:.06em;background:var(--frame);border:1px dashed var(--accent);border-radius:14px;padding:12px 16px;margin-top:12px;word-break:break-all;user-select:all;}
-
-
-/* ── ROUND 2: calmer Today, pinned dose, trends, sync dot ── */
-.me-card{background:var(--surface);border-radius:22px;padding:16px 18px;margin-bottom:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;}
-.me-line{font-size:13px;color:var(--muted);margin-bottom:10px;}
-details.tl-block>summary{list-style:none;cursor:pointer;min-height:44px;}
-details.tl-block>summary::-webkit-details-marker{display:none;}
-details.tl-block>summary:focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:12px;}
-.tl-chev{flex:none;align-self:center;color:var(--accent);transition:transform .15s;}
-details[open]>summary .tl-chev{transform:rotate(90deg);}
-details.tl-block:not([open])>summary{margin-bottom:0;}
-.tl-block.late{outline:2px solid var(--accent);outline-offset:6px;}
-.tl-block.late.now{outline-style:solid;}
-.tl-latepill,.tl-donepill{font-size:11px;font-weight:700;border-radius:999px;padding:3px 10px;text-transform:uppercase;letter-spacing:.06em;}
-.tl-latepill{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent);}
-.tl-donepill{background:var(--s2);color:var(--muted);}
-.tl-sg{grid-column:1/-1;}
-.tl-sg-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.tl-sg-h .tl-count{background:rgba(255,255,255,.62);color:#A33226;}
-.tl-sg .dose-btn{margin-left:auto;}
-.tl-srows{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:6px 10px;margin-top:6px;}
-.tl-srow{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 8px;background:rgba(255,255,255,.5);border-radius:18px;padding:2px 6px 4px 2px;}
-.tl-sbtn{display:flex;align-items:center;gap:10px;min-height:44px;border:0;background:transparent;font:inherit;color:#3A1D1A;text-align:left;cursor:pointer;padding:2px 8px;border-radius:14px;}
-button.tl-sbtn:hover{background:rgba(255,255,255,.7);}
-button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
-.tl-sbtn.ro{cursor:default;}
-.tl-sbtn.ro .tl-ck{display:none;}
-.tl-sbtn.done .tl-ck{background:#A33226;}
-.tl-sname{font-weight:600;font-size:14px;}
-.tl-sdose{font-family:'DM Mono',monospace;font-size:12px;color:#A33226;margin-left:6px;}
-.tl-snote{grid-column:1/-1;font-size:12px;color:#6B2F26;padding:0 10px 2px 46px;line-height:1.35;}
-.tl-sbtn.ro~.tl-snote{padding-left:10px;}
-.tl-srow .dose-btn{margin:0;border-color:#A33226;color:#A33226;min-height:32px;}
-.tl-opt{margin-top:10px;}
-.tl-opt>summary{cursor:pointer;font-size:13px;font-weight:600;min-height:36px;display:flex;align-items:center;color:inherit;}
-.tl-pin{background:var(--accent);color:#FFF6E6;border-radius:22px;padding:18px 20px;margin-bottom:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;}
-.tl-pin.done{opacity:.7;}
-.tl-pin-k{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
-.tl-pin-t{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:28px;line-height:1.15;margin:2px 0;}
-.tl-pin-s{font-family:'DM Mono',monospace;font-size:14px;}
-.tl-pin-btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;border:2px solid #FFF6E6;background:transparent;color:#FFF6E6;font:600 15px 'DM Sans',sans-serif;cursor:pointer;}
-.tl-pin-btn:hover{background:rgba(255,246,230,.18);}
-.tl-pin-btn[aria-pressed=true]{background:#FFF6E6;color:var(--accent);}
-.tl-pin-btn:focus-visible{outline:3px solid #FFF6E6;outline-offset:3px;}
-.tl-next a{color:var(--accent);font-weight:600;}
-.sync-dot{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--frame);color:var(--ink);border-radius:999px;min-height:32px;padding:0 12px;font:600 11px 'DM Sans',sans-serif;cursor:pointer;margin-left:auto;}
-.sync-dot+.today-pill{margin-left:8px;}
-.sd-i{width:10px;height:10px;border-radius:50%;flex:none;}
-.sync-dot[data-s=ok] .sd-i{background:var(--green);}
-.sync-dot[data-s=off] .sd-i{border:2px solid var(--muted);}
-.sync-dot[data-s=offline] .sd-i{background:var(--warn);}
-.sync-dot[data-s=syncing] .sd-i{border:2px solid var(--accent);border-top-color:transparent;animation:sdspin .9s linear infinite;}
-@keyframes sdspin{to{transform:rotate(360deg);}}
-@media(prefers-reduced-motion:reduce){.sync-dot[data-s=syncing] .sd-i{animation:none;}.tl-chev{transition:none;}}
-.sync-dot:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
-.tr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin-top:10px;}
-.tr-card{background:var(--frame);border-radius:18px;padding:12px 14px;}
-.tr-h{font-weight:600;font-size:14px;}
-.tr-sub{font-size:12px;font-weight:400;color:var(--muted);margin-left:6px;}
-.tr-svg{width:100%;height:auto;display:block;margin-top:4px;overflow:visible;}
-.tr-gl,.tr-axis{stroke:var(--border);stroke-width:1;}
-.tr-t{fill:var(--muted);font:10px 'DM Mono',monospace;}
-.tr-v{fill:var(--text);font:600 11px 'DM Sans',sans-serif;}
-.tr-bar{fill:var(--accent);}
-.tr-hit{fill:transparent;}
-.tr-g:hover .tr-bar,.tr-g:focus .tr-bar{opacity:.78;}
-.tr-g:focus{outline:none;}
-.tr-g:focus-visible .tr-hit{stroke:var(--ink);stroke-width:2;}
-.tr-tip{position:fixed;z-index:300;background:var(--ink);color:var(--bg);border-radius:10px;padding:6px 10px;font-size:12px;pointer-events:none;max-width:220px;}
-.tr-tip strong{font-size:14px;}
-.tr-table{border-collapse:collapse;font-size:13px;margin-top:8px;}
-.tr-table th,.tr-table td{padding:4px 12px;text-align:center;border-bottom:1px solid var(--border);}
-.tr-table th:first-child,.tr-table td:first-child{text-align:left;}
-
-
-/* ── Sticky pickers: day strip / schedule days / Today filter stay in view while scrolling ── */
-.sticky-bar{position:sticky;top:var(--hdr-h,120px);z-index:60;background:var(--frame);padding:8px 0 10px;margin-bottom:14px;border-bottom:1px solid var(--border);}
-.sticky-bar .wk-strip{margin-bottom:8px;}
-.sticky-bar .sched-day-strip{margin-bottom:8px;}
-.sticky-bar .tl-bar{margin-bottom:0;}
-#todayBar{position:sticky;top:var(--hdr-h,120px);z-index:60;background:var(--frame);padding:8px 0;margin-bottom:12px;border-bottom:1px solid var(--border);}
-#todayBar .tl-bar{margin-bottom:0;}
-.ci-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;}
-.ci-sub{background:var(--frame);border-radius:18px;padding:14px 16px;}
-@media(max-width:768px){
-  .sticky-bar{padding:6px 0 8px;}
-  .sticky-bar .wk-strip{gap:4px;margin-bottom:6px;}
-  .sticky-bar .wday{padding:6px 2px;border-radius:14px;}
-  .sticky-bar .wday-num{font-size:17px;margin:1px 0;}
-  .sticky-bar .sched-day-strip{gap:6px;margin-bottom:6px;}
-  .sticky-bar .sched-day-btn{padding:6px 12px;}
-  .sticky-bar .tl-chip,#todayBar .tl-chip{min-height:36px;padding:0 12px;font-size:12px;}
-  .sticky-bar .tl-bar,#todayBar .tl-bar{gap:6px;}
-}
-
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .dual{grid-template-columns:1fr;}
@@ -460,7 +219,6 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
   <div class="hdr-top">
     <h1>🧬 Peptide Planner</h1>
     <span class="hdr-meta" id="hMeta"></span>
-    <button class="sync-dot" id="syncDot" data-s="off" onclick="goTab('checkin')" aria-label="Sync status: sync off. Open sync settings."><i class="sd-i"></i><span class="sd-t">Sync off</span></button>
     <span class="today-pill" id="hPill"></span>
   </div>
   <div class="tabs">
@@ -468,7 +226,6 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
     <button class="tab" onclick="sw('week',this)">This Week</button>
     <button class="tab" onclick="sw('schedule',this)">Schedule</button>
     <button class="tab" onclick="sw('tracker',this)">Tracker</button>
-    <button class="tab" onclick="sw('checkin',this)">Check-in</button>
     <button class="tab" onclick="sw('protocol',this)">Protocol</button>
     <button class="tab" onclick="sw('sunday',this)">Sunday Prep</button>
     <button class="tab" onclick="sw('supps',this)">Supplements</button>
@@ -481,12 +238,7 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
 
   <!-- TODAY -->
   <div id="tab-today" class="vp active">
-    <div id="meBar"></div>
     <div id="todayBanners"></div>
-    <div id="todayBar"></div>
-    <div id="todayTimeline"></div>
-    <div id="todayCheckin" class="ci-wrap"></div>
-    <div id="todayClassic" style="display:none">
     <div class="prog-wrap" style="margin-bottom:16px;">
       <div class="prog-label">Today's Progress</div>
       <div class="prog-bars">
@@ -528,26 +280,19 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
         <div class="dlist" id="mikeToday"></div>
       </div>
     </div>
-    </div>
   </div>
 
   <!-- WEEK -->
   <div id="tab-week" class="vp">
     <div class="slabel">Week of <span id="wkRange"></span></div>
-    <div class="sticky-bar">
-      <div class="wk-strip" id="wkStrip"></div>
-      <div id="wkTools"></div>
-    </div>
+    <div class="wk-strip" id="wkStrip"></div>
     <div id="wkDetail"></div>
   </div>
 
   <!-- TRACKER -->
   <div id="tab-schedule" class="vp">
     <div class="slabel" style="margin-bottom:14px">Daily Schedule · Exact Timing</div>
-    <div class="sticky-bar">
-      <div class="sched-day-strip" id="schedDayStrip"></div>
-      <div id="schedTools"></div>
-    </div>
+    <div class="sched-day-strip" id="schedDayStrip"></div>
     <div id="schedContent"></div>
   </div>
 
@@ -564,27 +309,16 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
       <div class="graph-title">Cassidy <span style="color:var(--blue);margin-left:12px">● Mike</span> <span style="color:var(--accent);margin-left:4px">● Cass</span></div>
       <div class="graph-bars" id="graphBars"></div>
     </div>
-    <div id="trkExtras"></div>
     <div class="slabel" style="margin-bottom:10px">Log History</div>
     <div id="historyList" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;"></div>
-  </div>
-
-  <!-- CHECK-IN -->
-  <div id="tab-checkin" class="vp">
-    <div class="slabel" style="margin-bottom:14px">Check-in · Notes · Cycle</div>
-    <div id="ciTabBody"></div>
   </div>
 
   <!-- PROTOCOL -->
   <div id="tab-protocol" class="vp">
     <div class="slabel" style="margin-bottom:14px">Full Protocol · May 2026</div>
-    <div id="protoTools"></div>
-    <div id="protoCards"></div>
-    <div id="protoTable" style="display:none">
     <div class="ptable">
       <div class="pt-head"><span>Peptide</span><span>Cassidy</span><span>Mike</span><span>Who</span></div>
       <div id="protoRows"></div>
-    </div>
     </div>
   </div>
 
@@ -665,8 +399,8 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
       <div class="slabel" style="margin-bottom:0">Supplement Schedule · Cassidy</div>
       <div style="margin-left:auto;display:flex;gap:6px;">
-        <button class="sched-day-btn" id="phaseFollBtn" onclick="setPhase('follicular')">🌱 Follicular · Days 6–16</button>
-        <button class="sched-day-btn" id="phaseLutBtn"  onclick="setPhase('luteal')">🌕 Luteal · Days 17–28</button>
+        <button class="sched-day-btn" id="phaseFollBtn" onclick="setPhase('follicular')">🌱 Follicular · Days 1–13</button>
+        <button class="sched-day-btn" id="phaseLutBtn"  onclick="setPhase('luteal')">🌕 Luteal · Days 15–28</button>
         <button class="sched-day-btn" id="phaseMensBtn" onclick="setPhase('menstrual')">🔴 Menstrual · Days 1–5</button>
       </div>
     </div>
@@ -683,10 +417,6 @@ const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 // ── PROTOCOL CONFIG — editable via Settings tab ──────────────────────────
 // These are set by the app's reset/reconfigure button and stored in localStorage
 // Default values reflect Oct 27 2026 restart
-// Read 'YYYY-MM-DD' as a local date (new Date('YYYY-MM-DD') is UTC midnight = the previous evening in US time zones)
-function pdate(s) { const [y, m, d] = String(s).split('-').map(Number); return new Date(y, m - 1, d); }
-function pymd(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
-
 function getProtocolConfig() {
   try {
     const saved = localStorage.getItem('pp_protocol_config');
@@ -708,7 +438,7 @@ function saveProtocolConfig(cfg) {
 // Count how many Pinealon doses have actually been taken (not missed)
 function getPinealonActualDoses() {
   const s = getStore(), ms = getMissedStore();
-  const start = pdate(CFG ? CFG.startDate : '2026-10-27');
+  const start = new Date(CFG ? CFG.startDate : '2026-10-27');
   let taken = 0;
   for (let i = 0; i < 30; i++) {
     const d = new Date(start);
@@ -724,7 +454,7 @@ function getPinealonActualDoses() {
 
 // Compute effective PIN_END based on actual doses taken
 function getEffectivePinEnd(cfg) {
-  const start = pdate(cfg.startDate);
+  const start = new Date(cfg.startDate);
   const ms = getMissedStore();
   const s  = getStore();
   let taken = 0, d = new Date(start);
@@ -746,7 +476,7 @@ function getEffectivePinEnd(cfg) {
 // Compute effective MT2 load days — skip missed ones, extend until 6 actual doses
 function getEffectiveMT2LoadDays(cfg) {
   const ms = getMissedStore();
-  const scheduled = cfg.mt2LoadDays.map(d => pdate(d));
+  const scheduled = cfg.mt2LoadDays.map(d => new Date(d));
   // Any scheduled day that wasn't missed counts; extend for missed ones
   let actual = [], extra = new Date(scheduled[scheduled.length - 1]);
   scheduled.forEach(d => {
@@ -793,7 +523,7 @@ function getEffectiveRetaDose(date) {
 
 // Compute live dates from config — miss-aware
 function buildDates(cfg) {
-  const start   = pdate(cfg.startDate);
+  const start   = new Date(cfg.startDate);
   const pin_end = getEffectivePinEnd(cfg);
   const mt2Days = getEffectiveMT2LoadDays(cfg);
   const lastMT2 = mt2Days[mt2Days.length - 1];
@@ -805,7 +535,7 @@ function buildDates(cfg) {
     MT2_LOAD_END:    lastMT2,
     MT2_MAINT_START: maint,
     PIN_START:       start,
-    PIN_END:         new Date(pin_end.getFullYear(), pin_end.getMonth(), pin_end.getDate(), 23, 59, 59, 999),
+    PIN_END:         pin_end,
     MOTS_START:      start,
     MOTS_DAYS:       cfg.motsWeekdays,
     MT2_LOAD_DAYS:   mt2Days.map(d => d.toDateString()),
@@ -872,8 +602,6 @@ function getDoses(date) {
   if (dow === 6) {
     SAT_C.forEach(d => res.c.push({...d}));
     SAT_M.forEach(d => res.m.push({...d}));
-    if (isMT2Load)
-      res.c.push({name:"MT2 🔶 LOADING",t:"10t",mg:"0.50mg",time:"load",note:"EOD · Cass · thru Jun 19"});
     if (isMT2Maint)
       res.c.push({name:"MT2",t:"5t",mg:"0.25mg",time:"eve",note:"Sat maintenance · Cass only"});
     if (inPin) {
@@ -1218,7 +946,6 @@ function initToday() {
   document.getElementById('medsToday').innerHTML = meds.map(m => medRow(m, TODAY)).join('');
   updateMedProgress(TODAY);
   updateProgress();
-  renderTodayView();
 }
 
 // ─── WEEK VIEW ────────────────────────────────────────────────────────────────
@@ -1255,8 +982,6 @@ function renderStrip() {
 function showDay(date) {
   selDay = date;
   renderStrip();
-  tlRenderWeek(date);
-  if (tlMode() === 'timeline') return;
   const d = getDoses(date);
   document.getElementById('wkDetail').innerHTML = `
     <div class="slabel">${DAYS[date.getDay()]} ${date.getMonth()+1}/${date.getDate()}</div>
@@ -1317,7 +1042,7 @@ function updateGraph() {
   }).join('');
 }
 
-function initTracker() { updateGraph(); checkRestoreBtn(); renderTrackerExtras(); }
+function initTracker() { updateGraph(); checkRestoreBtn(); }
 
 // ─── PROTOCOL TABLE ───────────────────────────────────────────────────────────
 const PROTO = [
@@ -1344,7 +1069,6 @@ function initProtocol() {
       <div class="pt-dose"><span class="bt">${p.mt}</span>${p.mm?` <span class="dm">· ${p.mm}</span>`:''}</div>
       <div><span class="who ${p.who==='both'?'who-both':'who-cass'}">${p.who==='both'?'Both':'Cass only'}</span></div>
     </div>`).join('');
-  renderProtoCards();
 }
 
 // ─── SUNDAY PREP ──────────────────────────────────────────────────────────────
@@ -1569,9 +1293,6 @@ function setSchedDay(day) {
 
 function renderSchedule() {
   const blocks = getSchedule(schedDay);
-  const st = document.getElementById('schedTools');
-  if (st) st.innerHTML = tlToolbar(true);
-  if (tlMode() === 'timeline') return renderScheduleTimeline(blocks);
   const whoLabel = {both:'Both',cass:'Cass',mike:'Mike'};
   const whoCls   = {both:'both',cass:'cass',mike:'cass'};
 
@@ -1607,7 +1328,6 @@ function toggleSupp(block, name) {
   const s = getSuppStore(), k = suppKey(block, name);
   if (s[k]) delete s[k]; else s[k] = Date.now();
   saveSuppStore(s);
-  syncQueue('supp', k, s[k] || null, !s[k]);
 }
 
 function setPhase(phase) {
@@ -1703,26 +1423,38 @@ const SUPP_BLOCKS = [
 
 const PHASE_ITEMS = {
   follicular: {
-    sub:'Follicular / Ovulatory · Days 6–16',
+    sub:'Follicular · Days 1–13 · rising estrogen, higher energy',
     items:[
-      {name:'Maca', note:'hormone + energy support · follicular phase'},
-      {name:'Tribulus', note:'ovulatory support'},
-      {name:'B-Complex', note:'methylation + energy'},
+      {name:'Maca Root', note:'estrogen support, energy, libido'},
+      {name:'DIM', note:'estrogen metabolism · especially important with Reta/GLP-1'},
+      {name:'B-Complex', note:'methylation + estrogen clearance · already in AM stack'},
+      {name:'CoQ10', note:'mitochondrial + cellular energy support'},
+      {name:'Tribulus', note:'ovulatory LH support'},
+      {name:'Iron', note:'replenish post-bleed · only if levels warrant', tag:'optional'},
     ]
   },
   luteal: {
-    sub:'Luteal / Menstrual · Days 17–28',
+    sub:'Luteal · Days 15–28 · progesterone dominant, higher inflammation',
     items:[
-      {name:'Evening Primrose Oil', note:'prostaglandin support · luteal phase'},
-      {name:'SAMe', note:'mood + methylation · earlier in day, away from protein if possible'},
+      {name:'Evening Primrose Oil', note:'prostaglandin balance, reduce cramping'},
+      {name:'Vitex (Chaste Tree)', note:'progesterone support · skip if on hormonal BC', tag:'warn'},
+      {name:'SAMe', note:'mood + methylation · take earlier in day, away from protein'},
+      {name:'P5P / B6', note:'PMS, mood, progesterone cofactor · increase if B-Complex dose insufficient'},
+      {name:'Magnesium Glycinate', note:'increase dose in luteal · anxiety + cramp prevention'},
+      {name:'DAO Enzyme', note:'histamine spikes higher in luteal · critical for MCAS', tag:'detox'},
+      {name:'Quercetin', note:'mast cell stabilization · bump dose in luteal', tag:'detox'},
     ]
   },
   menstrual: {
-    sub:'Menstrual · Days 1–5',
+    sub:'Menstrual · Days 1–5 · lowest hormones, highest inflammation + histamine',
     items:[
       {name:'Evening Primrose Oil', note:'continue from luteal'},
       {name:'SAMe', note:'mood support · earlier in day'},
-      {name:'Extra Magnesium', note:'cramping + nervous system'},
+      {name:'Extra Magnesium', note:'cramps + nervous system · highest need window'},
+      {name:'Ginger or Turmeric', note:'prostaglandin + anti-inflammatory support'},
+      {name:'DAO Enzyme', note:'histamine peaks here · non-negotiable for MCAS', tag:'detox'},
+      {name:'Quercetin', note:'mast cell stabilization · continue elevated dose', tag:'detox'},
+      {name:'Iron', note:'start replenishing if heavy flow', tag:'optional'},
     ]
   }
 };
@@ -1733,8 +1465,8 @@ function suppRow(block, item) {
   return `<div class="supp-row ${done?'done':''}" onclick="tapSupp(this,'${block}','${item.name.replace(/'/g,"\\'")}')">
     <div class="supp-chk"><span class="supp-chk-mark">✓</span></div>
     <div>
-      <div class="supp-name">${item.name}${getDoseInfo()[item.name] ? ` <b class="supp-dose">· ${tlEsc(getDoseInfo()[item.name])}</b>` : ''}</div>
-      <div class="supp-note">${item.note} ${doseBtn(item.name)}</div>
+      <div class="supp-name">${item.name}</div>
+      <div class="supp-note">${item.note}</div>
     </div>
     ${tagHtml}
   </div>`;
@@ -1745,7 +1477,6 @@ function tapSupp(el, block, name) {
   el.classList.toggle('done');
   const mark = el.querySelector('.supp-chk-mark');
   if (mark) mark.style.display = el.classList.contains('done') ? 'block' : 'none';
-  tlRefreshAll();
 }
 
 function renderSupps() {
@@ -1792,7 +1523,7 @@ function renderSupps() {
     </div>`;
   }).join('');
 
-  document.getElementById('suppBanners').innerHTML = cycleBanner() + bannerHtml;
+  document.getElementById('suppBanners').innerHTML = bannerHtml;
   document.getElementById('suppContent').innerHTML = blocks;
 }
 
@@ -1812,7 +1543,7 @@ function initSettings() {
       <div><span style="color:var(--muted)">MT2 Loading ends</span><br><strong>${d.MT2_LOAD_END.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</strong></div>
       <div><span style="color:var(--muted)">MT2 Maintenance</span><br><strong>${d.MT2_MAINT_START.toLocaleDateString('en-US',{month:'short',day:'numeric'})}+ Saturdays</strong></div>
       <div><span style="color:var(--muted)">MOTS-c days</span><br><strong>${cfg.motsWeekdays.map(d=>['','Mon','Tue','Wed','Thu','Fri'][d]).join(' + ')}</strong></div>
-      <div><span style="color:var(--muted)">MT2 load dates</span><br><strong>${cfg.mt2LoadDays.map(d=>pdate(d).toLocaleDateString('en-US',{month:'numeric',day:'numeric'})).join(', ')}</strong></div>
+      <div><span style="color:var(--muted)">MT2 load dates</span><br><strong>${cfg.mt2LoadDays.map(d=>new Date(d).toLocaleDateString('en-US',{month:'numeric',day:'numeric'})).join(', ')}</strong></div>
     </div>`;
 
   const input = document.getElementById('newStartDate');
@@ -1856,14 +1587,14 @@ function applyProtocolReset() {
   if (!startStr) { alert('Please select a start date'); return; }
 
   const cfg = getProtocolConfig();
-  const start = pdate(startStr);
+  const start = new Date(startStr);
 
   // Per-compound reset
   if (document.getElementById('reset_mt2').checked) {
     const mt2Days = [];
     let d = new Date(start);
     for (let i = 0; i < 6; i++) {
-      mt2Days.push(pymd(d));
+      mt2Days.push(d.toISOString().split('T')[0]);
       d.setDate(d.getDate() + 2);
     }
     cfg.mt2LoadDays = mt2Days;
@@ -1919,7 +1650,6 @@ function sw(tab, btn) {
   document.getElementById('tab-'+tab).classList.add('active');
   btn.classList.add('active');
   if (tab === 'tracker') initTracker();
-  if (tab === 'checkin') initCheckin();
   if (tab === 'week') initWeek();
   if (tab === 'supps') initSupps();
   if (tab === 'schedule') initSchedule();
@@ -2114,886 +1844,7 @@ function checkRestoreBtn() {
   btn.style.display = 'block'; // always show — not one-time
 }
 
-function initTracker() { updateGraph(); checkRestoreBtn(); renderTrackerExtras(); }
-
-// ─── TIMELINE VIEW ────────────────────────────────────────────────────────────
-// Display layer only. Reads getDoses / getMeds / SUPP_BLOCKS and writes through the
-// existing trackers (toggleDose, toggleSupp, toggleMissed), so data and Supabase
-// logging behave exactly as in the list view.
-const TL_SLOTS = [
-  {id:'early',    label:'Early AM',        win:'8–10am · Levo first, then fasted supps, then peptides', start:8, end:10,  bg:'#FFE7A0'},
-  {id:'sun',      label:'Late start',      win:'Sunday · after waking',                                 start:9, end:11,  bg:'#FFD1D9'},
-  {id:'mid',      label:'Mid AM',          win:'with first meal',                                       start:10, end:12, bg:'#CFE4EE'},
-  {id:'midday',   label:'Midday',          win:'~2pm · detox layer, Mon–Fri',                           start:12, end:16, bg:'#F9D6CC'},
-  {id:'binder',   label:'Late afternoon',  win:'binder window · 2+ hrs from everything',                start:15, end:17, bg:'#EADFF3'},
-  {id:'evepm',    label:'Early PM',        win:'5–7pm',                                                 start:17, end:19, bg:'#DDE0F7'},
-  {id:'eve',      label:'Evening',         win:'MT2 doses',                                             start:18, end:22, bg:'#FFD1D9'},
-  {id:'night',    label:'Night',           win:'8–10pm · before bed',                                   start:20, end:22, bg:'#BFD6F2'},
-  {id:'bed',      label:'Before bed',      win:'fixed nightly + choose by symptoms',                    start:22, end:24, bg:'#D5DDF5'},
-  {id:'asneeded', label:'As needed',       win:'histamine and inflammation support',                    start:99, end:99, bg:'#E8F0C8'},
-];
-// The block whose window contains the hour h; if windows overlap, the one that started latest
-function tlPickNow(list, h) {
-  let id = null;
-  list.forEach(s => { if (s.start < 99 && s.start <= h && h < s.end) id = s.id; });
-  return id;
-}
-const TL_BUCKET = {early:'early', sun:'sun', mid:'mid', evepm:'evepm', eve:'eve', load:'eve', night:'night'};
-const TL_SUPP_SLOT = {am_fasted:'early', am_food:'mid', phase:'mid', detox_mid:'midday', binder:'binder', pm:'bed', histamine:'asneeded'};
-const TL_TITRATING = ['Retatrutide','MT2','Pinealon','MOTS-c'];
-const TL_CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-
-function tlEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function tlMode() { try { return localStorage.getItem('pp_view_v1') === 'list' ? 'list' : 'timeline'; } catch(e) { return 'timeline'; } }
-function tlWho()  { try { const w = localStorage.getItem('pp_who_v1'); return (w==='c'||w==='m') ? w : 'all'; } catch(e) { return 'all'; } }
-function tlIsActive(id) { const el = document.getElementById(id); return !!(el && el.classList.contains('active')); }
-
-function tlToolbar(showWho) {
-  const mode = tlMode(), who = tlWho();
-  const chip = (on, fn, label) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="${fn}">${label}</button>`;
-  return `<div class="tl-bar">
-    <div class="tl-seg" role="group" aria-label="View">${chip(mode==='timeline',"setTlMode('timeline')",'Timeline')}${chip(mode==='list',"setTlMode('list')",'List')}</div>
-    ${(showWho && mode==='timeline') ? `<div class="tl-seg" role="group" aria-label="Show">${chip(who==='all',"setTlWho('all')",'Both')}${chip(who==='c',"setTlWho('c')",'Cassidy')}${chip(who==='m',"setTlWho('m')",'Mike')}</div>` : ''}
-  </div>`;
-}
-
-function setTlMode(m) {
-  try { localStorage.setItem('pp_view_v1', m); } catch(e) {}
-  initToday();
-  tlRefreshOthers();
-}
-function setTlWho(w) {
-  try { localStorage.setItem('pp_who_v1', w); if (w === 'c' || w === 'm') localStorage.setItem('pp_ciwho_v1', w); } catch(e) {}
-  renderTodayView();
-  ciRefresh();
-  tlRefreshOthers();
-}
-function tlRefreshOthers() {
-  if (tlIsActive('tab-week')) { renderStrip(); showDay(selDay); }
-  if (tlIsActive('tab-schedule')) renderSchedule();
-}
-
-function tlBuild(date) {
-  const isToday = date.toDateString() === TODAY.toDateString();
-  const slots = {};
-  TL_SLOTS.forEach(s => { slots[s.id] = []; });
-
-  const d = getDoses(date);
-  [['c','Cass',d.c],['m','Mike',d.m]].forEach(([p,label,arr]) => arr.forEach(x => {
-    const slot = TL_BUCKET[x.time] || 'early';
-    let it = slots[slot].find(i => i.kind==='dose' && i.name===x.name);
-    if (!it) {
-      it = {kind:'dose', name:x.name, note:x.note||'', lines:[],
-            titrating: TL_TITRATING.some(t => x.name.includes(t))};
-      slots[slot].push(it);
-    }
-    it.lines.push({person:p, label, amount: x.mg ? `${x.t} · ${x.mg}` : x.t, done: isDone(date,p,x.name), live:true});
-  }));
-
-  getMeds(date).forEach(x => {
-    slots[TL_BUCKET[x.time] || 'early'].push({kind:'med', name:x.name, note:x.note||'', lines:[
-      {person:'med', label:'Cass', amount: getDoseInfo()[x.name] || (x.mg ? `${x.t} · ${x.mg}` : x.t), done: isDone(date,'med',x.name), live:true}
-    ]});
-  });
-
-  const dow = date.getDay(), biocin = dow !== 0 && dow !== 6;
-  SUPP_BLOCKS.forEach(b => {
-    if (b.id === 'detox_mid' && !biocin) return;
-    const items = b.id === 'phase' ? PHASE_ITEMS[suppPhase].items : b.items;
-    items.forEach(i => {
-      slots[TL_SUPP_SLOT[b.id]].push({kind:'supp', block:b.id, name:i.name, note:i.note||'', tag:i.tag||'', lines:[
-        {person:'supp', label:'Cass', amount: getDoseInfo()[i.name] || '', done: isToday && isSuppDone(b.id, i.name), live:isToday}
-      ]});
-    });
-  });
-  // Early AM runs in this order: meds (Levo alone first), fasted supps, then peptides
-  const rank = {med:0, supp:1, dose:2};
-  slots.early.sort((a, b) => rank[a.kind] - rank[b.kind]);
-  return slots;
-}
-
-function tlCard(it, date, bg) {
-  const ds = date.toDateString();
-  const missed = it.titrating && isMissed(date, it.name);
-  const lines = it.lines.map(l => {
-    const key = `${it.kind}|${ds}|${l.person}|${it.name}`;
-    const inner = `<span class="tl-ck">${l.done ? TL_CHECK : ''}</span><span class="tl-who">${l.label}</span><span class="tl-amt">${tlEsc(l.amount)}</span>`;
-    if (!l.live) return `<div class="tl-line ro">${inner}</div>`;
-    return `<button class="tl-line ${l.done?'done':''}" aria-pressed="${l.done}" aria-label="${tlEsc(it.name)}, ${l.label}${l.amount ? ', ' + tlEsc(l.amount) : ''}"
-      data-key="${tlEsc(key)}" data-kind="${it.kind}" data-date="${tlEsc(ds)}" data-person="${l.person}" data-block="${tlEsc(it.block||'')}" data-name="${tlEsc(it.name)}"
-      onclick="tlTap(this)">${inner}</button>`;
-  }).join('');
-  const miss = it.titrating
-    ? `<button class="tl-miss ${missed?'on':''}" aria-pressed="${missed}" data-date="${tlEsc(ds)}" data-name="${tlEsc(it.name)}" onclick="tlMiss(this)">${missed ? 'Missed' : 'Mark missed'}</button>` : '';
-  const allDone = it.lines.every(l => l.done);
-  const tag = it.tag ? `<span class="tl-tag">${tlEsc(it.tag)}</span>` : '';
-  return `<div class="tl-card ${allDone?'all-done':''} ${missed?'is-missed':''}" style="background:${bg}">
-    <div class="tl-card-top"><div class="tl-name">${tlEsc(it.name)}</div>${tag}</div>
-    ${it.note ? `<div class="tl-note">${tlEsc(it.note)}</div>` : ''}
-    <div class="tl-lines">${lines}</div>
-    ${miss}
-    ${(it.kind === 'med' || it.kind === 'supp') ? doseBtn(it.name) : ''}
-  </div>`;
-}
-
-let tlScrolled = false;
-// Collapsible time blocks, grouped supplements, pinned dose, overdue flags.
-const tlOpenState = {};
-function tlSumClick(sum) { const d = sum.parentElement; tlOpenState[d.dataset.key] = !d.open; }
-function tlJumpNow() {
-  const b = document.querySelector('#todayTimeline .tl-block.now');
-  if (b) window.scrollTo({top: b.getBoundingClientRect().top + window.scrollY - 140, behavior:'smooth'});
-}
-function tlCheckAll(slotId, dateStr) {
-  const date = new Date(dateStr), items = (tlBuild(date)[slotId] || []).filter(i => i.kind === 'supp' && i.tag !== 'optional' && i.lines[0].live);
-  const allDone = items.length && items.every(i => i.lines[0].done);
-  items.forEach(i => { if (allDone ? i.lines[0].done : !i.lines[0].done) toggleSupp(i.block, i.name); });
-  tlAfterChange();
-}
-
-function tlSuppGroup(items, date, s) {
-  const ds = date.toDateString();
-  const req = items.filter(i => i.tag !== 'optional'), opt = items.filter(i => i.tag === 'optional');
-  const live = items.some(i => i.lines[0].live);
-  const rd = req.filter(i => i.lines[0].done).length;
-  const allDone = req.length > 0 && rd === req.length;
-  const row = it => {
-    const l = it.lines[0], key = `supp|${ds}|supp|${it.name}`;
-    const main = `<span class="tl-ck">${l.done ? TL_CHECK : ''}</span><span class="tl-sname">${tlEsc(it.name)}</span>${l.amount ? `<span class="tl-sdose">${tlEsc(l.amount)}</span>` : ''}`;
-    const btn = l.live
-      ? `<button class="tl-sbtn ${l.done?'done':''}" aria-pressed="${l.done}" aria-label="${tlEsc(it.name)}${l.amount ? ', ' + tlEsc(l.amount) : ''}" data-key="${tlEsc(key)}" data-kind="supp" data-date="${tlEsc(ds)}" data-person="supp" data-block="${tlEsc(it.block)}" data-name="${tlEsc(it.name)}" onclick="tlTap(this)">${main}</button>`
-      : `<div class="tl-sbtn ro">${main}</div>`;
-    return `<div class="tl-srow">${btn}${doseBtn(it.name)}${it.note ? `<div class="tl-snote">${tlEsc(it.note)}</div>` : ''}</div>`;
-  };
-  return `<div class="tl-card tl-sg" style="background:${s.bg}">
-    <div class="tl-sg-h"><b class="tl-name">Supplements</b>${req.length ? `<span class="tl-count">${rd}/${req.length}</span>` : ''}
-      ${(live && req.length) ? `<button class="dose-btn" onclick="tlCheckAll('${s.id}','${ds}')">${allDone ? 'Uncheck all' : 'Check all'}</button>` : ''}</div>
-    <div class="tl-srows">${req.map(row).join('')}</div>
-    ${opt.length ? `<details class="tl-opt"><summary>Optional (${opt.length})</summary><div class="tl-srows">${opt.map(row).join('')}</div></details>` : ''}
-  </div>`;
-}
-
-// Today's key doses (MT2, Retatrutide) get a bold card at the top
-function tlPinned(date, slots, keep) {
-  const ds = date.toDateString(), out = [];
-  TL_SLOTS.forEach(s => (slots[s.id] || []).forEach(it => {
-    if (it.kind !== 'dose' || !/MT2|Retatrutide/.test(it.name)) return;
-    it.lines.filter(keep).forEach(l => out.push({s, it, l}));
-  }));
-  if (!out.length) return '';
-  const nightSlots = ['evepm','eve','night','bed'];
-  return out.map(({s, it, l}) => {
-    let title = it.name.replace('🔶 ', '').replace('LOADING', 'loading');
-    if (/LOADING/.test(it.name)) { const days = cycleDaysOf('LOADING'), n = days.findIndex(d => d.toDateString() === ds) + 1; if (n) title = `MT2 loading · dose ${n} of ${days.length}`; }
-    const hold = /Retatrutide/.test(it.name) && getRetaDose(date).hold ? ' · hold: do not titrate up' : '';
-    const key = `dose|${ds}|${l.person}|${it.name}`;
-    return `<div class="tl-pin ${l.done ? 'done' : ''}">
-      <div><div class="tl-pin-k">${nightSlots.includes(s.id) ? 'Due tonight' : 'Due today'} · ${tlEsc(s.label)}</div>
-        <div class="tl-pin-t">${tlEsc(title)}</div>
-        <div class="tl-pin-s">${l.label} · ${tlEsc(l.amount)}${hold}</div></div>
-      <button class="tl-pin-btn" aria-pressed="${l.done}" aria-label="${tlEsc(title)}, ${l.label}, ${l.done ? 'done' : 'mark done'}" data-key="${tlEsc(key)}" data-kind="dose" data-date="${tlEsc(ds)}" data-person="${l.person}" data-block="" data-name="${tlEsc(it.name)}" onclick="tlTap(this)">${TL_CHECK}<span>${l.done ? 'Done' : 'Mark done'}</span></button>
-    </div>`;
-  }).join('');
-}
-
-function tlRender(date) {
-  const who = tlWho();
-  const ds = date.toDateString(), isToday = ds === TODAY.toDateString();
-  const slots = tlBuild(date);
-  const keep = l => who==='all' || (who==='c' && l.label==='Cass') || (who==='m' && l.label==='Mike');
-  const nowD = new Date(), nowH = nowD.getHours() + nowD.getMinutes()/60;
-  const timed = TL_SLOTS.filter(s => s.start < 99 && slots[s.id].some(it => it.lines.some(keep)));
-  const curId = isToday ? tlPickNow(timed, nowH) : null;
-  const curIdx = curId ? TL_SLOTS.findIndex(s => s.id === curId) : -1;
-
-  let total = 0, done = 0, nowOpen = null, overdueN = 0;
-  const openList = [];
-  const blocks = TL_SLOTS.map(s => {
-    const items = slots[s.id].map(it => ({...it, lines: it.lines.filter(keep)})).filter(it => it.lines.length);
-    if (!items.length) return '';
-    let sTotal = 0, sDone = 0;
-    items.forEach(it => it.lines.forEach(l => { if (l.live && it.tag !== 'optional') { sTotal++; if (l.done) sDone++; } }));
-    total += sTotal; done += sDone;
-    const open = sTotal - sDone;
-    const isNow = isToday && s.id === curId;
-    const overdue = isToday && s.end < 99 && nowH >= s.end && open > 0;
-    if (isNow) nowOpen = open;
-    if (overdue) overdueN++;
-    if (isToday && open > 0) openList.push({s, overdue});
-    const allDone = sTotal > 0 && open === 0;
-    const key = ds + '|' + s.id;
-    const pastBlock = isToday && s.end < 99 && nowH >= s.end;
-    const isOpen = tlOpenState[key] !== undefined ? tlOpenState[key] : !(isToday && (allDone || pastBlock));
-    const cards = items.filter(it => it.kind !== 'supp'), supps = items.filter(it => it.kind === 'supp');
-    return `<details class="tl-block ${isNow?'now':''} ${overdue?'late':''}" data-key="${tlEsc(key)}" ${isOpen ? 'open' : ''}>
-      <summary class="tl-bh" onclick="tlSumClick(this)">
-        <svg class="tl-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        <div class="tl-bt"><h3>${tlEsc(s.label)}</h3>${isNow?'<span class="tl-nowpill">Now</span>':''}${overdue?'<span class="tl-latepill">Overdue</span>':''}${allDone?'<span class="tl-donepill">Done</span>':''}</div>
-        <div class="tl-win">${tlEsc(s.win)}</div>
-        ${sTotal ? `<div class="tl-count">${sDone}/${sTotal}</div>` : ''}
-      </summary>
-      <div class="tl-grid">${cards.map(it => tlCard(it, date, s.bg)).join('')}${supps.length ? tlSuppGroup(supps, date, s) : ''}</div>
-    </details>`;
-  }).join('');
-
-  const pct = total ? Math.round(done/total*100) : 0;
-  const dayLabel = isToday ? 'Today' : `${DAYS[date.getDay()]} ${date.getMonth()+1}/${date.getDate()}`;
-  let status = '';
-  if (isToday) {
-    if (total && done === total) status = 'Everything is checked off for today.';
-    else {
-      const parts = [], cur = TL_SLOTS[curIdx];
-      if (cur) parts.push(`Now: <b>${tlEsc(cur.label)}</b>${nowOpen ? ` · ${nowOpen} open` : ' · done'}`);
-      const nxt = openList.find(o => !o.overdue && o.s.id !== curId && TL_SLOTS.indexOf(o.s) > curIdx);
-      if (nxt) parts.push(`Next: <b>${tlEsc(nxt.s.label)}</b>`);
-      if (overdueN) parts.push(`<b>${overdueN} earlier block${overdueN > 1 ? 's' : ''}</b> still ${overdueN > 1 ? 'have' : 'has'} open items`);
-      status = parts.join(' · ');
-    }
-  }
-  const summary = `<div class="tl-sum">
-    <div class="tl-sum-top"><h2>${dayLabel}</h2><span class="tl-sum-n">${isToday ? `${done} of ${total} done` : `${total} to track`}</span></div>
-    ${isToday ? `<div class="tl-track" role="img" aria-label="${pct}% of today's items done"><div style="width:${pct}%"></div></div>` : ''}
-    ${status ? `<div class="tl-next">${status}${curId ? ' · <a href="#" onclick="tlJumpNow();return false">Jump to now</a>' : ''}</div>` : ''}
-    ${isToday && cycleInfo() ? `<div class="tl-next">Cycle day ${cycleInfo().day} · ${cycleInfo().label} phase</div>` : ''}
-    ${!isToday ? '<div class="tl-next">Supplements are view-only on other days.</div>' : ''}
-  </div>`;
-  return summary + (isToday ? tlPinned(date, slots, keep) : '') + (blocks || '<div class="tl-empty">Nothing scheduled.</div>');
-}
-
-// ── Who is using this device ──
-function meGet() { try { return localStorage.getItem('pp_me_v1') || ''; } catch(e) { return ''; } }
-function meSet(w) {
-  try {
-    localStorage.setItem('pp_me_v1', w);
-    localStorage.setItem('pp_who_v1', w === 'b' ? 'all' : w);
-    localStorage.setItem('pp_ciwho_v1', w === 'm' ? 'm' : 'c');
-  } catch(e) {}
-  renderTodayView(); ciRefresh(); renderCheckinHistory(); tlRefreshOthers();
-}
-function meChange() { try { localStorage.removeItem('pp_me_v1'); } catch(e) {} renderMeBar(); }
-function renderMeBar() {
-  const el = document.getElementById('meBar');
-  if (!el) return;
-  const me = meGet(), nm = {c:'Cassidy', m:'Mike', b:'both of you'};
-  if (!me) { el.innerHTML = `<div class="me-card"><div><b>Who is using this device?</b><div class="tl-note" style="color:var(--muted)">This sets what you see first. You can switch to Both any time.</div></div>
-    <div class="tl-seg" role="group" aria-label="Who is using this device"><button class="tl-chip" onclick="meSet('c')">Cassidy</button><button class="tl-chip" onclick="meSet('m')">Mike</button><button class="tl-chip" onclick="meSet('b')">Both of us</button></div></div>`; return; }
-  el.innerHTML = `<div class="me-line">This device: <b>${nm[me]}</b> <button class="dose-btn" onclick="meChange()">Change</button></div>`;
-}
-
-function renderTodayView() {
-  const el = document.getElementById('todayTimeline');
-  if (!el) return;
-  const mode = tlMode();
-  const classic = document.getElementById('todayClassic');
-  if (classic) classic.style.display = mode === 'list' ? '' : 'none';
-  const bar = document.getElementById('todayBar');
-  if (bar) bar.innerHTML = tlToolbar(true);
-  el.innerHTML = mode === 'timeline' ? tlRender(TODAY) : '';
-  const ci = document.getElementById('todayCheckin');
-  if (ci && !ci.dataset.ready) { ci.dataset.ready = '1'; ciRenderToday(ci); }
-  renderMeBar();
-  if (!tlScrolled && mode === 'timeline' && tlIsActive('tab-today')) {
-    tlScrolled = true;
-    setTimeout(() => { const b = document.querySelector('#todayTimeline .tl-pin:not(.done)') || document.querySelector('#todayTimeline .tl-block.now'); if (b && b.getBoundingClientRect().top > window.innerHeight * 0.6) window.scrollTo({top: b.getBoundingClientRect().top + window.scrollY - 140}); }, 60);
-  }
-}
-
-function tlRenderWeek(date) {
-  const tools = document.getElementById('wkTools');
-  if (tools) tools.innerHTML = tlToolbar(true);
-  if (tlMode() === 'timeline') document.getElementById('wkDetail').innerHTML = tlRender(date);
-}
-
-function tlRefreshAll() {
-  renderTodayView();
-  if (tlIsActive('tab-week')) { renderStrip(); showDay(selDay); }
-}
-
-function tlAfterChange(key) {
-  updateProgress();
-  updateGraph();
-  updateMedProgress(TODAY);
-  tlRefreshAll();
-  if (key) {
-    const b = Array.from(document.querySelectorAll('[data-key]')).find(x => x.dataset.key === key);
-    if (b) b.focus({preventScroll:true});
-  }
-}
-
-function tlTap(btn) {
-  const k = btn.dataset, date = new Date(k.date);
-  if (k.kind === 'supp') toggleSupp(k.block, k.name);
-  else toggleDose(date, k.person, k.name);
-  tlAfterChange(k.key);
-}
-
-function tlMiss(btn) {
-  toggleMissed(new Date(btn.dataset.date), btn.dataset.name);
-  refreshRetaBanner();
-  tlRefreshAll();
-}
-
-// Schedule tab: same cards, read-only (plan for the selected weekday)
-function renderScheduleTimeline(blocks) {
-  const who = tlWho();
-  const pal = ['#FFE7A0','#CFE4EE','#F9D6CC','#DDE0F7','#FFD1D9','#E8F0C8'];
-  const whoLabel = {both:'Both', cass:'Cass', mike:'Mike'};
-  const out = blocks.map((b, i) => {
-    const rows = b.rows.filter(r => who==='all' || r.who==='both' || (who==='c' && r.who==='cass') || (who==='m' && r.who==='mike'));
-    if (!rows.length) return '';
-    const bg = pal[i % pal.length];
-    const cards = rows.map(r => `<div class="tl-card" style="background:${bg}">
-      <div class="tl-card-top"><div class="tl-name">${tlEsc(r.name)}</div></div>
-      ${r.note ? `<div class="tl-note">${tlEsc(r.note)}</div>` : ''}
-      <div class="tl-lines"><div class="tl-line ro"><span class="tl-who">${whoLabel[r.who]||''}</span><span class="tl-amt">${tlEsc(r.dose)}</span></div></div>
-    </div>`).join('');
-    return `<section class="tl-block" aria-label="${tlEsc(b.time)}">
-      <div class="tl-bh"><div class="tl-bt"><h3>${tlEsc(b.time)}</h3></div><div class="tl-win">${tlEsc(b.window)}</div></div>
-      <div class="tl-grid">${cards}</div>
-    </section>`;
-  }).join('');
-  document.getElementById('schedContent').innerHTML = out || '<div class="tl-empty">Nothing scheduled.</div>';
-}
-
-// ─── CHECK-IN, NOTES, CYCLE, DOSES, PROTOCOL CARDS ───────────────────────────
-// All stored on this device (localStorage), like the supplement checks.
-const CI_KEY = 'pp_checkin_v1', CY_KEY = 'pp_cycle_v1', DOSE_KEY = 'pp_doseinfo_v1';
-function jget(k, def) { try { const v = JSON.parse(localStorage.getItem(k)); return v || def; } catch(e) { return def; } }
-function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
-function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
-function fromYmd(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
-function dayDiff(a, b) { return Math.round((new Date(a.getFullYear(),a.getMonth(),a.getDate()) - new Date(b.getFullYear(),b.getMonth(),b.getDate())) / 86400000); }
-function fmtShort(d) { return d.toLocaleDateString('en-US', {month:'short', day:'numeric'}); }
-function goTab(tab) { const b = document.querySelector(`.tab[onclick*="'${tab}'"]`); if (b) { sw(tab, b); window.scrollTo(0,0); } }
-
-// Editable doses for meds and supplements (no amounts are built in)
-function getDoseInfo() { return jget(DOSE_KEY, {}); }
-function editDose(btn) {
-  const name = btn.dataset.name, info = getDoseInfo();
-  const v = prompt(`Dose for ${name} (for example 500 mg, 2 capsules). Leave blank to clear.`, info[name] || '');
-  if (v === null) return;
-  if (v.trim()) info[name] = v.trim(); else delete info[name];
-  jset(DOSE_KEY, info);
-  syncQueue('dose', name, info[name] || null, !info[name]);
-  tlRefreshAll();
-  if (tlIsActive('tab-supps')) renderSupps();
-}
-function doseBtn(name) {
-  const has = !!getDoseInfo()[name];
-  return `<button class="dose-btn" data-name="${tlEsc(name)}" onclick="event.stopPropagation();editDose(this)">${has ? 'Edit dose' : '+ Add dose'}</button>`;
-}
-
-// ── Cycle tracking ──
-function getCycle() { const c = jget(CY_KEY, {}); return {starts: Array.isArray(c.starts) ? c.starts.slice().sort() : [], len: Number(c.len) || 28}; }
-function cycleInfo(date) {
-  date = date || TODAY;
-  const c = getCycle(), t = ymd(date);
-  const last = c.starts.filter(s => s <= t).pop();
-  if (!last) return null;
-  const day = dayDiff(date, fromYmd(last)) + 1;
-  const phase = day <= 5 ? 'menstrual' : day <= 16 ? 'follicular' : 'luteal';
-  const next = fromYmd(last); next.setDate(next.getDate() + c.len);
-  return {start:last, day, phase, len:c.len, late: day > c.len, next,
-          label:{menstrual:'Menstrual', follicular:'Follicular', luteal:'Luteal'}[phase]};
-}
-function applyCyclePhase() { const ci = cycleInfo(); if (ci) suppPhase = ci.phase; }
-function cycleAfterChange() {
-  applyCyclePhase();
-  renderTodayView();
-  if (tlIsActive('tab-supps')) renderSupps();
-  renderCheckinTab();
-}
-function logPeriodStart() {
-  const v = document.getElementById('cyDate').value;
-  if (!v) return;
-  const c = getCycle();
-  if (!c.starts.includes(v)) c.starts.push(v);
-  jset(CY_KEY, c); syncQueue('cycle', 'cycle', c, false); cycleAfterChange();
-}
-function removePeriod(btn) {
-  const c = getCycle();
-  c.starts = c.starts.filter(s => s !== btn.dataset.d);
-  jset(CY_KEY, c); syncQueue('cycle', 'cycle', c, false); cycleAfterChange();
-}
-function setCycleLen(inp) {
-  const c = getCycle(), n = parseInt(inp.value, 10);
-  if (n >= 20 && n <= 45) { c.len = n; jset(CY_KEY, c); syncQueue('cycle', 'cycle', c, false); cycleAfterChange(); }
-}
-function cycleBanner() {
-  const ci = cycleInfo();
-  if (!ci) return `<div class="banner warn">No period logged yet, so the phase is set by hand. <button class="dose-btn" onclick="goTab('checkin')">Log your period</button></div>`;
-  return `<div class="banner warn">Cycle day ${ci.day} · ${ci.label}. Supplements follow this phase automatically; tap a phase below to override it for now.${ci.late ? ' Your period may be due. <button class="dose-btn" onclick="goTab(\'checkin\')">Log it</button>' : ''}</div>`;
-}
-
-// ── Check-in widget (ratings + notes), used on Today and on the Check-in tab ──
-const CI_METRICS = [['sleep','Sleep'],['energy','Energy'],['mood','Mood'],['recovery','Recovery']];
-// Two people: Cassidy is stored under the date, Mike under "date|m"
-function ciWho() { try { return localStorage.getItem('pp_ciwho_v1') === 'm' ? 'm' : 'c'; } catch(e) { return 'c'; } }
-function setCiWho(w) { try { localStorage.setItem('pp_ciwho_v1', w); } catch(e) {} ciRefresh(); renderCheckinHistory(); }
-function ciRender(el, pre, dateKey, whoOverride, showToggle) {
-  if (!el) return;
-  const who = whoOverride || ciWho(), key = dateKey + (who === 'm' ? '|m' : ''), name = who === 'm' ? 'Mike' : 'Cassidy';
-  const e = (jget(CI_KEY, {}))[key] || {};
-  const d = fromYmd(dateKey), isT = dateKey === ymd(TODAY);
-  const chip = (on, w, l) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="setCiWho('${w}')">${l}</button>`;
-  const rows = CI_METRICS.map(([m, l]) => `<div class="ci-row"><span class="ci-l" id="${pre}-${m}">${l}</span>
-    <div class="ci-pills" role="group" aria-labelledby="${pre}-${m}">${[1,2,3,4,5].map(n =>
-      `<button class="ci-pill ${e[m]===n?'on':''}" aria-pressed="${e[m]===n}" aria-label="${name} ${l} ${n} of 5" data-key="${key}" data-m="${m}" data-v="${n}" onclick="ciSet(this)">${n}</button>`).join('')}</div></div>`).join('');
-  el.innerHTML = `<div class="ci">
-    ${showToggle === false ? '' : `<div class="tl-bar" style="margin-bottom:10px"><div class="tl-seg" role="group" aria-label="Check-in for">${chip(who==='c','c','Cassidy')}${chip(who==='m','m','Mike')}</div></div>`}
-    <div class="tl-sum-top"><h2>${isT ? `How does ${name} feel today?` : `${name} · ${fmtShort(d)}`}</h2><span class="tl-sum-n">1 = low · 5 = high</span></div>
-    ${rows}
-    <label class="ci-nl" for="${pre}-notes">Notes for ${name}</label>
-    <textarea id="${pre}-notes" rows="3" data-key="${key}" placeholder="Side effects, timing, how the day went" onchange="ciNote(this)">${tlEsc(e.notes || '')}</textarea>
-    <div class="ci-saved" id="${pre}-saved" aria-live="polite"></div>
-  </div>`;
-}
-// Today's check-in follows the Cassidy / Mike / Both filter at the top
-function ciRenderToday(t) {
-  const who = tlWho(), key = ymd(TODAY);
-  if (who === 'all') {
-    t.innerHTML = '<div class="ci-two"><div class="ci-sub" id="tciC"></div><div class="ci-sub" id="tciM"></div></div>';
-    ciRender(document.getElementById('tciC'), 't1', key, 'c', false);
-    ciRender(document.getElementById('tciM'), 't2', key, 'm', false);
-  } else {
-    t.innerHTML = '<div id="tciS"></div>';
-    ciRender(document.getElementById('tciS'), 't1', key, who, false);
-  }
-}
-function ciRefresh() {
-  const t = document.getElementById('todayCheckin');
-  if (t && t.dataset.ready) ciRenderToday(t);
-  const w = document.getElementById('ciTabWidget');
-  if (w) ciRender(w, 'c', ciDate);
-}
-function ciSet(btn) {
-  const k = btn.dataset, all = jget(CI_KEY, {});
-  const e = all[k.key] || {};
-  const v = parseInt(k.v, 10), wrapId = btn.closest('[id]').id;
-  if (e[k.m] === v) delete e[k.m]; else e[k.m] = v;
-  e.ts = Date.now(); all[k.key] = e; jset(CI_KEY, all); syncQueue('checkin', k.key, e, false);
-  ciRefresh(); renderCheckinHistory();
-  const again = Array.from(document.querySelectorAll('.ci-pill')).find(x => x.dataset.key === k.key && x.dataset.m === k.m && x.dataset.v === k.v && x.closest('#' + wrapId));
-  if (again) again.focus({preventScroll:true});
-}
-function ciNote(ta) {
-  const all = jget(CI_KEY, {}), e = all[ta.dataset.key] || {};
-  e.notes = ta.value; e.ts = Date.now(); all[ta.dataset.key] = e; jset(CI_KEY, all); syncQueue('checkin', ta.dataset.key, e, false);
-  const s = document.getElementById(ta.id.replace('-notes', '-saved'));
-  if (s) s.textContent = 'Saved on this device';
-  renderCheckinHistory();
-}
-
-let ciDate = ymd(TODAY);
-function initCheckin() { ciDate = ymd(TODAY); renderCheckinTab(); }
-function renderCheckinTab() {
-  const body = document.getElementById('ciTabBody');
-  if (!body) return;
-  const ci = cycleInfo(), c = getCycle();
-  const starts = c.starts.slice().reverse().slice(0, 6);
-  const intervals = []; for (let i = 1; i < c.starts.length; i++) intervals.push(dayDiff(fromYmd(c.starts[i]), fromYmd(c.starts[i-1])));
-  const avg = intervals.length ? Math.round(intervals.slice(-3).reduce((a,b) => a+b, 0) / Math.min(3, intervals.length)) : null;
-  const status = ci
-    ? `<div class="cy-big">Day ${ci.day} <span>· ${ci.label}</span></div>
-       <div class="cy-sub">Supplements use the ${ci.label.toLowerCase()} phase list automatically. Next period expected about ${fmtShort(ci.next)}${ci.late ? ' (it may be late, log it when it starts)' : ''}.${avg ? ` Your recent average is ${avg} days.` : ''}</div>`
-    : `<div class="cy-sub">Log the first day of your last period to start tracking. The Supplements tab will then pick your phase automatically.</div>`;
-  body.innerHTML = `
-    <div class="ci-datebar"><label for="ciDateIn">Check-in date</label>
-      <input type="date" id="ciDateIn" value="${ciDate}" max="${ymd(TODAY)}" onchange="ciDate=this.value||ymd(TODAY);ciRefresh();"></div>
-    <div id="ciTabWidget" class="ci-wrap"></div>
-    <div class="ci-wrap cy">
-      <div class="tl-sum-top"><h2>Cycle · Cassidy</h2></div>
-      ${status}
-      <div class="cy-form">
-        <label for="cyDate">First day of period</label>
-        <input type="date" id="cyDate" value="${ymd(TODAY)}" max="${ymd(TODAY)}">
-        <button class="pill-btn" onclick="logPeriodStart()">Log period start</button>
-        <label for="cyLen">Cycle length (days)</label>
-        <input type="number" id="cyLen" min="20" max="45" value="${c.len}" onchange="setCycleLen(this)" style="width:84px">
-      </div>
-      ${starts.length ? `<div class="cy-list">${starts.map(s => `<div class="cy-item"><span>${fmtShort(fromYmd(s))}, ${fromYmd(s).getFullYear()}</span><button class="dose-btn" data-d="${s}" aria-label="Remove period start ${s}" onclick="removePeriod(this)">Remove</button></div>`).join('')}</div>` : ''}
-      <div class="ci-saved">Days 1–5 menstrual, 6–16 follicular, 17+ luteal, the same ranges your Supplements tab uses.</div>
-    </div>
-    <div class="ci-wrap" id="ciTrends"></div>
-    ${syncCardHtml()}
-    <div class="ci-wrap"><div class="tl-sum-top"><h2>Recent check-ins</h2></div><div id="ciHistory"></div></div>`;
-  ciRender(document.getElementById('ciTabWidget'), 'c', ciDate);
-  renderCheckinHistory();
-  syncStatus();
-}
-function renderCheckinHistory() {
-  renderTrends();
-  const el = document.getElementById('ciHistory');
-  if (!el) return;
-  const all = jget(CI_KEY, {}), who = ciWho();
-  const has = k => CI_METRICS.some(([m]) => all[k][m]) || all[k].notes;
-  const keys = Object.keys(all).filter(has).sort((x, y) => y.localeCompare(x)).slice(0, 24);
-  if (!keys.length) { el.innerHTML = '<div class="tl-empty">No check-ins yet.</div>'; return; }
-  const mine = Object.keys(all).filter(k => (k.endsWith('|m') ? 'm' : 'c') === who && dayDiff(TODAY, fromYmd(k.split('|')[0])) < 7);
-  const avgs = CI_METRICS.map(([m, l]) => {
-    const v = mine.map(k => all[k][m]).filter(Boolean);
-    return v.length ? `${l} ${(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1)}` : null;
-  }).filter(Boolean);
-  el.innerHTML = (avgs.length ? `<div class="ci-saved" style="margin:0 0 10px">${who==='m'?'Mike':'Cassidy'} 7-day average: ${avgs.join(' · ')}</div>` : '') +
-    keys.map(k => {
-      const e = all[k], isM = k.endsWith('|m'), d = fromYmd(k.split('|')[0]), cinfo = isM ? null : cycleInfo(d);
-      const sc = CI_METRICS.map(([m, l]) => e[m] ? `${l} ${e[m]}` : null).filter(Boolean).join(' · ');
-      return `<div class="ci-hist"><div class="ci-hist-top"><b>${DAYS[d.getDay()]} ${d.getMonth()+1}/${d.getDate()}</b><span class="tl-tag">${isM ? 'Mike' : 'Cass'}</span>${cinfo ? `<span class="tl-tag">Cycle day ${cinfo.day}</span>` : ''}<span class="ci-hist-sc">${sc}</span></div>${e.notes ? `<div class="ci-hist-n">${tlEsc(e.notes)}</div>` : ''}</div>`;
-    }).join('');
-}
-
-// ── Tracker: meds + supplements (they were not counted before) ──
-function suppItemsFor(date) {
-  const dow = date.getDay(), biocin = dow !== 0 && dow !== 6, out = [];
-  SUPP_BLOCKS.forEach(b => {
-    if (b.id === 'detox_mid' && !biocin) return;
-    (b.id === 'phase' ? PHASE_ITEMS[suppPhase].items : b.items).forEach(i => out.push({block:b.id, name:i.name, tag:i.tag || ''}));
-  });
-  return out;
-}
-function renderTrackerExtras() {
-  const el = document.getElementById('trkExtras');
-  if (!el) return;
-  const ss = getSuppStore();
-  let cols = '';
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(TODAY); d.setDate(TODAY.getDate() - i);
-    const meds = getMeds(d), mDone = meds.filter(m => isDone(d, 'med', m.name)).length;
-    const mp = meds.length ? Math.round(mDone / meds.length * 100) : 0;
-    const items = suppItemsFor(d).filter(x => x.tag !== 'optional');
-    const sDone = items.filter(x => ss[`${d.toDateString()}|${x.block}|${x.name}`]).length;
-    const sp = items.length ? Math.round(sDone / items.length * 100) : 0;
-    cols += `<div class="xg-col"><div class="xg-bars" role="img" aria-label="${DAYS[d.getDay()]}: meds ${mp}%, supplements ${sp}%"><i class="m" style="height:${Math.max(mp,2)}%"></i><i class="s" style="height:${Math.max(sp,2)}%"></i></div><span class="g-day">${DAYS[d.getDay()].slice(0,3)}</span><span class="g-pct">${mp}/${sp}</span></div>`;
-  }
-  const rows = Object.entries(ss).sort((a,b) => b[1]-a[1]).slice(0, 40).map(([k, ts]) => {
-    const [dateStr, block, name] = k.split('|'), t = new Date(ts);
-    return `<div class="trk-row"><span class="trk-tag">SUPP</span><span class="trk-n">${tlEsc(name)}</span><span class="trk-t">${dateStr} · ${t.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span></div>`;
-  }).join('');
-  el.innerHTML = `
-    <div class="slabel" style="margin-bottom:14px">Meds + Supplements · 7-Day Completion</div>
-    <div class="graph-wrap"><div class="graph-title">Meds <span class="xg-key m"></span> · Supplements <span class="xg-key s"></span> <span style="font-size:12px;font-weight:400;color:var(--muted)">(optional items not counted · numbers are meds/supps %)</span></div>
-      <div class="xg">${cols}</div></div>
-    <div class="slabel" style="margin-bottom:10px">Supplement Log</div>
-    <div class="trk-list">${rows || '<div class="tl-empty">No supplements checked yet. Tick them on Today or the Supplements tab.</div>'}</div>
-    <div style="height:18px"></div>`;
-}
-
-// ── Protocol cards ──
-// Day lists come from getDoses, so the cards always match what the Today tab schedules
-function cycleDaysOf(match) {
-  const base = fromYmd(CFG.startDate), out = [];
-  for (let i = -3; i < 90; i++) {
-    const d = new Date(base); d.setDate(base.getDate() + i);
-    if (getDoses(d).c.some(x => x.name.includes(match))) out.push(d);
-  }
-  return out;
-}
-function protoStatus(name) {
-  const T = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
-  const run = (match, word) => {
-    const days = cycleDaysOf(match);
-    if (!days.length) return {state:'Ongoing', label:'Ongoing', pct:null};
-    const n = days.filter(d => dayDiff(d, T) <= 0).length, last = days[days.length-1];
-    if (n === 0) return {state:'Planned', label:`Starts ${fmtShort(days[0])}`, pct:0};
-    if (dayDiff(T, last) > 0) return null;
-    return {state:'Active', label:`${word} ${n} of ${days.length} · ends ${fmtShort(last)}`, pct:Math.round(n/days.length*100)};
-  };
-  if (name === 'Pinealon') return run('Pinealon', 'Day') || {state:'Complete', label:'Cycle complete', pct:100};
-  if (name.startsWith('MT2')) return run('LOADING', 'Loading dose') || {state:'Active', label:`Maintenance · Saturdays from ${fmtShort(MT2_MAINT_START)}`, pct:100};
-  if (name === 'Retatrutide') { const r = getRetaDose(TODAY); return {state:'Active', label:`Current dose ${r.t} · ${r.mg}${r.hold ? ' · hold' : ''}`, pct:null}; }
-  if (name === 'MOTS-c') return {state:'Active', label:`Twice weekly · ${MOTS_DAYS.map(d => ['','Mon','Tue','Wed','Thu','Fri'][d]).join(' + ')}`, pct:null};
-  return {state:'Ongoing', label:'Ongoing', pct:null};
-}
-function protoIcon(i, c1, c2) {
-  const k = i % 4;
-  if (k === 0) return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><rect x="32" y="8" width="36" height="16" rx="5" fill="${c2}"/><rect x="28" y="22" width="44" height="72" rx="12" fill="${c1}"/><rect x="28" y="44" width="44" height="26" fill="#FAF0DC"/><rect x="36" y="53" width="28" height="4" rx="2" fill="${c2}"/></svg>`;
-  if (k === 1) return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><rect x="40" y="4" width="20" height="14" rx="4" fill="${c2}"/><rect x="34" y="16" width="32" height="70" rx="14" fill="${c1}"/><rect x="46" y="86" width="8" height="12" rx="3" fill="${c2}"/></svg>`;
-  if (k === 2) return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><g transform="rotate(-35 50 50)"><rect x="12" y="30" width="76" height="40" rx="20" fill="#FFF6E6"/><path d="M50 30h18a20 20 0 0 1 0 40H50z" fill="${c2}"/></g></svg>`;
-  return `<svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><circle cx="50" cy="66" r="30" fill="${c1}"/><rect x="42" y="14" width="16" height="22" rx="5" fill="${c2}"/><rect x="38" y="34" width="24" height="8" rx="3" fill="${c2}"/></svg>`;
-}
-let protoFilter = 'all';
-function protoMode() { try { return localStorage.getItem('pp_proto_v1') === 'table' ? 'table' : 'cards'; } catch(e) { return 'cards'; } }
-function setProtoMode(m) { try { localStorage.setItem('pp_proto_v1', m); } catch(e) {} renderProtoCards(); }
-function setProtoFilter(f) { protoFilter = f; renderProtoCards(); }
-function renderProtoCards() {
-  const tools = document.getElementById('protoTools'), cards = document.getElementById('protoCards'), table = document.getElementById('protoTable');
-  if (!tools || !cards) return;
-  const mode = protoMode();
-  const chip = (on, fn, l) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="${fn}">${l}</button>`;
-  tools.innerHTML = `<div class="tl-bar"><div class="tl-seg" role="group" aria-label="View">${chip(mode==='cards',"setProtoMode('cards')",'Cards')}${chip(mode==='table',"setProtoMode('table')",'Table')}</div>
-    ${mode==='cards' ? `<div class="tl-seg" role="group" aria-label="Filter">${chip(protoFilter==='all',"setProtoFilter('all')",'All')}${chip(protoFilter==='active',"setProtoFilter('active')",'Active cycles')}${chip(protoFilter==='both',"setProtoFilter('both')",'Both of us')}${chip(protoFilter==='cass',"setProtoFilter('cass')",'Cass only')}</div>` : ''}</div>`;
-  table.style.display = mode === 'table' ? '' : 'none';
-  if (mode === 'table') { cards.innerHTML = ''; return; }
-  const pal = [['#FFE7A0','#8E9BE0','#A9CCDC'],['#CFE4EE','#C8402F','#FFD97A'],['#F9D6CC','#8E9BE0','#FFF6E6'],['#DDE0F7','#C8402F','#FFB5C2'],['#FFD1D9','#8E9BE0','#FFD97A'],['#E8F0C8','#C8402F','#A9CCDC']];
-  const list = PROTO.map((p, i) => ({p, i, st: protoStatus(p.name)})).filter(({p, st}) =>
-    protoFilter === 'all' || (protoFilter === 'active' && st.pct !== null && st.state === 'Active') || (protoFilter === 'both' && p.who === 'both') || (protoFilter === 'cass' && p.who === 'cass'));
-  cards.innerHTML = `<div class="tl-grid">${list.map(({p, i, st}) => {
-    const [bg, c1, c2] = pal[i % pal.length];
-    const cass = `${p.ct}${p.cm ? ' · ' + p.cm : ''}`, mike = p.mt && p.mt !== '—' ? `${p.mt}${p.mm ? ' · ' + p.mm : ''}` : '';
-    return `<div class="tl-card pr-card" style="background:${bg}">
-      <div class="pr-top"><div class="pr-ic">${protoIcon(i, c1, c2)}</div><span class="tl-tag">${st.state}</span></div>
-      <div class="tl-name">${tlEsc(p.name)}</div>
-      <div class="tl-note">${tlEsc(p.sub)}</div>
-      <div class="tl-lines"><div class="tl-line ro"><span class="tl-who">Cass</span><span class="tl-amt">${tlEsc(cass)}</span></div>
-      ${mike ? `<div class="tl-line ro"><span class="tl-who">Mike</span><span class="tl-amt">${tlEsc(mike)}</span></div>` : ''}</div>
-      ${st.pct !== null ? `<div class="tl-track pr-track" role="img" aria-label="${tlEsc(st.label)}"><div style="width:${st.pct}%"></div></div>` : ''}
-      <div class="tl-note"><b>${tlEsc(st.label)}</b></div>
-    </div>`;
-  }).join('')}</div>${list.length ? '' : '<div class="tl-empty">Nothing matches this filter.</div>'}`;
-}
-
-// ── Keep "now" live ──
-function tlCurId() {
-  const n = new Date(), h = n.getHours() + n.getMinutes() / 60;
-  return tlPickNow(TL_SLOTS, h);
-}
-let tlLastCur = tlCurId();
-function tlClockCheck() {
-  if (ymd(new Date()) !== ymd(TODAY)) {
-    const a = document.activeElement;
-    if (!a || !/^(TEXTAREA|INPUT)$/.test(a.tagName)) window.location.reload();
-    return;
-  }
-  const cur = tlCurId();
-  if (cur !== tlLastCur) { tlLastCur = cur; tlRefreshAll(); }
-}
-document.addEventListener('visibilitychange', () => { if (!document.hidden) tlClockCheck(); });
-setInterval(tlClockCheck, 60000);
-
-// ─── PRIVATE SYNC (check-ins, cycle, supplement doses, supplement checks) ─────
-// Data goes to the pp_data table through two Supabase functions. The table itself
-// is locked; a record is only reachable with the hash of your private sync code.
-const SYNC_CODE_KEY = 'pp_sync_code_v1', SYNC_META_KEY = 'pp_syncmeta_v1', SYNC_OUT_KEY = 'pp_outbox_v1', SYNC_LAST_KEY = 'pp_synclast_v1';
-function syncCode() { try { return localStorage.getItem(SYNC_CODE_KEY) || ''; } catch(e) { return ''; } }
-function syncOn() { return !!syncCode(); }
-function syncClean(c) { return String(c).replace(/[^A-Za-z0-9]/g, '').toUpperCase(); }
-function syncFmt(c) { return c.match(/.{1,5}/g).join('-'); }
-async function syncOwner(code) {
-  const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('pp1:' + syncClean(code)));
-  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-function syncNewCode() {
-  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = crypto.getRandomValues(new Uint8Array(20));
-  return syncFmt(Array.from(r).map(b => A[b % 32]).join(''));
-}
-async function syncRpc(fn, body) {
-  const r = await fetch(SB_URL + '/rest/v1/rpc/' + fn, {method:'POST', headers:{'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY}, body:JSON.stringify(body)});
-  if (!r.ok) throw new Error(r.status);
-  return r.json();
-}
-function syncMeta() { return jget(SYNC_META_KEY, {}); }
-
-// Called after every local change to a synced record
-function syncQueue(kind, key, value, deleted) {
-  const ts = Date.now(), m = syncMeta();
-  m[kind + '|' + key] = ts; jset(SYNC_META_KEY, m);
-  if (!syncOn()) return;
-  const out = jget(SYNC_OUT_KEY, []).filter(o => !(o.kind === kind && o.key === key));
-  out.push({kind, key, value: deleted ? null : value, deleted: !!deleted, updated_at: ts});
-  jset(SYNC_OUT_KEY, out);
-  syncFlushSoon();
-}
-let syncTimer = null;
-function syncFlushSoon() { clearTimeout(syncTimer); syncTimer = setTimeout(syncFlush, 800); }
-async function syncFlush() {
-  if (!syncOn()) return;
-  const batch = jget(SYNC_OUT_KEY, []).slice(0, 400);
-  if (!batch.length) return;
-  try {
-    await syncRpc('pp_push', {p_owner: await syncOwner(syncCode()), p_rows: batch});
-    const left = jget(SYNC_OUT_KEY, []).filter(o => !batch.some(b => b.kind === o.kind && b.key === o.key && b.updated_at === o.updated_at));
-    jset(SYNC_OUT_KEY, left);
-    if (left.length) syncFlushSoon();
-  } catch(e) { console.warn('sync push failed', e); syncStatus('Offline. Changes will send when you are back online.'); }
-}
-async function syncPull() {
-  if (!syncOn()) return false;
-  try {
-    const rows = await syncRpc('pp_pull', {p_owner: await syncOwner(syncCode())});
-    const meta = syncMeta(), ci = jget(CI_KEY, {}), di = getDoseInfo(), ss = getSuppStore();
-    let changed = false;
-    rows.forEach(r => {
-      const mk = r.kind + '|' + r.key, rts = Date.parse(r.updated_at);
-      if (!(rts > (meta[mk] || 0))) return;
-      changed = true; meta[mk] = rts;
-      if (r.kind === 'checkin') { if (r.deleted) delete ci[r.key]; else ci[r.key] = r.value; }
-      else if (r.kind === 'cycle') { if (r.value) jset(CY_KEY, r.value); }
-      else if (r.kind === 'dose') { if (r.deleted) delete di[r.key]; else di[r.key] = r.value; }
-      else if (r.kind === 'supp') { if (r.deleted) delete ss[r.key]; else ss[r.key] = r.value; }
-    });
-    if (changed) { jset(CI_KEY, ci); jset(DOSE_KEY, di); saveSuppStore(ss); jset(SYNC_META_KEY, meta); }
-    return changed;
-  } catch(e) { console.warn('sync pull failed', e); syncStatus('Offline. Showing what is saved on this device.'); return false; }
-}
-// Put everything already on this device into the outbox (first time sync is turned on)
-function syncSeedLocal() {
-  const meta = syncMeta(), out = [], now = Date.now();
-  const add = (kind, key, value, deleted, fallback) => {
-    const mk = kind + '|' + key; meta[mk] = meta[mk] || fallback || now;
-    out.push({kind, key, value: deleted ? null : value, deleted: !!deleted, updated_at: meta[mk]});
-  };
-  const ci = jget(CI_KEY, {}); Object.keys(ci).forEach(k => add('checkin', k, ci[k], false, ci[k].ts));
-  const cy = jget(CY_KEY, null); if (cy) add('cycle', 'cycle', cy, false);
-  const di = getDoseInfo(); Object.keys(di).forEach(k => add('dose', k, di[k], false));
-  const ss = getSuppStore(); Object.keys(ss).forEach(k => add('supp', k, ss[k], false, ss[k]));
-  jset(SYNC_META_KEY, meta); jset(SYNC_OUT_KEY, out);
-}
-async function syncNow() {
-  if (!syncOn()) return;
-  syncStatus('Syncing…');
-  await syncFlush();
-  const changed = await syncPull();
-  if (changed) syncAfterPull();
-  if (!jget(SYNC_OUT_KEY, []).length) { try { localStorage.setItem(SYNC_LAST_KEY, String(Date.now())); } catch(e) {} syncStatus(); }
-}
-function syncAfterPull() {
-  applyCyclePhase();
-  tlRefreshAll();
-  const a = document.activeElement;
-  if (!(a && a.tagName === 'TEXTAREA')) { ciRefresh(); renderCheckinHistory(); }
-  if (tlIsActive('tab-supps')) renderSupps();
-  if (tlIsActive('tab-tracker')) renderTrackerExtras();
-  if (tlIsActive('tab-checkin') && !(a && /^(TEXTAREA|INPUT)$/.test(a.tagName))) renderCheckinTab();
-}
-function syncSupported() { return !!(window.crypto && crypto.subtle && crypto.getRandomValues); }
-async function syncEnableNew() {
-  if (!syncSupported()) { alert('This browser cannot create a secure sync code.'); return; }
-  localStorage.setItem(SYNC_CODE_KEY, syncNewCode());
-  syncSeedLocal(); renderCheckinTab(); await syncNow();
-}
-async function syncConnect() {
-  if (!syncSupported()) { alert('This browser cannot use secure sync.'); return; }
-  const c = syncClean(document.getElementById('syncCodeIn').value);
-  if (c.length !== 20) { const m = document.getElementById('syncMsg'); if (m) m.textContent = 'A sync code has 20 letters and numbers.'; return; }
-  localStorage.setItem(SYNC_CODE_KEY, syncFmt(c));
-  syncSeedLocal(); renderCheckinTab(); await syncNow();
-}
-function syncDisable() {
-  if (!confirm('Turn off sync on this device? Your data stays here and in the cloud. You can reconnect with your code.')) return;
-  try { localStorage.removeItem(SYNC_CODE_KEY); localStorage.removeItem(SYNC_OUT_KEY); } catch(e) {}
-  renderCheckinTab();
-}
-function syncToggleCode(btn) {
-  const el = document.getElementById('syncCodeShow'), show = el.hidden;
-  el.hidden = !show; btn.textContent = show ? 'Hide code' : 'Show my code'; btn.setAttribute('aria-expanded', show);
-}
-function syncCardHtml() {
-  if (!syncOn()) return `<div class="ci-wrap"><div class="tl-sum-top"><h2>Sync across devices</h2></div>
-    <div class="cy-sub">Keep your check-ins, notes, cycle, supplement doses and supplement checks the same on your phone and laptop. They are stored privately under a code only you hold.</div>
-    <div class="cy-form"><button class="pill-btn" onclick="syncEnableNew()">Turn on sync</button></div>
-    <div class="cy-form"><label for="syncCodeIn">Already have a code?</label><input type="text" id="syncCodeIn" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" autocapitalize="characters" style="width:260px"><button class="pill-btn" onclick="syncConnect()">Connect</button></div>
-    <div class="ci-saved" id="syncMsg" aria-live="polite"></div></div>`;
-  return `<div class="ci-wrap"><div class="tl-sum-top"><h2>Sync across devices</h2><span class="tl-sum-n" id="syncStatus" aria-live="polite"></span></div>
-    <div class="cy-sub">Sync is on. Enter this code on your other devices to connect them. Anyone who has the code can read this data, so keep it private.</div>
-    <div class="cy-form"><button class="pill-btn" onclick="syncNow()">Sync now</button><button class="dose-btn" aria-expanded="false" onclick="syncToggleCode(this)">Show my code</button><button class="dose-btn" onclick="syncDisable()">Turn off on this device</button></div>
-    <div id="syncCodeShow" class="sync-code" hidden>${tlEsc(syncCode())}</div>
-    <div class="ci-saved">Peptide dose checks on Today still sync through your original dose log.</div></div>`;
-}
-document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNow(); });
-
-// ── Trends (check-in charts): one series per chart, hover/focus tooltips, table view ──
-function trTip() {
-  let t = document.getElementById('trTip');
-  if (!t) { t = document.createElement('div'); t.id = 'trTip'; t.className = 'tr-tip'; t.setAttribute('role', 'status'); t.hidden = true; document.body.appendChild(t); }
-  return t;
-}
-function trShow(g) {
-  const t = trTip(); t.hidden = false; t.textContent = '';
-  const v = document.createElement('strong'); v.textContent = g.dataset.l;
-  t.appendChild(v);
-  const r = g.getBoundingClientRect();
-  t.style.left = Math.max(8, Math.min(window.innerWidth - 190, r.left + r.width / 2 - 70)) + 'px';
-  t.style.top = Math.max(8, r.top - 40) + 'px';
-}
-function trHide() { const t = document.getElementById('trTip'); if (t) t.hidden = true; }
-
-// items: [{v: 1-5 or null, x: axis label or '', tip: text}]
-function trChart(items, aria) {
-  const W = 420, H = 132, L = 24, T = 14, B = 26, pw = W - L - 6, ph = H - T - B, n = items.length, slot = pw / n, bw = Math.min(24, slot * 0.62);
-  const y = v => T + ph - (v / 5) * ph;
-  let svg = `<svg class="tr-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="${tlEsc(aria)}">`;
-  [1, 3, 5].forEach(v => { svg += `<line class="tr-gl" x1="${L}" x2="${W-6}" y1="${y(v)}" y2="${y(v)}"/><text class="tr-t" x="${L-6}" y="${y(v)+3}" text-anchor="end">${v}</text>`; });
-  svg += `<line class="tr-axis" x1="${L}" x2="${W-6}" y1="${y(0)}" y2="${y(0)}"/>`;
-  let lastIdx = -1; items.forEach((it, i) => { if (it.v) lastIdx = i; });
-  items.forEach((it, i) => {
-    const cx = L + slot * i + slot / 2, x0 = cx - bw / 2;
-    let bar = '';
-    if (it.v) {
-      const yt = y(it.v), r = Math.min(4, (y(0) - yt) / 2);
-      bar = `<path class="tr-bar" d="M${x0},${y(0)} L${x0},${yt + r} Q${x0},${yt} ${x0 + r},${yt} L${x0 + bw - r},${yt} Q${x0 + bw},${yt} ${x0 + bw},${yt + r} L${x0 + bw},${y(0)} Z"/>`;
-      if (i === lastIdx) bar += `<text class="tr-v" x="${cx}" y="${yt - 5}" text-anchor="middle">${it.v}</text>`;
-    }
-    svg += `<g class="tr-g" tabindex="0" role="img" aria-label="${tlEsc(it.tip)}" data-v="${it.v || 'none'}" data-l="${tlEsc(it.tip)}" onpointerenter="trShow(this)" onpointerleave="trHide()" onfocus="trShow(this)" onblur="trHide()">
-      <rect class="tr-hit" x="${L + slot * i}" y="${T - 8}" width="${slot}" height="${ph + 8}"/>${bar}</g>`;
-    if (it.x) svg += `<text class="tr-t" x="${cx}" y="${H - 8}" text-anchor="middle">${tlEsc(it.x)}</text>`;
-  });
-  return svg + '</svg>';
-}
-function renderTrends() {
-  const el = document.getElementById('ciTrends');
-  if (!el) return;
-  const all = jget(CI_KEY, {}), who = ciWho(), name = who === 'm' ? 'Mike' : 'Cassidy', sfx = who === 'm' ? '|m' : '';
-  const days = [];
-  for (let i = 13; i >= 0; i--) { const d = new Date(TODAY); d.setDate(d.getDate() - i); days.push({d, e: all[ymd(d) + sfx] || {}}); }
-  const filled = days.filter(x => CI_METRICS.some(([m]) => x.e[m])).length;
-  const head = `<div class="tl-sum-top"><h2>Trends · ${name}</h2><span class="tl-sum-n">last 14 days</span></div>`;
-  if (filled < 2) { el.innerHTML = head + '<div class="tl-empty">Check in on a few days to see your trends here.</div>'; return; }
-  const card = (title, sub, chart) => `<div class="tr-card"><div class="tr-h">${title} <span class="tr-sub">${sub}</span></div>${chart}</div>`;
-  const dayCharts = CI_METRICS.map(([m, l]) => card(l, 'score 1 to 5', trChart(days.map((x, i) => ({
-    v: x.e[m] || null,
-    x: (i === 0 || i === 7 || i === 13) ? `${x.d.getMonth()+1}/${x.d.getDate()}` : '',
-    tip: `${l} ${x.d.getMonth()+1}/${x.d.getDate()}: ${x.e[m] ? x.e[m] + ' of 5' : 'no check-in'}`
-  })), `${l} over the last 14 days`))).join('');
-  // By cycle phase (Cassidy only)
-  let phaseHtml = '';
-  if (who === 'c') {
-    const groups = {menstrual: [], follicular: [], luteal: []};
-    Object.keys(all).filter(k => !k.includes('|')).forEach(k => { const ci = cycleInfo(fromYmd(k)); if (ci) groups[ci.phase].push(all[k]); });
-    const withData = Object.keys(groups).filter(g => groups[g].some(e => CI_METRICS.some(([m]) => e[m])));
-    if (withData.length >= 2) {
-      const lab = {menstrual:'Menstrual', follicular:'Follicular', luteal:'Luteal'};
-      phaseHtml = `<div class="tl-sum-top" style="margin-top:18px"><h2>By cycle phase</h2><span class="tl-sum-n">average score</span></div><div class="tr-grid">` +
-        CI_METRICS.map(([m, l]) => card(l, 'average by phase', trChart(['menstrual','follicular','luteal'].map(g => {
-          const v = groups[g].map(e => e[m]).filter(Boolean), avg = v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length * 10) / 10 : null;
-          return {v: avg, x: `${lab[g]} (${v.length})`, tip: `${l}, ${lab[g]} phase: ${avg ? avg + ' average of ' + v.length + ' day' + (v.length > 1 ? 's' : '') : 'no check-ins'}`};
-        }), `${l} average by cycle phase`))).join('') + '</div>';
-    } else phaseHtml = '<div class="ci-saved" style="margin-top:12px">Phase comparison appears once you have check-ins in at least two cycle phases.</div>';
-  }
-  const rows = days.slice().reverse().map(x => `<tr><td>${x.d.getMonth()+1}/${x.d.getDate()}</td>${CI_METRICS.map(([m]) => `<td>${x.e[m] || '–'}</td>`).join('')}</tr>`).join('');
-  el.innerHTML = head + `<div class="tr-grid">${dayCharts}</div>${phaseHtml}
-    <details class="tl-opt" style="margin-top:12px"><summary>Show as table</summary><div style="overflow:auto"><table class="tr-table"><thead><tr><th>Date</th>${CI_METRICS.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></details>`;
-}
-
-// ── Sync status dot in the header ──
-function syncStatus(msg) {
-  const dot = document.getElementById('syncDot');
-  if (dot) {
-    const st = !syncOn() ? 'off' : /^Offline/.test(msg || '') ? 'offline' : /^Syncing/.test(msg || '') ? 'syncing' : 'ok';
-    const txt = {off:'Sync off', offline:'Offline', syncing:'Syncing', ok:'Synced'}[st];
-    dot.dataset.s = st; dot.querySelector('.sd-t').textContent = txt;
-    dot.setAttribute('aria-label', 'Sync status: ' + txt + '. Open sync settings.');
-  }
-  const el = document.getElementById('syncStatus');
-  if (!el) return;
-  if (msg) { el.textContent = msg; return; }
-  const t = Number(localStorage.getItem(SYNC_LAST_KEY) || 0);
-  el.textContent = t ? 'Synced ' + new Date(t).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : 'Not synced yet';
-}
-
-// ── Install as an app (works on https; skipped on file://) ──
-if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
-}
-
-(function trackHeaderHeight() {
-  const h = document.querySelector('.hdr');
-  if (!h) return;
-  const set = () => document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px');
-  set();
-  if (window.ResizeObserver) new ResizeObserver(set).observe(h);
-  window.addEventListener('resize', set);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(set);
-})();
+function initTracker() { updateGraph(); checkRestoreBtn(); }
 
 (async () => {
   // One-time cleanup: remove any bad localStorage keys from before the med-person fix
@@ -3014,13 +1865,10 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 
   // Sync from Supabase first so checkmarks are correct on first render
   await syncFromSupabase();
-  applyCyclePhase();
   initToday();
   initProtocol();
   initSunday();
   initPricing();
-  syncStatus();
-  syncNow();
 })();
 </script>
 </body>
