@@ -575,6 +575,10 @@ const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 // ── PROTOCOL CONFIG — editable via Settings tab ──────────────────────────
 // These are set by the app's reset/reconfigure button and stored in localStorage
 // Default values reflect Oct 27 2026 restart
+// Read 'YYYY-MM-DD' as a local date (new Date('YYYY-MM-DD') is UTC midnight = the previous evening in US time zones)
+function pdate(s) { const [y, m, d] = String(s).split('-').map(Number); return new Date(y, m - 1, d); }
+function pymd(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+
 function getProtocolConfig() {
   try {
     const saved = localStorage.getItem('pp_protocol_config');
@@ -596,7 +600,7 @@ function saveProtocolConfig(cfg) {
 // Count how many Pinealon doses have actually been taken (not missed)
 function getPinealonActualDoses() {
   const s = getStore(), ms = getMissedStore();
-  const start = new Date(CFG ? CFG.startDate : '2026-10-27');
+  const start = pdate(CFG ? CFG.startDate : '2026-10-27');
   let taken = 0;
   for (let i = 0; i < 30; i++) {
     const d = new Date(start);
@@ -612,7 +616,7 @@ function getPinealonActualDoses() {
 
 // Compute effective PIN_END based on actual doses taken
 function getEffectivePinEnd(cfg) {
-  const start = new Date(cfg.startDate);
+  const start = pdate(cfg.startDate);
   const ms = getMissedStore();
   const s  = getStore();
   let taken = 0, d = new Date(start);
@@ -634,7 +638,7 @@ function getEffectivePinEnd(cfg) {
 // Compute effective MT2 load days — skip missed ones, extend until 6 actual doses
 function getEffectiveMT2LoadDays(cfg) {
   const ms = getMissedStore();
-  const scheduled = cfg.mt2LoadDays.map(d => new Date(d));
+  const scheduled = cfg.mt2LoadDays.map(d => pdate(d));
   // Any scheduled day that wasn't missed counts; extend for missed ones
   let actual = [], extra = new Date(scheduled[scheduled.length - 1]);
   scheduled.forEach(d => {
@@ -681,7 +685,7 @@ function getEffectiveRetaDose(date) {
 
 // Compute live dates from config — miss-aware
 function buildDates(cfg) {
-  const start   = new Date(cfg.startDate);
+  const start   = pdate(cfg.startDate);
   const pin_end = getEffectivePinEnd(cfg);
   const mt2Days = getEffectiveMT2LoadDays(cfg);
   const lastMT2 = mt2Days[mt2Days.length - 1];
@@ -693,7 +697,7 @@ function buildDates(cfg) {
     MT2_LOAD_END:    lastMT2,
     MT2_MAINT_START: maint,
     PIN_START:       start,
-    PIN_END:         pin_end,
+    PIN_END:         new Date(pin_end.getFullYear(), pin_end.getMonth(), pin_end.getDate(), 23, 59, 59, 999),
     MOTS_START:      start,
     MOTS_DAYS:       cfg.motsWeekdays,
     MT2_LOAD_DAYS:   mt2Days.map(d => d.toDateString()),
@@ -760,6 +764,8 @@ function getDoses(date) {
   if (dow === 6) {
     SAT_C.forEach(d => res.c.push({...d}));
     SAT_M.forEach(d => res.m.push({...d}));
+    if (isMT2Load)
+      res.c.push({name:"MT2 🔶 LOADING",t:"10t",mg:"0.50mg",time:"load",note:"EOD · Cass · thru Jun 19"});
     if (isMT2Maint)
       res.c.push({name:"MT2",t:"5t",mg:"0.25mg",time:"eve",note:"Sat maintenance · Cass only"});
     if (inPin) {
@@ -1698,7 +1704,7 @@ function initSettings() {
       <div><span style="color:var(--muted)">MT2 Loading ends</span><br><strong>${d.MT2_LOAD_END.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</strong></div>
       <div><span style="color:var(--muted)">MT2 Maintenance</span><br><strong>${d.MT2_MAINT_START.toLocaleDateString('en-US',{month:'short',day:'numeric'})}+ Saturdays</strong></div>
       <div><span style="color:var(--muted)">MOTS-c days</span><br><strong>${cfg.motsWeekdays.map(d=>['','Mon','Tue','Wed','Thu','Fri'][d]).join(' + ')}</strong></div>
-      <div><span style="color:var(--muted)">MT2 load dates</span><br><strong>${cfg.mt2LoadDays.map(d=>new Date(d).toLocaleDateString('en-US',{month:'numeric',day:'numeric'})).join(', ')}</strong></div>
+      <div><span style="color:var(--muted)">MT2 load dates</span><br><strong>${cfg.mt2LoadDays.map(d=>pdate(d).toLocaleDateString('en-US',{month:'numeric',day:'numeric'})).join(', ')}</strong></div>
     </div>`;
 
   const input = document.getElementById('newStartDate');
@@ -1742,14 +1748,14 @@ function applyProtocolReset() {
   if (!startStr) { alert('Please select a start date'); return; }
 
   const cfg = getProtocolConfig();
-  const start = new Date(startStr);
+  const start = pdate(startStr);
 
   // Per-compound reset
   if (document.getElementById('reset_mt2').checked) {
     const mt2Days = [];
     let d = new Date(start);
     for (let i = 0; i < 6; i++) {
-      mt2Days.push(d.toISOString().split('T')[0]);
+      mt2Days.push(pymd(d));
       d.setDate(d.getDate() + 2);
     }
     cfg.mt2LoadDays = mt2Days;
