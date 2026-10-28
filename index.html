@@ -1804,6 +1804,22 @@ function checkRestoreBtn() {
 function initTracker() { updateGraph(); checkRestoreBtn(); }
 
 (async () => {
+  // One-time cleanup: remove any bad localStorage keys from before the med-person fix
+  // These are keys where person is a raw Supabase string ('Mike','Cass','Cass-med')
+  // or where a med was incorrectly attributed to Mike
+  (function cleanBadKeys() {
+    const s = getStore();
+    const bad = ['Mike','Cass','Cass-med'];
+    let changed = false;
+    Object.keys(s).forEach(k => {
+      const parts = k.split('|');
+      if (parts.length === 3 && bad.includes(parts[1])) { delete s[k]; changed = true; }
+      // Remove Mike|Levothyroxine specifically (mis-logged med)
+      if (parts[1] === 'm' && parts[2] === 'Levothyroxine') { delete s[k]; changed = true; }
+    });
+    if (changed) saveStore(s);
+  })();
+
   // Sync from Supabase first so checkmarks are correct on first render
   await syncFromSupabase();
   initToday();
