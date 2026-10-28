@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Peptide Planner</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FFB5C2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Planner">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700;1,900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap">
 <style>
 /* ── TOKENS ───────────────────────────────────────────────── */
@@ -335,6 +342,100 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
 
 .sync-code{font:600 20px 'DM Mono',monospace;letter-spacing:.06em;background:var(--frame);border:1px dashed var(--accent);border-radius:14px;padding:12px 16px;margin-top:12px;word-break:break-all;user-select:all;}
 
+
+/* ── ROUND 2: calmer Today, pinned dose, trends, sync dot ── */
+.me-card{background:var(--surface);border-radius:22px;padding:16px 18px;margin-bottom:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;}
+.me-line{font-size:13px;color:var(--muted);margin-bottom:10px;}
+details.tl-block>summary{list-style:none;cursor:pointer;min-height:44px;}
+details.tl-block>summary::-webkit-details-marker{display:none;}
+details.tl-block>summary:focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:12px;}
+.tl-chev{flex:none;align-self:center;color:var(--accent);transition:transform .15s;}
+details[open]>summary .tl-chev{transform:rotate(90deg);}
+details.tl-block:not([open])>summary{margin-bottom:0;}
+.tl-block.late{outline:2px solid var(--accent);outline-offset:6px;}
+.tl-block.late.now{outline-style:solid;}
+.tl-latepill,.tl-donepill{font-size:11px;font-weight:700;border-radius:999px;padding:3px 10px;text-transform:uppercase;letter-spacing:.06em;}
+.tl-latepill{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent);}
+.tl-donepill{background:var(--s2);color:var(--muted);}
+.tl-sg{grid-column:1/-1;}
+.tl-sg-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.tl-sg-h .tl-count{background:rgba(255,255,255,.62);color:#A33226;}
+.tl-sg .dose-btn{margin-left:auto;}
+.tl-srows{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:6px 10px;margin-top:6px;}
+.tl-srow{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 8px;background:rgba(255,255,255,.5);border-radius:18px;padding:2px 6px 4px 2px;}
+.tl-sbtn{display:flex;align-items:center;gap:10px;min-height:44px;border:0;background:transparent;font:inherit;color:#3A1D1A;text-align:left;cursor:pointer;padding:2px 8px;border-radius:14px;}
+button.tl-sbtn:hover{background:rgba(255,255,255,.7);}
+button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
+.tl-sbtn.ro{cursor:default;}
+.tl-sbtn.ro .tl-ck{display:none;}
+.tl-sbtn.done .tl-ck{background:#A33226;}
+.tl-sname{font-weight:600;font-size:14px;}
+.tl-sdose{font-family:'DM Mono',monospace;font-size:12px;color:#A33226;margin-left:6px;}
+.tl-snote{grid-column:1/-1;font-size:12px;color:#6B2F26;padding:0 10px 2px 46px;line-height:1.35;}
+.tl-sbtn.ro~.tl-snote{padding-left:10px;}
+.tl-srow .dose-btn{margin:0;border-color:#A33226;color:#A33226;min-height:32px;}
+.tl-opt{margin-top:10px;}
+.tl-opt>summary{cursor:pointer;font-size:13px;font-weight:600;min-height:36px;display:flex;align-items:center;color:inherit;}
+.tl-pin{background:var(--accent);color:#FFF6E6;border-radius:22px;padding:18px 20px;margin-bottom:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;}
+.tl-pin.done{opacity:.7;}
+.tl-pin-k{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.tl-pin-t{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:28px;line-height:1.15;margin:2px 0;}
+.tl-pin-s{font-family:'DM Mono',monospace;font-size:14px;}
+.tl-pin-btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;border:2px solid #FFF6E6;background:transparent;color:#FFF6E6;font:600 15px 'DM Sans',sans-serif;cursor:pointer;}
+.tl-pin-btn:hover{background:rgba(255,246,230,.18);}
+.tl-pin-btn[aria-pressed=true]{background:#FFF6E6;color:var(--accent);}
+.tl-pin-btn:focus-visible{outline:3px solid #FFF6E6;outline-offset:3px;}
+.tl-next a{color:var(--accent);font-weight:600;}
+.sync-dot{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--frame);color:var(--ink);border-radius:999px;min-height:32px;padding:0 12px;font:600 11px 'DM Sans',sans-serif;cursor:pointer;margin-left:auto;}
+.sync-dot+.today-pill{margin-left:8px;}
+.sd-i{width:10px;height:10px;border-radius:50%;flex:none;}
+.sync-dot[data-s=ok] .sd-i{background:var(--green);}
+.sync-dot[data-s=off] .sd-i{border:2px solid var(--muted);}
+.sync-dot[data-s=offline] .sd-i{background:var(--warn);}
+.sync-dot[data-s=syncing] .sd-i{border:2px solid var(--accent);border-top-color:transparent;animation:sdspin .9s linear infinite;}
+@keyframes sdspin{to{transform:rotate(360deg);}}
+@media(prefers-reduced-motion:reduce){.sync-dot[data-s=syncing] .sd-i{animation:none;}.tl-chev{transition:none;}}
+.sync-dot:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
+.tr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin-top:10px;}
+.tr-card{background:var(--frame);border-radius:18px;padding:12px 14px;}
+.tr-h{font-weight:600;font-size:14px;}
+.tr-sub{font-size:12px;font-weight:400;color:var(--muted);margin-left:6px;}
+.tr-svg{width:100%;height:auto;display:block;margin-top:4px;overflow:visible;}
+.tr-gl,.tr-axis{stroke:var(--border);stroke-width:1;}
+.tr-t{fill:var(--muted);font:10px 'DM Mono',monospace;}
+.tr-v{fill:var(--text);font:600 11px 'DM Sans',sans-serif;}
+.tr-bar{fill:var(--accent);}
+.tr-hit{fill:transparent;}
+.tr-g:hover .tr-bar,.tr-g:focus .tr-bar{opacity:.78;}
+.tr-g:focus{outline:none;}
+.tr-g:focus-visible .tr-hit{stroke:var(--ink);stroke-width:2;}
+.tr-tip{position:fixed;z-index:300;background:var(--ink);color:var(--bg);border-radius:10px;padding:6px 10px;font-size:12px;pointer-events:none;max-width:220px;}
+.tr-tip strong{font-size:14px;}
+.tr-table{border-collapse:collapse;font-size:13px;margin-top:8px;}
+.tr-table th,.tr-table td{padding:4px 12px;text-align:center;border-bottom:1px solid var(--border);}
+.tr-table th:first-child,.tr-table td:first-child{text-align:left;}
+
+
+/* ── Sticky pickers: day strip / schedule days / Today filter stay in view while scrolling ── */
+.sticky-bar{position:sticky;top:var(--hdr-h,120px);z-index:60;background:var(--frame);padding:8px 0 10px;margin-bottom:14px;border-bottom:1px solid var(--border);}
+.sticky-bar .wk-strip{margin-bottom:8px;}
+.sticky-bar .sched-day-strip{margin-bottom:8px;}
+.sticky-bar .tl-bar{margin-bottom:0;}
+#todayBar{position:sticky;top:var(--hdr-h,120px);z-index:60;background:var(--frame);padding:8px 0;margin-bottom:12px;border-bottom:1px solid var(--border);}
+#todayBar .tl-bar{margin-bottom:0;}
+.ci-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;}
+.ci-sub{background:var(--frame);border-radius:18px;padding:14px 16px;}
+@media(max-width:768px){
+  .sticky-bar{padding:6px 0 8px;}
+  .sticky-bar .wk-strip{gap:4px;margin-bottom:6px;}
+  .sticky-bar .wday{padding:6px 2px;border-radius:14px;}
+  .sticky-bar .wday-num{font-size:17px;margin:1px 0;}
+  .sticky-bar .sched-day-strip{gap:6px;margin-bottom:6px;}
+  .sticky-bar .sched-day-btn{padding:6px 12px;}
+  .sticky-bar .tl-chip,#todayBar .tl-chip{min-height:36px;padding:0 12px;font-size:12px;}
+  .sticky-bar .tl-bar,#todayBar .tl-bar{gap:6px;}
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .dual{grid-template-columns:1fr;}
@@ -359,6 +460,7 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
   <div class="hdr-top">
     <h1>🧬 Peptide Planner</h1>
     <span class="hdr-meta" id="hMeta"></span>
+    <button class="sync-dot" id="syncDot" data-s="off" onclick="goTab('checkin')" aria-label="Sync status: sync off. Open sync settings."><i class="sd-i"></i><span class="sd-t">Sync off</span></button>
     <span class="today-pill" id="hPill"></span>
   </div>
   <div class="tabs">
@@ -379,7 +481,9 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
 
   <!-- TODAY -->
   <div id="tab-today" class="vp active">
+    <div id="meBar"></div>
     <div id="todayBanners"></div>
+    <div id="todayBar"></div>
     <div id="todayTimeline"></div>
     <div id="todayCheckin" class="ci-wrap"></div>
     <div id="todayClassic" style="display:none">
@@ -430,16 +534,20 @@ button.tl-line:focus-visible,.tl-chip:focus-visible,.tl-miss:focus-visible{outli
   <!-- WEEK -->
   <div id="tab-week" class="vp">
     <div class="slabel">Week of <span id="wkRange"></span></div>
-    <div class="wk-strip" id="wkStrip"></div>
-    <div id="wkTools"></div>
+    <div class="sticky-bar">
+      <div class="wk-strip" id="wkStrip"></div>
+      <div id="wkTools"></div>
+    </div>
     <div id="wkDetail"></div>
   </div>
 
   <!-- TRACKER -->
   <div id="tab-schedule" class="vp">
     <div class="slabel" style="margin-bottom:14px">Daily Schedule · Exact Timing</div>
-    <div class="sched-day-strip" id="schedDayStrip"></div>
-    <div id="schedTools"></div>
+    <div class="sticky-bar">
+      <div class="sched-day-strip" id="schedDayStrip"></div>
+      <div id="schedTools"></div>
+    </div>
     <div id="schedContent"></div>
   </div>
 
@@ -2055,8 +2163,9 @@ function setTlMode(m) {
   tlRefreshOthers();
 }
 function setTlWho(w) {
-  try { localStorage.setItem('pp_who_v1', w); } catch(e) {}
+  try { localStorage.setItem('pp_who_v1', w); if (w === 'c' || w === 'm') localStorage.setItem('pp_ciwho_v1', w); } catch(e) {}
   renderTodayView();
+  ciRefresh();
   tlRefreshOthers();
 }
 function tlRefreshOthers() {
@@ -2127,55 +2236,148 @@ function tlCard(it, date, bg) {
   </div>`;
 }
 
+let tlScrolled = false;
+// Collapsible time blocks, grouped supplements, pinned dose, overdue flags.
+const tlOpenState = {};
+function tlSumClick(sum) { const d = sum.parentElement; tlOpenState[d.dataset.key] = !d.open; }
+function tlJumpNow() {
+  const b = document.querySelector('#todayTimeline .tl-block.now');
+  if (b) window.scrollTo({top: b.getBoundingClientRect().top + window.scrollY - 140, behavior:'smooth'});
+}
+function tlCheckAll(slotId, dateStr) {
+  const date = new Date(dateStr), items = (tlBuild(date)[slotId] || []).filter(i => i.kind === 'supp' && i.tag !== 'optional' && i.lines[0].live);
+  const allDone = items.length && items.every(i => i.lines[0].done);
+  items.forEach(i => { if (allDone ? i.lines[0].done : !i.lines[0].done) toggleSupp(i.block, i.name); });
+  tlAfterChange();
+}
+
+function tlSuppGroup(items, date, s) {
+  const ds = date.toDateString();
+  const req = items.filter(i => i.tag !== 'optional'), opt = items.filter(i => i.tag === 'optional');
+  const live = items.some(i => i.lines[0].live);
+  const rd = req.filter(i => i.lines[0].done).length;
+  const allDone = req.length > 0 && rd === req.length;
+  const row = it => {
+    const l = it.lines[0], key = `supp|${ds}|supp|${it.name}`;
+    const main = `<span class="tl-ck">${l.done ? TL_CHECK : ''}</span><span class="tl-sname">${tlEsc(it.name)}</span>${l.amount ? `<span class="tl-sdose">${tlEsc(l.amount)}</span>` : ''}`;
+    const btn = l.live
+      ? `<button class="tl-sbtn ${l.done?'done':''}" aria-pressed="${l.done}" aria-label="${tlEsc(it.name)}${l.amount ? ', ' + tlEsc(l.amount) : ''}" data-key="${tlEsc(key)}" data-kind="supp" data-date="${tlEsc(ds)}" data-person="supp" data-block="${tlEsc(it.block)}" data-name="${tlEsc(it.name)}" onclick="tlTap(this)">${main}</button>`
+      : `<div class="tl-sbtn ro">${main}</div>`;
+    return `<div class="tl-srow">${btn}${doseBtn(it.name)}${it.note ? `<div class="tl-snote">${tlEsc(it.note)}</div>` : ''}</div>`;
+  };
+  return `<div class="tl-card tl-sg" style="background:${s.bg}">
+    <div class="tl-sg-h"><b class="tl-name">Supplements</b>${req.length ? `<span class="tl-count">${rd}/${req.length}</span>` : ''}
+      ${(live && req.length) ? `<button class="dose-btn" onclick="tlCheckAll('${s.id}','${ds}')">${allDone ? 'Uncheck all' : 'Check all'}</button>` : ''}</div>
+    <div class="tl-srows">${req.map(row).join('')}</div>
+    ${opt.length ? `<details class="tl-opt"><summary>Optional (${opt.length})</summary><div class="tl-srows">${opt.map(row).join('')}</div></details>` : ''}
+  </div>`;
+}
+
+// Today's key doses (MT2, Retatrutide) get a bold card at the top
+function tlPinned(date, slots, keep) {
+  const ds = date.toDateString(), out = [];
+  TL_SLOTS.forEach(s => (slots[s.id] || []).forEach(it => {
+    if (it.kind !== 'dose' || !/MT2|Retatrutide/.test(it.name)) return;
+    it.lines.filter(keep).forEach(l => out.push({s, it, l}));
+  }));
+  if (!out.length) return '';
+  const nightSlots = ['evepm','eve','night','bed'];
+  return out.map(({s, it, l}) => {
+    let title = it.name.replace('🔶 ', '').replace('LOADING', 'loading');
+    if (/LOADING/.test(it.name)) { const days = cycleDaysOf('LOADING'), n = days.findIndex(d => d.toDateString() === ds) + 1; if (n) title = `MT2 loading · dose ${n} of ${days.length}`; }
+    const hold = /Retatrutide/.test(it.name) && getRetaDose(date).hold ? ' · hold: do not titrate up' : '';
+    const key = `dose|${ds}|${l.person}|${it.name}`;
+    return `<div class="tl-pin ${l.done ? 'done' : ''}">
+      <div><div class="tl-pin-k">${nightSlots.includes(s.id) ? 'Due tonight' : 'Due today'} · ${tlEsc(s.label)}</div>
+        <div class="tl-pin-t">${tlEsc(title)}</div>
+        <div class="tl-pin-s">${l.label} · ${tlEsc(l.amount)}${hold}</div></div>
+      <button class="tl-pin-btn" aria-pressed="${l.done}" aria-label="${tlEsc(title)}, ${l.label}, ${l.done ? 'done' : 'mark done'}" data-key="${tlEsc(key)}" data-kind="dose" data-date="${tlEsc(ds)}" data-person="${l.person}" data-block="" data-name="${tlEsc(it.name)}" onclick="tlTap(this)">${TL_CHECK}<span>${l.done ? 'Done' : 'Mark done'}</span></button>
+    </div>`;
+  }).join('');
+}
+
 function tlRender(date) {
   const who = tlWho();
-  const isToday = date.toDateString() === TODAY.toDateString();
+  const ds = date.toDateString(), isToday = ds === TODAY.toDateString();
   const slots = tlBuild(date);
   const keep = l => who==='all' || (who==='c' && l.label==='Cass') || (who==='m' && l.label==='Mike');
-
   const nowD = new Date(), nowH = nowD.getHours() + nowD.getMinutes()/60;
   const timed = TL_SLOTS.filter(s => s.start < 99 && slots[s.id].some(it => it.lines.some(keep)));
-  let curId = null;
-  if (isToday) curId = tlPickNow(timed, nowH);
+  const curId = isToday ? tlPickNow(timed, nowH) : null;
+  const curIdx = curId ? TL_SLOTS.findIndex(s => s.id === curId) : -1;
 
-  let total = 0, done = 0, firstOpen = null, openAfterNow = null;
-  const blocks = TL_SLOTS.map((s, idx) => {
+  let total = 0, done = 0, nowOpen = null, overdueN = 0;
+  const openList = [];
+  const blocks = TL_SLOTS.map(s => {
     const items = slots[s.id].map(it => ({...it, lines: it.lines.filter(keep)})).filter(it => it.lines.length);
     if (!items.length) return '';
     let sTotal = 0, sDone = 0;
-    items.forEach(it => it.lines.forEach(l => { if (l.live) { sTotal++; if (l.done) sDone++; } }));
+    items.forEach(it => it.lines.forEach(l => { if (l.live && it.tag !== 'optional') { sTotal++; if (l.done) sDone++; } }));
     total += sTotal; done += sDone;
-    if (sDone < sTotal) {
-      if (!firstOpen) firstOpen = s;
-      if (!openAfterNow && (!curId || timed.findIndex(t=>t.id===s.id) >= timed.findIndex(t=>t.id===curId))) openAfterNow = s;
-    }
+    const open = sTotal - sDone;
     const isNow = isToday && s.id === curId;
-    return `<section class="tl-block ${isNow?'now':''}" aria-label="${tlEsc(s.label)}">
-      <div class="tl-bh">
-        <div class="tl-bt"><h3>${tlEsc(s.label)}</h3>${isNow?'<span class="tl-nowpill">Now</span>':''}</div>
+    const overdue = isToday && s.end < 99 && nowH >= s.end && open > 0;
+    if (isNow) nowOpen = open;
+    if (overdue) overdueN++;
+    if (isToday && open > 0) openList.push({s, overdue});
+    const allDone = sTotal > 0 && open === 0;
+    const key = ds + '|' + s.id;
+    const pastBlock = isToday && s.end < 99 && nowH >= s.end;
+    const isOpen = tlOpenState[key] !== undefined ? tlOpenState[key] : !(isToday && (allDone || pastBlock));
+    const cards = items.filter(it => it.kind !== 'supp'), supps = items.filter(it => it.kind === 'supp');
+    return `<details class="tl-block ${isNow?'now':''} ${overdue?'late':''}" data-key="${tlEsc(key)}" ${isOpen ? 'open' : ''}>
+      <summary class="tl-bh" onclick="tlSumClick(this)">
+        <svg class="tl-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        <div class="tl-bt"><h3>${tlEsc(s.label)}</h3>${isNow?'<span class="tl-nowpill">Now</span>':''}${overdue?'<span class="tl-latepill">Overdue</span>':''}${allDone?'<span class="tl-donepill">Done</span>':''}</div>
         <div class="tl-win">${tlEsc(s.win)}</div>
         ${sTotal ? `<div class="tl-count">${sDone}/${sTotal}</div>` : ''}
-      </div>
-      <div class="tl-grid">${items.map(it => tlCard(it, date, s.bg)).join('')}</div>
-    </section>`;
+      </summary>
+      <div class="tl-grid">${cards.map(it => tlCard(it, date, s.bg)).join('')}${supps.length ? tlSuppGroup(supps, date, s) : ''}</div>
+    </details>`;
   }).join('');
 
   const pct = total ? Math.round(done/total*100) : 0;
   const dayLabel = isToday ? 'Today' : `${DAYS[date.getDay()]} ${date.getMonth()+1}/${date.getDate()}`;
-  let next = '';
+  let status = '';
   if (isToday) {
-    if (total && done === total) next = 'Everything is checked off for today.';
-    else if (openAfterNow) next = `Up next: <b>${tlEsc(openAfterNow.label)}</b>`;
-    else if (firstOpen) next = `Still open: <b>${tlEsc(firstOpen.label)}</b>`;
+    if (total && done === total) status = 'Everything is checked off for today.';
+    else {
+      const parts = [], cur = TL_SLOTS[curIdx];
+      if (cur) parts.push(`Now: <b>${tlEsc(cur.label)}</b>${nowOpen ? ` · ${nowOpen} open` : ' · done'}`);
+      const nxt = openList.find(o => !o.overdue && o.s.id !== curId && TL_SLOTS.indexOf(o.s) > curIdx);
+      if (nxt) parts.push(`Next: <b>${tlEsc(nxt.s.label)}</b>`);
+      if (overdueN) parts.push(`<b>${overdueN} earlier block${overdueN > 1 ? 's' : ''}</b> still ${overdueN > 1 ? 'have' : 'has'} open items`);
+      status = parts.join(' · ');
+    }
   }
   const summary = `<div class="tl-sum">
     <div class="tl-sum-top"><h2>${dayLabel}</h2><span class="tl-sum-n">${isToday ? `${done} of ${total} done` : `${total} to track`}</span></div>
     ${isToday ? `<div class="tl-track" role="img" aria-label="${pct}% of today's items done"><div style="width:${pct}%"></div></div>` : ''}
-    ${next ? `<div class="tl-next">${next}</div>` : ''}
-    ${(!isToday) ? '<div class="tl-next">Supplements are view-only on other days.</div>' : ''}
-    ${(isToday && cycleInfo()) ? `<div class="tl-next">Cycle day ${cycleInfo().day} · ${cycleInfo().label} phase</div>` : ''}
+    ${status ? `<div class="tl-next">${status}${curId ? ' · <a href="#" onclick="tlJumpNow();return false">Jump to now</a>' : ''}</div>` : ''}
+    ${isToday && cycleInfo() ? `<div class="tl-next">Cycle day ${cycleInfo().day} · ${cycleInfo().label} phase</div>` : ''}
+    ${!isToday ? '<div class="tl-next">Supplements are view-only on other days.</div>' : ''}
   </div>`;
-  return summary + (blocks || '<div class="tl-empty">Nothing scheduled.</div>');
+  return summary + (isToday ? tlPinned(date, slots, keep) : '') + (blocks || '<div class="tl-empty">Nothing scheduled.</div>');
+}
+
+// ── Who is using this device ──
+function meGet() { try { return localStorage.getItem('pp_me_v1') || ''; } catch(e) { return ''; } }
+function meSet(w) {
+  try {
+    localStorage.setItem('pp_me_v1', w);
+    localStorage.setItem('pp_who_v1', w === 'b' ? 'all' : w);
+    localStorage.setItem('pp_ciwho_v1', w === 'm' ? 'm' : 'c');
+  } catch(e) {}
+  renderTodayView(); ciRefresh(); renderCheckinHistory(); tlRefreshOthers();
+}
+function meChange() { try { localStorage.removeItem('pp_me_v1'); } catch(e) {} renderMeBar(); }
+function renderMeBar() {
+  const el = document.getElementById('meBar');
+  if (!el) return;
+  const me = meGet(), nm = {c:'Cassidy', m:'Mike', b:'both of you'};
+  if (!me) { el.innerHTML = `<div class="me-card"><div><b>Who is using this device?</b><div class="tl-note" style="color:var(--muted)">This sets what you see first. You can switch to Both any time.</div></div>
+    <div class="tl-seg" role="group" aria-label="Who is using this device"><button class="tl-chip" onclick="meSet('c')">Cassidy</button><button class="tl-chip" onclick="meSet('m')">Mike</button><button class="tl-chip" onclick="meSet('b')">Both of us</button></div></div>`; return; }
+  el.innerHTML = `<div class="me-line">This device: <b>${nm[me]}</b> <button class="dose-btn" onclick="meChange()">Change</button></div>`;
 }
 
 function renderTodayView() {
@@ -2184,9 +2386,16 @@ function renderTodayView() {
   const mode = tlMode();
   const classic = document.getElementById('todayClassic');
   if (classic) classic.style.display = mode === 'list' ? '' : 'none';
-  el.innerHTML = tlToolbar(true) + (mode === 'timeline' ? tlRender(TODAY) : '');
+  const bar = document.getElementById('todayBar');
+  if (bar) bar.innerHTML = tlToolbar(true);
+  el.innerHTML = mode === 'timeline' ? tlRender(TODAY) : '';
   const ci = document.getElementById('todayCheckin');
-  if (ci && !ci.dataset.ready) { ci.dataset.ready = '1'; ciRender(ci, 't', ymd(TODAY)); }
+  if (ci && !ci.dataset.ready) { ci.dataset.ready = '1'; ciRenderToday(ci); }
+  renderMeBar();
+  if (!tlScrolled && mode === 'timeline' && tlIsActive('tab-today')) {
+    tlScrolled = true;
+    setTimeout(() => { const b = document.querySelector('#todayTimeline .tl-pin:not(.done)') || document.querySelector('#todayTimeline .tl-block.now'); if (b && b.getBoundingClientRect().top > window.innerHeight * 0.6) window.scrollTo({top: b.getBoundingClientRect().top + window.scrollY - 140}); }, 60);
+  }
 }
 
 function tlRenderWeek(date) {
@@ -2321,9 +2530,9 @@ const CI_METRICS = [['sleep','Sleep'],['energy','Energy'],['mood','Mood'],['reco
 // Two people: Cassidy is stored under the date, Mike under "date|m"
 function ciWho() { try { return localStorage.getItem('pp_ciwho_v1') === 'm' ? 'm' : 'c'; } catch(e) { return 'c'; } }
 function setCiWho(w) { try { localStorage.setItem('pp_ciwho_v1', w); } catch(e) {} ciRefresh(); renderCheckinHistory(); }
-function ciRender(el, pre, dateKey) {
+function ciRender(el, pre, dateKey, whoOverride, showToggle) {
   if (!el) return;
-  const who = ciWho(), key = dateKey + (who === 'm' ? '|m' : ''), name = who === 'm' ? 'Mike' : 'Cassidy';
+  const who = whoOverride || ciWho(), key = dateKey + (who === 'm' ? '|m' : ''), name = who === 'm' ? 'Mike' : 'Cassidy';
   const e = (jget(CI_KEY, {}))[key] || {};
   const d = fromYmd(dateKey), isT = dateKey === ymd(TODAY);
   const chip = (on, w, l) => `<button class="tl-chip ${on?'on':''}" aria-pressed="${on}" onclick="setCiWho('${w}')">${l}</button>`;
@@ -2331,7 +2540,7 @@ function ciRender(el, pre, dateKey) {
     <div class="ci-pills" role="group" aria-labelledby="${pre}-${m}">${[1,2,3,4,5].map(n =>
       `<button class="ci-pill ${e[m]===n?'on':''}" aria-pressed="${e[m]===n}" aria-label="${name} ${l} ${n} of 5" data-key="${key}" data-m="${m}" data-v="${n}" onclick="ciSet(this)">${n}</button>`).join('')}</div></div>`).join('');
   el.innerHTML = `<div class="ci">
-    <div class="tl-bar" style="margin-bottom:10px"><div class="tl-seg" role="group" aria-label="Check-in for">${chip(who==='c','c','Cassidy')}${chip(who==='m','m','Mike')}</div></div>
+    ${showToggle === false ? '' : `<div class="tl-bar" style="margin-bottom:10px"><div class="tl-seg" role="group" aria-label="Check-in for">${chip(who==='c','c','Cassidy')}${chip(who==='m','m','Mike')}</div></div>`}
     <div class="tl-sum-top"><h2>${isT ? `How does ${name} feel today?` : `${name} · ${fmtShort(d)}`}</h2><span class="tl-sum-n">1 = low · 5 = high</span></div>
     ${rows}
     <label class="ci-nl" for="${pre}-notes">Notes for ${name}</label>
@@ -2339,9 +2548,21 @@ function ciRender(el, pre, dateKey) {
     <div class="ci-saved" id="${pre}-saved" aria-live="polite"></div>
   </div>`;
 }
+// Today's check-in follows the Cassidy / Mike / Both filter at the top
+function ciRenderToday(t) {
+  const who = tlWho(), key = ymd(TODAY);
+  if (who === 'all') {
+    t.innerHTML = '<div class="ci-two"><div class="ci-sub" id="tciC"></div><div class="ci-sub" id="tciM"></div></div>';
+    ciRender(document.getElementById('tciC'), 't1', key, 'c', false);
+    ciRender(document.getElementById('tciM'), 't2', key, 'm', false);
+  } else {
+    t.innerHTML = '<div id="tciS"></div>';
+    ciRender(document.getElementById('tciS'), 't1', key, who, false);
+  }
+}
 function ciRefresh() {
   const t = document.getElementById('todayCheckin');
-  if (t && t.dataset.ready) ciRender(t, 't', ymd(TODAY));
+  if (t && t.dataset.ready) ciRenderToday(t);
   const w = document.getElementById('ciTabWidget');
   if (w) ciRender(w, 'c', ciDate);
 }
@@ -2393,6 +2614,7 @@ function renderCheckinTab() {
       ${starts.length ? `<div class="cy-list">${starts.map(s => `<div class="cy-item"><span>${fmtShort(fromYmd(s))}, ${fromYmd(s).getFullYear()}</span><button class="dose-btn" data-d="${s}" aria-label="Remove period start ${s}" onclick="removePeriod(this)">Remove</button></div>`).join('')}</div>` : ''}
       <div class="ci-saved">Days 1–5 menstrual, 6–16 follicular, 17+ luteal, the same ranges your Supplements tab uses.</div>
     </div>
+    <div class="ci-wrap" id="ciTrends"></div>
     ${syncCardHtml()}
     <div class="ci-wrap"><div class="tl-sum-top"><h2>Recent check-ins</h2></div><div id="ciHistory"></div></div>`;
   ciRender(document.getElementById('ciTabWidget'), 'c', ciDate);
@@ -2400,6 +2622,7 @@ function renderCheckinTab() {
   syncStatus();
 }
 function renderCheckinHistory() {
+  renderTrends();
   const el = document.getElementById('ciHistory');
   if (!el) return;
   const all = jget(CI_KEY, {}), who = ciWho();
@@ -2632,13 +2855,6 @@ function syncAfterPull() {
   if (tlIsActive('tab-tracker')) renderTrackerExtras();
   if (tlIsActive('tab-checkin') && !(a && /^(TEXTAREA|INPUT)$/.test(a.tagName))) renderCheckinTab();
 }
-function syncStatus(msg) {
-  const el = document.getElementById('syncStatus');
-  if (!el) return;
-  if (msg) { el.textContent = msg; return; }
-  const t = Number(localStorage.getItem(SYNC_LAST_KEY) || 0);
-  el.textContent = t ? 'Synced ' + new Date(t).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : 'Not synced yet';
-}
 function syncSupported() { return !!(window.crypto && crypto.subtle && crypto.getRandomValues); }
 async function syncEnableNew() {
   if (!syncSupported()) { alert('This browser cannot create a secure sync code.'); return; }
@@ -2675,6 +2891,110 @@ function syncCardHtml() {
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNow(); });
 
+// ── Trends (check-in charts): one series per chart, hover/focus tooltips, table view ──
+function trTip() {
+  let t = document.getElementById('trTip');
+  if (!t) { t = document.createElement('div'); t.id = 'trTip'; t.className = 'tr-tip'; t.setAttribute('role', 'status'); t.hidden = true; document.body.appendChild(t); }
+  return t;
+}
+function trShow(g) {
+  const t = trTip(); t.hidden = false; t.textContent = '';
+  const v = document.createElement('strong'); v.textContent = g.dataset.l;
+  t.appendChild(v);
+  const r = g.getBoundingClientRect();
+  t.style.left = Math.max(8, Math.min(window.innerWidth - 190, r.left + r.width / 2 - 70)) + 'px';
+  t.style.top = Math.max(8, r.top - 40) + 'px';
+}
+function trHide() { const t = document.getElementById('trTip'); if (t) t.hidden = true; }
+
+// items: [{v: 1-5 or null, x: axis label or '', tip: text}]
+function trChart(items, aria) {
+  const W = 420, H = 132, L = 24, T = 14, B = 26, pw = W - L - 6, ph = H - T - B, n = items.length, slot = pw / n, bw = Math.min(24, slot * 0.62);
+  const y = v => T + ph - (v / 5) * ph;
+  let svg = `<svg class="tr-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="${tlEsc(aria)}">`;
+  [1, 3, 5].forEach(v => { svg += `<line class="tr-gl" x1="${L}" x2="${W-6}" y1="${y(v)}" y2="${y(v)}"/><text class="tr-t" x="${L-6}" y="${y(v)+3}" text-anchor="end">${v}</text>`; });
+  svg += `<line class="tr-axis" x1="${L}" x2="${W-6}" y1="${y(0)}" y2="${y(0)}"/>`;
+  let lastIdx = -1; items.forEach((it, i) => { if (it.v) lastIdx = i; });
+  items.forEach((it, i) => {
+    const cx = L + slot * i + slot / 2, x0 = cx - bw / 2;
+    let bar = '';
+    if (it.v) {
+      const yt = y(it.v), r = Math.min(4, (y(0) - yt) / 2);
+      bar = `<path class="tr-bar" d="M${x0},${y(0)} L${x0},${yt + r} Q${x0},${yt} ${x0 + r},${yt} L${x0 + bw - r},${yt} Q${x0 + bw},${yt} ${x0 + bw},${yt + r} L${x0 + bw},${y(0)} Z"/>`;
+      if (i === lastIdx) bar += `<text class="tr-v" x="${cx}" y="${yt - 5}" text-anchor="middle">${it.v}</text>`;
+    }
+    svg += `<g class="tr-g" tabindex="0" role="img" aria-label="${tlEsc(it.tip)}" data-v="${it.v || 'none'}" data-l="${tlEsc(it.tip)}" onpointerenter="trShow(this)" onpointerleave="trHide()" onfocus="trShow(this)" onblur="trHide()">
+      <rect class="tr-hit" x="${L + slot * i}" y="${T - 8}" width="${slot}" height="${ph + 8}"/>${bar}</g>`;
+    if (it.x) svg += `<text class="tr-t" x="${cx}" y="${H - 8}" text-anchor="middle">${tlEsc(it.x)}</text>`;
+  });
+  return svg + '</svg>';
+}
+function renderTrends() {
+  const el = document.getElementById('ciTrends');
+  if (!el) return;
+  const all = jget(CI_KEY, {}), who = ciWho(), name = who === 'm' ? 'Mike' : 'Cassidy', sfx = who === 'm' ? '|m' : '';
+  const days = [];
+  for (let i = 13; i >= 0; i--) { const d = new Date(TODAY); d.setDate(d.getDate() - i); days.push({d, e: all[ymd(d) + sfx] || {}}); }
+  const filled = days.filter(x => CI_METRICS.some(([m]) => x.e[m])).length;
+  const head = `<div class="tl-sum-top"><h2>Trends · ${name}</h2><span class="tl-sum-n">last 14 days</span></div>`;
+  if (filled < 2) { el.innerHTML = head + '<div class="tl-empty">Check in on a few days to see your trends here.</div>'; return; }
+  const card = (title, sub, chart) => `<div class="tr-card"><div class="tr-h">${title} <span class="tr-sub">${sub}</span></div>${chart}</div>`;
+  const dayCharts = CI_METRICS.map(([m, l]) => card(l, 'score 1 to 5', trChart(days.map((x, i) => ({
+    v: x.e[m] || null,
+    x: (i === 0 || i === 7 || i === 13) ? `${x.d.getMonth()+1}/${x.d.getDate()}` : '',
+    tip: `${l} ${x.d.getMonth()+1}/${x.d.getDate()}: ${x.e[m] ? x.e[m] + ' of 5' : 'no check-in'}`
+  })), `${l} over the last 14 days`))).join('');
+  // By cycle phase (Cassidy only)
+  let phaseHtml = '';
+  if (who === 'c') {
+    const groups = {menstrual: [], follicular: [], luteal: []};
+    Object.keys(all).filter(k => !k.includes('|')).forEach(k => { const ci = cycleInfo(fromYmd(k)); if (ci) groups[ci.phase].push(all[k]); });
+    const withData = Object.keys(groups).filter(g => groups[g].some(e => CI_METRICS.some(([m]) => e[m])));
+    if (withData.length >= 2) {
+      const lab = {menstrual:'Menstrual', follicular:'Follicular', luteal:'Luteal'};
+      phaseHtml = `<div class="tl-sum-top" style="margin-top:18px"><h2>By cycle phase</h2><span class="tl-sum-n">average score</span></div><div class="tr-grid">` +
+        CI_METRICS.map(([m, l]) => card(l, 'average by phase', trChart(['menstrual','follicular','luteal'].map(g => {
+          const v = groups[g].map(e => e[m]).filter(Boolean), avg = v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length * 10) / 10 : null;
+          return {v: avg, x: `${lab[g]} (${v.length})`, tip: `${l}, ${lab[g]} phase: ${avg ? avg + ' average of ' + v.length + ' day' + (v.length > 1 ? 's' : '') : 'no check-ins'}`};
+        }), `${l} average by cycle phase`))).join('') + '</div>';
+    } else phaseHtml = '<div class="ci-saved" style="margin-top:12px">Phase comparison appears once you have check-ins in at least two cycle phases.</div>';
+  }
+  const rows = days.slice().reverse().map(x => `<tr><td>${x.d.getMonth()+1}/${x.d.getDate()}</td>${CI_METRICS.map(([m]) => `<td>${x.e[m] || '–'}</td>`).join('')}</tr>`).join('');
+  el.innerHTML = head + `<div class="tr-grid">${dayCharts}</div>${phaseHtml}
+    <details class="tl-opt" style="margin-top:12px"><summary>Show as table</summary><div style="overflow:auto"><table class="tr-table"><thead><tr><th>Date</th>${CI_METRICS.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></details>`;
+}
+
+// ── Sync status dot in the header ──
+function syncStatus(msg) {
+  const dot = document.getElementById('syncDot');
+  if (dot) {
+    const st = !syncOn() ? 'off' : /^Offline/.test(msg || '') ? 'offline' : /^Syncing/.test(msg || '') ? 'syncing' : 'ok';
+    const txt = {off:'Sync off', offline:'Offline', syncing:'Syncing', ok:'Synced'}[st];
+    dot.dataset.s = st; dot.querySelector('.sd-t').textContent = txt;
+    dot.setAttribute('aria-label', 'Sync status: ' + txt + '. Open sync settings.');
+  }
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  if (msg) { el.textContent = msg; return; }
+  const t = Number(localStorage.getItem(SYNC_LAST_KEY) || 0);
+  el.textContent = t ? 'Synced ' + new Date(t).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : 'Not synced yet';
+}
+
+// ── Install as an app (works on https; skipped on file://) ──
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
+
+(function trackHeaderHeight() {
+  const h = document.querySelector('.hdr');
+  if (!h) return;
+  const set = () => document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px');
+  set();
+  if (window.ResizeObserver) new ResizeObserver(set).observe(h);
+  window.addEventListener('resize', set);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(set);
+})();
+
 (async () => {
   // One-time cleanup: remove any bad localStorage keys from before the med-person fix
   // These are keys where person is a raw Supabase string ('Mike','Cass','Cass-med')
@@ -2699,6 +3019,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) sync
   initProtocol();
   initSunday();
   initPricing();
+  syncStatus();
   syncNow();
 })();
 </script>
