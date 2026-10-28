@@ -656,8 +656,12 @@ function sbLogDose(date, person, name, isAdding) {
   if (person !== 'c' && person !== 'm') return; // skip meds / non-peptide rows
   const sbPerson = person === 'c' ? 'Cass' : 'Mike';
   if (isAdding) {
-    const loggedAt = new Date(date.getFullYear(), date.getMonth(), date.getDate(),
-                              new Date().getHours(), new Date().getMinutes(), 0).toISOString();
+    // Use actual clock time if logging today, noon if backdating a past day
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    const h = isToday ? now.getHours() : 12;
+    const min = isToday ? now.getMinutes() : 0;
+    const loggedAt = new Date(date.getFullYear(), date.getMonth(), date.getDate(), h, min, 0).toISOString();
     sbFetch('/rest/v1/dose_logs', {
       method: 'POST',
       body: JSON.stringify({ logged_at: loggedAt, person: sbPerson, compound: name })
@@ -774,6 +778,10 @@ function tap(el, dateStr, person, name) {
   if (mark) mark.style.display = row.classList.contains('done') ? 'block' : 'none';
   updateProgress();
   updateGraph();
+  // If tapping from This Week tab, re-render the strip so % updates
+  if (document.getElementById('week') && document.getElementById('week').classList.contains('active')) {
+    renderStrip();
+  }
 }
 
 // ─── PROGRESS BARS ────────────────────────────────────────────────────────────
@@ -925,11 +933,11 @@ function showDay(date) {
     <div class="dual" style="margin-top:10px">
       <div class="pcard">
         <div class="phead cass"><span class="phead-name">Cassidy</span></div>
-        <div class="dlist">${personList(d.c, date, 'c', false)}</div>
+        <div class="dlist">${personList(d.c, date, 'c', true)}</div>
       </div>
       <div class="pcard">
         <div class="phead mike"><span class="phead-name">Mike</span></div>
-        <div class="dlist">${personList(d.m, date, 'm', false)}</div>
+        <div class="dlist">${personList(d.m, date, 'm', true)}</div>
       </div>
     </div>`;
 }
