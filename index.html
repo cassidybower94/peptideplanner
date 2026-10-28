@@ -799,9 +799,18 @@ function tap(el, dateStr, person, name) {
   if (mark) mark.style.display = row.classList.contains('done') ? 'block' : 'none';
   updateProgress();
   updateGraph();
-  // If tapping from This Week tab, re-render the strip so % updates
+  // If tapping from This Week tab, re-render strip % and also refresh Today's
+  // dose lists so checkmarks appear there without a manual refresh
   if (document.getElementById('week') && document.getElementById('week').classList.contains('active')) {
     renderStrip();
+    if (date.toDateString() === TODAY.toDateString()) {
+      const d = getDoses(TODAY);
+      const ct = document.getElementById('cassToday');
+      const mt = document.getElementById('mikeToday');
+      if (ct) ct.innerHTML = personList(d.c, TODAY, 'c', true);
+      if (mt) mt.innerHTML = personList(d.m, TODAY, 'm', true);
+      updateProgress();
+    }
   }
 }
 
