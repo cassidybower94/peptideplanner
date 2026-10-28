@@ -2013,17 +2013,23 @@ function initTracker() { updateGraph(); checkRestoreBtn(); renderTrackerExtras()
 // existing trackers (toggleDose, toggleSupp, toggleMissed), so data and Supabase
 // logging behave exactly as in the list view.
 const TL_SLOTS = [
-  {id:'early',    label:'Early AM',        win:'8–10am · Levo first, then fasted supps, then peptides', start:8,  bg:'#FFE7A0'},
-  {id:'sun',      label:'Late start',      win:'Sunday · after waking',                                 start:9,  bg:'#FFD1D9'},
-  {id:'mid',      label:'Mid AM',          win:'with first meal',                                       start:10, bg:'#CFE4EE'},
-  {id:'midday',   label:'Midday',          win:'~2pm · detox layer, Mon–Fri',                           start:14, bg:'#F9D6CC'},
-  {id:'binder',   label:'Late afternoon',  win:'binder window · 2+ hrs from everything',                start:15, bg:'#EADFF3'},
-  {id:'evepm',    label:'Early PM',        win:'5–7pm',                                                 start:17, bg:'#DDE0F7'},
-  {id:'eve',      label:'Evening',         win:'MT2 doses',                                             start:18, bg:'#FFD1D9'},
-  {id:'night',    label:'Night',           win:'8–10pm · before bed',                                   start:20, bg:'#BFD6F2'},
-  {id:'bed',      label:'Before bed',      win:'fixed nightly + choose by symptoms',                    start:21, bg:'#D5DDF5'},
-  {id:'asneeded', label:'As needed',       win:'histamine and inflammation support',                    start:99, bg:'#E8F0C8'},
+  {id:'early',    label:'Early AM',        win:'8–10am · Levo first, then fasted supps, then peptides', start:8, end:10,  bg:'#FFE7A0'},
+  {id:'sun',      label:'Late start',      win:'Sunday · after waking',                                 start:9, end:11,  bg:'#FFD1D9'},
+  {id:'mid',      label:'Mid AM',          win:'with first meal',                                       start:10, end:12, bg:'#CFE4EE'},
+  {id:'midday',   label:'Midday',          win:'~2pm · detox layer, Mon–Fri',                           start:12, end:16, bg:'#F9D6CC'},
+  {id:'binder',   label:'Late afternoon',  win:'binder window · 2+ hrs from everything',                start:15, end:17, bg:'#EADFF3'},
+  {id:'evepm',    label:'Early PM',        win:'5–7pm',                                                 start:17, end:19, bg:'#DDE0F7'},
+  {id:'eve',      label:'Evening',         win:'MT2 doses',                                             start:18, end:22, bg:'#FFD1D9'},
+  {id:'night',    label:'Night',           win:'8–10pm · before bed',                                   start:20, end:22, bg:'#BFD6F2'},
+  {id:'bed',      label:'Before bed',      win:'fixed nightly + choose by symptoms',                    start:22, end:24, bg:'#D5DDF5'},
+  {id:'asneeded', label:'As needed',       win:'histamine and inflammation support',                    start:99, end:99, bg:'#E8F0C8'},
 ];
+// The block whose window contains the hour h; if windows overlap, the one that started latest
+function tlPickNow(list, h) {
+  let id = null;
+  list.forEach(s => { if (s.start < 99 && s.start <= h && h < s.end) id = s.id; });
+  return id;
+}
 const TL_BUCKET = {early:'early', sun:'sun', mid:'mid', evepm:'evepm', eve:'eve', load:'eve', night:'night'};
 const TL_SUPP_SLOT = {am_fasted:'early', am_food:'mid', phase:'mid', detox_mid:'midday', binder:'binder', pm:'bed', histamine:'asneeded'};
 const TL_TITRATING = ['Retatrutide','MT2','Pinealon','MOTS-c'];
@@ -2130,7 +2136,7 @@ function tlRender(date) {
   const nowD = new Date(), nowH = nowD.getHours() + nowD.getMinutes()/60;
   const timed = TL_SLOTS.filter(s => s.start < 99 && slots[s.id].some(it => it.lines.some(keep)));
   let curId = null;
-  if (isToday) timed.forEach(s => { if (s.start <= nowH) curId = s.id; });
+  if (isToday) curId = tlPickNow(timed, nowH);
 
   let total = 0, done = 0, firstOpen = null, openAfterNow = null;
   const blocks = TL_SLOTS.map((s, idx) => {
@@ -2516,8 +2522,7 @@ function renderProtoCards() {
 // ── Keep "now" live ──
 function tlCurId() {
   const n = new Date(), h = n.getHours() + n.getMinutes() / 60;
-  let id = null; TL_SLOTS.forEach(s => { if (s.start < 99 && s.start <= h) id = s.id; });
-  return id;
+  return tlPickNow(TL_SLOTS, h);
 }
 let tlLastCur = tlCurId();
 function tlClockCheck() {
