@@ -644,17 +644,19 @@ async function syncFromSupabase() {
   let changed = false;
   rows.forEach(r => {
     const d = new Date(r.logged_at);
-    const k = `${d.toDateString()}|${r.person === 'Cass' ? 'c' : 'm'}|${r.compound}`;
+    const personKey = r.person === 'Cass' ? 'c' : r.person === 'Mike' ? 'm' : r.person === 'Cass-med' ? 'med' : null;
+    if (!personKey) return;
+    const k = `${d.toDateString()}|${personKey}|${r.compound}`;
     if (!s[k]) { s[k] = d.getTime(); changed = true; }
   });
   if (changed) { saveStore(s); updateProgress(); updateGraph(); }
 }
 
 // Write a single dose log to Supabase (fire-and-forget)
-// person must be 'c' or 'm' — skip meds ('med') and anything else
+// person: 'c' = Cass peptide, 'm' = Mike peptide, 'med' = Cass med/supplement
 function sbLogDose(date, person, name, isAdding) {
-  if (person !== 'c' && person !== 'm') return; // skip meds / non-peptide rows
-  const sbPerson = person === 'c' ? 'Cass' : 'Mike';
+  const sbPerson = person === 'c' ? 'Cass' : person === 'm' ? 'Mike' : person === 'med' ? 'Cass-med' : null;
+  if (!sbPerson) return;
   if (isAdding) {
     // Use actual clock time if logging today, noon if backdating a past day
     const now = new Date();
@@ -838,7 +840,11 @@ function medRow(d, date) {
 
 function tapMed(el, dateStr, name) {
   const date = new Date(dateStr);
+  const s = getStore();
+  const k = doseKey(date, 'med', name);
+  const adding = !s[k];
   toggleDose(date, 'med', name);
+  sbLogDose(date, 'med', name, adding);
   el.classList.toggle('done');
   const mark = el.querySelector('.chk-mark');
   if (mark) mark.style.display = el.classList.contains('done') ? 'block' : 'none';
