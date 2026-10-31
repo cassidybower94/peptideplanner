@@ -436,6 +436,9 @@ button.tl-sbtn:focus-visible{outline:3px solid #3A1D1A;outline-offset:2px;}
   .sticky-bar .tl-bar,#todayBar .tl-bar{gap:6px;}
 }
 
+.tl-hid{background:var(--surface);border:1.5px solid var(--accent);border-radius:16px;padding:10px 14px;margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:14px;}
+.tl-hid .dose-btn{margin-left:0;}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .dual{grid-template-columns:1fr;}
@@ -2157,7 +2160,14 @@ const TL_CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" st
 
 function tlEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function tlMode() { try { return localStorage.getItem('pp_view_v1') === 'list' ? 'list' : 'timeline'; } catch(e) { return 'timeline'; } }
-function tlWho()  { try { const w = localStorage.getItem('pp_who_v1'); return (w==='c'||w==='m') ? w : 'all'; } catch(e) { return 'all'; } }
+// The filter is remembered for the rest of the day only; each new day starts from this device's default
+function tlWho() {
+  try {
+    if (localStorage.getItem('pp_who_day_v1') === ymd(TODAY)) { const w = localStorage.getItem('pp_who_v1'); return (w==='c'||w==='m') ? w : 'all'; }
+    const me = localStorage.getItem('pp_me_v1');
+    return me === 'c' ? 'c' : me === 'm' ? 'm' : 'all';
+  } catch(e) { return 'all'; }
+}
 function tlIsActive(id) { const el = document.getElementById(id); return !!(el && el.classList.contains('active')); }
 
 function tlToolbar(showWho) {
@@ -2175,7 +2185,7 @@ function setTlMode(m) {
   tlRefreshOthers();
 }
 function setTlWho(w) {
-  try { localStorage.setItem('pp_who_v1', w); if (w === 'c' || w === 'm') localStorage.setItem('pp_ciwho_v1', w); } catch(e) {}
+  try { localStorage.setItem('pp_who_v1', w); localStorage.setItem('pp_who_day_v1', ymd(TODAY)); if (w === 'c' || w === 'm') localStorage.setItem('pp_ciwho_v1', w); } catch(e) {}
   renderTodayView();
   ciRefresh();
   tlRefreshOthers();
@@ -2308,6 +2318,20 @@ function tlPinned(date, slots, keep) {
   }).join('');
 }
 
+function tlHiddenPinned(date, slots, keep, who) {
+  const ds = date.toDateString(), out = [];
+  TL_SLOTS.forEach(s => (slots[s.id] || []).forEach(it => {
+    if (it.kind !== 'dose' || !/MT2|Retatrutide/.test(it.name)) return;
+    it.lines.filter(l => !keep(l) && l.live && !l.done).forEach(l => {
+      let t = it.name.replace('🔶 ', '').replace('LOADING', 'loading');
+      if (/LOADING/.test(it.name)) { const days = cycleDaysOf('LOADING'), n = days.findIndex(d => d.toDateString() === ds) + 1; if (n) t = `MT2 loading dose ${n} of ${days.length}`; }
+      out.push(`${tlEsc(t)} (${l.label === 'Mike' ? 'Mike' : 'Cassidy'})`);
+    });
+  }));
+  if (!out.length) return '';
+  return `<div class="tl-hid" role="status"><span><b>Not shown with the ${who === 'm' ? 'Mike' : 'Cassidy'} filter, but due today:</b> ${out.join(', ')}.</span> <button class="dose-btn" onclick="setTlWho('all')">Show both</button></div>`;
+}
+
 function tlRender(date) {
   const who = tlWho();
   const ds = date.toDateString(), isToday = ds === TODAY.toDateString();
@@ -2369,7 +2393,7 @@ function tlRender(date) {
     ${isToday && cycleInfo() ? `<div class="tl-next">Cycle day ${cycleInfo().day} · ${cycleInfo().label} phase</div>` : ''}
     ${!isToday ? '<div class="tl-next">Supplements are view-only on other days.</div>' : ''}
   </div>`;
-  return summary + (isToday ? tlPinned(date, slots, keep) : '') + (blocks || '<div class="tl-empty">Nothing scheduled.</div>');
+  return summary + (isToday ? tlPinned(date, slots, keep) + tlHiddenPinned(date, slots, keep, who) : '') + (blocks || '<div class="tl-empty">Nothing scheduled.</div>');
 }
 
 // ── Who is using this device ──
@@ -2378,6 +2402,7 @@ function meSet(w) {
   try {
     localStorage.setItem('pp_me_v1', w);
     localStorage.setItem('pp_who_v1', w === 'b' ? 'all' : w);
+    localStorage.setItem('pp_who_day_v1', ymd(TODAY));
     localStorage.setItem('pp_ciwho_v1', w === 'm' ? 'm' : 'c');
   } catch(e) {}
   renderTodayView(); ciRefresh(); renderCheckinHistory(); tlRefreshOthers();
